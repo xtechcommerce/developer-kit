@@ -2,6 +2,8 @@
 	http://demo.localhost.com/templates/modacommerce_twig/assets/css/application.css
 	http://demo.localhost.com/templates/modacommerce/assets/css/application.css */
 
+
+
 /*Geral*/
 *{
 	border-radius: 0 !important;
@@ -98,7 +100,6 @@ strong{
 	background: rgba(255,255,255,.9);
 	border-bottom: 1px solid #dbdbdb;
 	position: fixed;
-	top: 0;
 	left: 0;
 	width: 100%;
 	z-index: 9999;
@@ -121,7 +122,7 @@ strong{
 }
 
 header{
-	margin: 2.5em 0 0;
+	padding: 2.5em 0 0;
 }
 
 header .row{
@@ -130,11 +131,11 @@ header .row{
 }
 
 #site-logo{
-	margin: 20px 0;
+	margin: 30px 0;
 }
 
 #site-logo img{
-	max-width: 100%;
+	width: 245px;
 }
 
 .top-cart i{
@@ -193,7 +194,7 @@ header .row{
 }
 
 #main-menu .navbar-nav>li>a{
-	padding: 0 12px;
+	padding: 0 25px;
 	padding-top: 8px;
 	padding-bottom: 8px;
 }
@@ -219,6 +220,7 @@ header .row{
 /*Pesquisa*/
 #top-search{
 	padding-top: 1px;
+	/*width: 260px;*/
 }
 
 #top-search input{
@@ -228,20 +230,6 @@ header .row{
 	color: #707070;
 	font-size: 11px;
 	text-transform: uppercase;
-	width: 260px;
-}
-
-#top-search input::-webkit-input-placeholder{
-	color: #707070;
-}
-#top-search input:-moz-placeholder{
-	color: #707070;
-}
-#top-search input:-moz-placeholder{
-	color: #707070;
-}
-#top-search input::-ms-input-placeholder{
-	color: #707070;
 }
 
 #top-search button{
@@ -436,29 +424,8 @@ header .row{
 	vertical-align: -5px;
 }
 
-#main-banners .container{
+#main-banner .container{
 	padding-bottom: 10px;
-}
-
-#main-banners .carousel-inner img{
-	width: 100%;
-}
-
-#main-banners .banner-col-bl{
-	padding-right: 5px;
-}
-
-#main-banners .banner-col-bm{
-	padding-left: 10px;
-	padding-right: 10px;
-}
-
-#main-banners .banner-col-br{
-	padding-left: 5px;
-}
-
-#main-banners .mini-banner img{
-	width: 100%;
 }
 
 
@@ -478,7 +445,6 @@ header .row{
 
 /*Breadcrumbs*/
 .breadcrumbs{
-	background: #fff;
 	border-bottom: 1px solid #EEE;
 	line-height: 45px;
 	margin-bottom: 20px;
@@ -528,7 +494,6 @@ header .row{
 }
 
 .sidebar-column-in{
-	background: #fff;
 	padding: 5px 0;
 }
 
@@ -594,9 +559,9 @@ header .row{
 
 .prod-list .prod-image{
 	height: 300px;
-	margin: 0 auto;
+	margin-top: 0px;
 	position: relative;
-	width: 100%;
+	width: 218px;
 }
 
 .prod-list .prod-image-overflow{
@@ -693,77 +658,6 @@ header .row{
 
 .categ-sidebar-wrapper .categ-sidebar-image img{
 	width: 100%;
-}
-
-
-
-
-/* Filters */
-.filters-side li{
-	padding: 0;
-}
-.filters-side li a{
-	background-color: white;
-	border: 1px solid lightgrey;
-	box-shadow: 0 0 2px #AFAFAF;
-	padding: 6px 10px;
-	margin-right: 5px;
-	line-height: 40px;
-}
-.filters-side li .active {
-	background-color: #F7F7F7;
-	color: #AFAFAF;
-}
-#filter-widget .filters {
-	float: right;
-	margin-right: 10px;
-	margin-top: -5px;
-	position: relative;
-}
-#filter-widget .filters ul {
-	list-style: none outside none;
-	margin: 0;
-	padding: 0;
-}
-#filter-widget .filters a{
-	font-weight: normal;
-}
-#filter-widget .filters a.main {
-	display: block;
-	line-height: 30px;
-	margin: 0;
-	padding: 0 13px 0 0;
-	position: relative;
-}
-#filter-widget .filters ul {
-	background-color: white;
-	border: 1px solid lightgrey;
-	box-shadow: 0 0 2px #AFAFAF;
-	display: none;
-	padding: 5px 0;
-	position: absolute;
-	right: 0;
-	top: 28px;
-	z-index: 600;
-}
-#filter-widget .filters ul li {
-	margin: 0;
-	padding: 0;
-}
-#filter-widget .filters ul li .sub {
-	display: block;
-	line-height: 20px;
-	padding: 6px 30px 6px 10px;
-	width: 180px;
-}
-#filter-widget .filters ul li .sub:hover {
-	background-color: #F7F7F7;
-}
-#filter-widget .filters ul li .active {
-	background-color: #F7F7F7;
-}
-#filter-widget .filters:hover ul {
-	display: block;
 }
 
 
@@ -1019,13 +913,6 @@ header .row{
 
 
 
-/*Instagram*/
-#instafeed{
-	margin-bottom: 30px;
-}
-
-
-
 
 
 
@@ -1067,7 +954,38 @@ footer .bottom{
 
 
 
+/* Buffer Framework */
 
+.buffer-top-lg{
+	margin-top: 50px;
+}
+.buffer-top-md{
+	margin-top: 25px;
+}
+.buffer-top-sm{
+	margin-top: 15px;
+}
+.buffer-top-xs{
+	margin-top: 8px;
+}
+.buffer-bottom-lg{
+	margin-bottom: 50px;
+}
+.buffer-bottom-md{
+	margin-bottom: 25px;
+}
+.buffer-bottom-sm{
+	margin-bottom: 15px;
+}
+.buffer-bottom-xs{
+	margin-bottom: 8px;
+}
+.buffer-top-no{
+	margin-top: 0;
+}
+.buffer-bottom-no{
+	margin-bottom: 0;
+}
 
 
 

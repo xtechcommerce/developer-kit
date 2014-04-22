@@ -51,17 +51,12 @@
 			{% if product.excerpt %}
 				<div class="prod-excerpt">
 					<p>
-						{{ product.excerpt }}
+						{{ product.escerpt }}
 					</p>
 				</div>
 			{% endif %}
 
           	<div class="hide">{{ variation_select(product, {button_selects: 'true'}) }}</div>
-          	<script type="text/javascript">
-				productvariants_settings_{{ product.id }}.validationSuccess = function(){
-                    $('.installment-price').text('R$ ' + (parseInt(this.selected_variant.price_num) / {{ product.installments }}).toFixed(2).replace('.', ','));
-				}
-			</script>
 
           	{% if product.options|count > 0 %}
 				<div class="prod-variants">
@@ -95,12 +90,10 @@
 							<span class="price">
 								<strong class="buy-price">
 									{% if product.saleprice > 0 %}
-										<span class="slash">{{ product.price|format_currency }}</span>
-										<span class="sale color product_price" itemprop="price">{{ product.saleprice|format_currency }}</span>
-										<span class="sale color variant_price" style="display: none;">{{ product.saleprice|format_currency }}</span>
+										<strike>{{ product.price|format_currency }}</strike>
+										<span class="sale">{{ product.saleprice|format_currency }}</span>
 									{% else %}
-										<span class="sale color product_price" itemprop="price">{{ product.price|format_currency }}</span>
-										<span class="sale color variant_price" style="display: none;">{{ product.saleprice|format_currency }}</span>
+										<span>{{ product.price|format_currency }}</span>
 									{% endif %}
 								</strong>
 								{% if product.installments > 1 %}
@@ -117,30 +110,18 @@
 					<div class="col-xs-5">
 						<div class="pull-right">
 							{{ buy_button('Comprar', product) }}
-							<br />
-							{{ wishlist_button('Adicionar à lista de desejos', product) }}
+							{{ wishlist_button('Adicionar ao lista de desejos', product) }}
 							{{ form_open('contact/remind_me', 'class="remindme-form hide form-horizontal"', {'redirect': site_url(uri_string()), 'variant_id': '', 'product_id': product.id}) }}
-								<fieldset>
-								  	Avise-me quando chegar: 
-								    <div class="input-group">
-								      <input type="text" name="email" class="form-control" placeholder="Email" />
-								      <span class="input-group-btn">
-								        <input type="submit" value="Enviar" name="submit" class="btn btn-primary"/>
-								      </span>
-								    </div>
-								</fieldset>
+							<fieldset>
+							  	Avisa-me quando chegar: 
+							    <div class="input-group">
+							      <input type="text" name="email" class="form-control" placeholder="Email" />
+							      <span class="input-group-btn">
+							        <input type="submit" value="Enviar" name="submit" class="btn btn-primary"/>
+							      </span>
+							    </div>
+							</fieldset>
 							{{ form_close() }}
-
-							{% if product.quantity <= 0 %}
-								<script type="text/javascript">
-								<!--
-									$(document).ready(function(){
-										$('#alert-unavailable').removeClass('hide');
-										$('#buy-btn').hide();
-									});
-								//-->
-								</script>
-							{% endif %}
 						</div>
 					</div>
 

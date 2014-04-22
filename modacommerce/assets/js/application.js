@@ -26,11 +26,13 @@ $(document).ready(function(){
 	}
 
 	$('.jqzoom').jqzoom({
-		zoomType: 'innerzoom',
+		zoomType: 'standard',
 		title: false,
 		lens: true,
 		preloadImages: true,
-		alwaysOn: false
+		alwaysOn: false,
+		xOffset: 18,
+		zoomWidth: 329
 	});
 
 	$('.imgLiquidFill').imgLiquid({

@@ -1,73 +1,73 @@
 {% macro item(product, category, cols) %}
-	<div class="product-list-item col-xs-{{ cols|default(3) }}">
-		<div class="prod-wrapper">
-			<!-- Overlay com o link do produto -->
-			<a class="prod-overlay" title="{{ product.name }}" href="{{ site_url( (category.slug ~ '/')|default('') ~ product.slug ) }}"></a>
-			
-			<!-- Imagem principal do produto -->
-			<div class="prod-image imgLiquidFill imgLiquid">
-				{% if product.quantity <= 0 %}
-					<span class="icon icon-esgotado"></span>
-				{% else %}
-					<div class="flag">
-						{% for category in product.categories %}
-							{% if categories_flatten[category.id].slug == 'sale' %}
-								<div class="promo">
-									<span class="hide">Sale</span>
-								</div>
-							{% endif %}
+<div class="product-list-item col-xs-{{ cols|default(3) }}">
+    <div class="prod-wrapper">
+        <!-- Overlay com o link do produto -->
+        <a class="prod-overlay" title="{{ product.name }}" href="{{ site_url( (category.slug ~ '/')|default('') ~ product.slug ) }}"></a>
+        
+        <!-- Imagem principal do produto -->
+        <div class="prod-image imgLiquidFill imgLiquid">
+            {% if product.quantity <= 0 %}
+                <span class="icon icon-esgotado"></span>
+            {% else %}
+                <div class="flag">
+                    {% for category in product.categories %}
 
-							{% if categories_flatten[category.id].slug == 'novo' %}
-								<div class="new">
-									<span class="hide">Novo</span>
-								</div>
-							{% endif %}
-						{% endfor %}
-					</div>
-				{% endif %}
-				
-				<div class="prod-image-overflow">
-					<img src="{{ product_img(product, 'small', {'only_link': true}) }}" alt="{{ product.name }}" class="first" style="display: block;" />
-		
-					{% for image in product.images %}
-						{% if not image.primary %}
-							<img src="{{ host_url('uploads/images/small/' ~ image.filename) }}" alt="{{ product.name }}" class="second" />
-						{% endif %}
-					{% endfor %}
-				</div>
-			</div>
-		
-			<div class="prod-info">
-				<h3>{{ product.name }}</h3>
-				<span class="price">
-					
-					{% if product.quantity <= 0 %}
-		
-						<span>
-							<br />
-							{{ lang('out_of_stock') }}
-						</span>
-		
-					{% else %}
-						
-						{% set product_price = product.saleprice > 0 ? product.saleprice : product.price %}
-						<strong class="buy-price">
-							{{ (product.saleprice > 0 ? '<span class="slash">' ~ product.price|format_currency ~ '</span>' : '')|raw }}
-							<span class="sale">{{ product_price|format_currency }}</span>
-						</strong>
-		
-						{% if product.installments > 0 %}
-							<span class="installments-price">
-								Em até <strong>{{ product.installments }}x</strong>
-								de <strong>{{ (product_price/product.installments)|format_currency }}</strong>
-								<span>sem juros</span>
-							</span>
-						{% endif %}
-					
-					{% endif %}
-		
-				</span>
-			</div>
-		</div>
-	</div>
+                        {% if categories_flatten[category.id].slug == 'sale' %}
+                            <div class="promo">
+                                <span class="hide">Sale</span>
+                            </div>
+                        {% endif %}
+
+                        {% if categories_flatten[category.id].slug == 'novo' %}
+                            <div class="new">
+                                <span class="hide">Novo</span>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <div class="prod-image-overflow">
+                <img src="{{ product_img(product, 'small', {'only_link': true}) }}" alt="{{ product.name }}" class="first" style="display: block;" />
+    
+                {% for image in product.images %}
+                    {% if not image.primary %}
+                        <img src="{{ host_url('uploads/images/small/' ~ image.filename) }}" alt="{{ product.name }}" class="second" />
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    
+        <div class="prod-info">
+            <h3>{{ product.name }}</h3>
+            <span class="price">
+                
+                {% if product.quantity <= 0 %}
+    
+                    <span>
+                        <br />
+                        {{ lang('out_of_stock') }}
+                    </span>
+    
+                {% else %}
+    
+                    <strong class="buy-price">
+                        {{ (product.saleprice > 0 ? '<span class="slash">' ~ product.price|format_currency ~ '</span>' : '')|raw }}
+                        <span class="sale">{{ (product.saleprice > 0 ? product.saleprice : product.price)|format_currency }}</span>
+                    </strong>
+    
+                    {% if product.installments > 0 %}
+                        <span class="installments-price">
+                            Em até <strong>{{ product.installments }}x</strong>
+                            de <strong>{{ (product.price/product.installments)|format_currency }}</strong>
+                            <span>sem juros</span>
+                        </span>
+                    {% endif %}
+                
+                {% endif %}
+    
+            </span>
+        </div>
+    </div>
+</div>
 {% endmacro %}

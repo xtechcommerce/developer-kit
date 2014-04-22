@@ -2,136 +2,41 @@
 
 {% block content %}
 
-{# Produtos por linha (a homepage possui outras definicoes) #}
-{% if template_settings('select:list_prod_cols') == '2' %}
-	{% set col_width = '6' %}
-{% elseif template_settings('select:list_prod_cols') == '3' %}
-	{% set col_width = '4' %}
-{% elseif template_settings('select:list_prod_cols') == '4' %}
-	{% set col_width = '3' %}
-{% elseif template_settings('select:list_prod_cols') == '6' %}
-	{% set col_width = '2' %}
-{% endif %}
-
 {% import 'product_listing.html' as product_listing %}
 
 {% if categories[category.root_category].children|count > 0 %}
 
-	{% if template_settings('select:list_prod_cols') == '6' %}
-		{% set col_width = '3' %}
-	{% endif %}
+{% set cols = 4 %}
 
-	<div class="row">
-		<div class="col-xs-3 sidebar">
-			<div class="sidebar-column">
-				<div class="sidebar-column-in">
-					<h4>
-						{{ categories[category.root_category].category.name }}
-					</h4>
-					<ul class="nav nav-pills nav-stacked">
-						{% for category_group in categories[category.root_category].children %}
-							<li class="{{ category_group.category.id == category.id ? 'active' : 'inactive' }}">
-								<a href="{{ site_url(categories[category.root_category].category.slug ~ '/' ~ category_group.category.slug) }}">{{ category_group.category.name }}</a>
-								<ul class="children-subcategory nav nav-pills nav-stacked">
-								{% for subcategory_group in category_group.children %}
-									<li>
-										<a href="{{ site_url(categories[category.root_category].category.slug ~ '/' ~ category_group.category.slug ~ '/' ~ subcategory_group.category.slug) }}">
-											{{ subcategory_group.category.name }}
-										</a>
-									</li>
-								{% endfor %}
-								</ul>
-							</li>
-						{% endfor %}
-					</ul>
-
-					{% if selected_properties|length > 0 or selected_options|length > 0 or price_max > 0 %}
-						<h4 class="margin-top">Selecionados</h4>
-						<ul class="active-filters list-unstyled buffer-bottom-md" style="display:none;">
-							{% for property in selected_properties %}
-							<li><a class="sub" href="#filter_{{ property }}"></a></li>
-							{% endfor %}
-							{% for option in selected_options %}
-							<li><a class="sub" href="#filter_{{ option }}"></a></li>
-							{% endfor %}
-							{% if price_max %}
-							<li><a class="price-max" href="#">{{ price_max }}</a></li>
-							{% endif %}
-						</ul>
-						<script type="text/javascript">
-							$(document).ready(function(){
-								$('.active-filters .price-max').html('<i class="glyphicon glyphicon-remove"></i> ' + $('.price-filters .active').text());
-								$('.active-filters .price-max').click(function(e){
-									e.preventDefault();
-									$('.price-filters .all').trigger('click');
-								});
-								$('.active-filters .sub').each(function(){
-									$filter = $($(this).attr('href'));
-									$(this).html('<i class="glyphicon glyphicon-remove"></i> ' + $filter.text());
-									$(this).click(function(e){
-										e.preventDefault();
-										$filter.trigger('click');
-									});
-								});
-								$('.active-filters').show();
-							});
-						</script>
-					{% endif %}
-					
-
-					{% for property in properties %}
-						{% if property.children|count > 0 %}
-							<div class="filters-side filters margin-top">
-								<h4>Filtrar por {{ property.category.name }}</h4>
-								<ul class="list-unstyled list-inline clearfix buffer-bottom-md">
-									{% for child in property.children %}
-										<li><a id="filter_{{ child.category.id }}" class="sub" href="#filter_property{{ child.category.id }}">{{ child.category.name }}</a></li>
-									{% endfor %}
-								</ul>
-							</div>
-						{% endif %}
+<div class="row">
+	<div class="col-xs-3 sidebar">
+		<div class="sidebar-column">
+			<div class="sidebar-column-in">
+				<h4>
+					{{ categories[category.root_category].category.name }}
+				</h4>
+				<ul class="nav nav-pills nav-stacked">
+					{% for category_group in categories[category.root_category].children %}
+					    <li class="{{ category_group.category.id == category.id ? 'active' : 'inactive' }}">
+					    	<a href="{{ site_url(categories[category.root_category].category.slug ~ '/' ~ category_group.category.slug) }}">{{ category_group.category.name }}</a>
+					    	<ul class="children-subcategory nav nav-pills nav-stacked">
+					    	{% for subcategory_group in category_group.children %}
+					    		<li>
+					    			<a href="{{ site_url(categories[category.root_category].category.slug ~ '/' ~ category_group.category.slug ~ '/' ~ subcategory_group.category.slug) }}">
+					    				{{ subcategory_group.category.name }}
+					    			</a>
+					    		</li>
+					    	{% endfor %}
+					    	</ul>
+					    </li>
 					{% endfor %}
-
-					{% for option in global_options %}
-						{% if option.values|count > 0 %}
-							<div class="filters-side filters margin-top">
-								<h4>Filtrar por {{ option.name }}</h4>
-								<ul class="list-unstyled list-inline clearfix buffer-bottom-md">
-									{% for value in option.values %}
-										<li><a id="filter_{{ value.id }}" class="sub" href="#filter_option{{ value.id }}">{{ value.name }}</a></li>
-									{% endfor %}
-								</ul>
-							</div>
-						{% endif %}
-					{% endfor %}
-
-					{% set range = pricerange.max - pricerange.min %}
-
-					{% if range > 0 %}
-					<div class="filters-side price-filters margin-top">
-						<h4>Filtrar por Preço</h4>
-						<ul class="list-unstyled clearfix buffer-bottom-md">
-							<li><a class="sub{{ price_max ? '' : ' active' }} all" href="#" data-min="" data-max="">Todos</a></li>
-							<li><a class="sub{{ price_max == (range / 3)|round ? ' active' : '' }}" href="#" data-min="{{ pricerange.min }}" data-max="{{ (range / 3)|round }}">{{ pricerange.min|format_currency }} - {{ (range / 3)|round|format_currency }}</a></li>
-							<li><a class="sub{{ price_max == (range / 2)|round ? ' active' : '' }}" href="#" data-min="{{ (range / 3)|round }}" data-max="{{ (range / 2)|round }}">{{ (range / 3)|round|format_currency }} - {{ (range / 2)|round|format_currency }}</a></li>
-							<li><a class="sub{{ price_max == pricerange.max ? ' active' : '' }}" href="#" data-min="{{ (range / 2)|round }}" data-max="{{ pricerange.max }}">{{ (range / 2)|round|format_currency }} - {{ pricerange.max|format_currency }}</a></li>
-						</ul>
-					</div>
-					{% endif %}
-				</div>
+				</ul>
 			</div>
 		</div>
+	</div>
 
-		<div class="col-xs-9">
+	<div class="col-xs-9">
 
-{% endif %}
-
-{% if category.image is not empty %}
-  <div class="row margin-bottom">
-	  <div class="col-xs-12">
-		{{ category_img(category, 'full', true) }}
-	  </div>
-  </div>
 {% endif %}
 
 <div class="pull-right">
@@ -141,17 +46,17 @@
 
 <div class="row prod-list">
 	{% for product in products %}
-		{{ product_listing.item(product, category, col_width) }}
+		{{ product_listing.item(product, category, cols|default(3)) }}
 	{% else %}
 		<div class="col-md-12">
 			Não há produtos nesta categoria.
 		</div>
 	{% endfor %}
-</div>
 
-{# Paginacao #}
-<div class="col-xs-12 text-center">
-	{{ pagination() }}
+	{# Paginacao #}
+	<div class="col-xs-12 text-center">
+		{{ pagination() }}
+	</div>
 </div>
 
 {% if categories[category.root_category].children|count > 0 %}

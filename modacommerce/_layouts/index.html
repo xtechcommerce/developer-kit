@@ -1,366 +1,441 @@
 <!DOCTYPE html>
 <html lang="pt-BR" dir="ltr">
 <head>
-	{{ header_code() }}
-	<title>{{ shop_config('company_name') }} | {{ document_title(seo_title|default(page_title)) }}</title>
+    {{ header_code() }}
+    <title>{{ shop_config('company_name') }} | {{ document_title(seo_title|default(page_title)) }}</title>
 
-	{# CSS #}
-	{{ theme_css('bootstrap.min.css', true) }}
-	{{ theme_css('animate.min.css', true) }}
-	{{ theme_css('animate.delay.css', true) }}
-	{{ theme_css('application.css', true) }}
-	{{ global_css('jquery.jqzoom.css', true) }}
-	
-	{# Global JS #}
-	{{ global_js('jquery.js', true) }}
-	{{ global_js('jquery-migrate.min.js', true) }}
-	{{ global_js('bootstrap.min.js', true) }}
-	{{ global_js('jquery.maskedinput.js', true) }}
-	{{ global_js('jquery.equalheights.js', true) }}
-	{{ global_js('jquery.jqzoom-core.js', true) }}
-	{{ global_js('jquery.equalheights.js', true) }}
-	{{ global_js('imgLiquid-min.js', true) }}
+    {{
+    template_settings({
+        'image:logo':             {'label': 'Logotipo', 'default': ''},
+        'color:background':       {'label': 'Cor de Fundo', 'default': '#FFF'},
+        'image:background':       {'label': 'Imagen de Fundo', 'default': ''},
+        'font:body':              {'label': 'Fonte padrão', 'default': ''},
+        'text:phone':             {'label': 'Telefone', 'default': '0800 999 999'},
+        'select:cols':            {'label': 'Produtos por linha', 'default': '4', 'options': ['3', '4']},
+        'color:navbar_bg':        {'label': 'Fundo navegação', 'default': ''},
+        'color:navbar_border':    {'label': 'Linha navegação', 'default': ''},
+        'color:navbar_open_font': {'label': 'Fundo navegação aberto', 'default': ''},
+        'color:navbar_font':      {'label': 'Fonte navegação', 'default': ''},
+        'color:navbar_font_over': {'label': 'Fonte navegação hover', 'default': ''},
+        'color:footer_bg':        {'label': 'Rodape', 'default': ''},
+        'color:footer_font':      {'label': 'Fonte rodape', 'default': ''},
+        'color:top_bg':           {'label': 'Top', 'default': ''},
+        'color:footer_bg_bottom': {'label': 'Rodape baixo', 'default': ''},
+        'if:footer_border':       {'label': 'Esconder linha rodape', 'default': '0'},
+        'color:btn':              {'label': 'Botão', 'default': ''},
+        'color:btn_font':         {'label': 'Fonte botão ', 'default': ''},
+        'color:btn_hover':        {'label': 'Hover botão', 'default': ''},
+        'layout:banners':         {'label': 'Banner Layout', 'default': 'banner1', 'options': ['banner1', 'banner2', 'banner3', 'banner4']},
+        'image:banner_one':       {'label': 'Banner I', 'default': ''},
+        'text:banner_one':        {'label': 'Banner I Link', 'default': '#'},
+        'image:banner_two':       {'label': 'Banner II', 'default': ''},
+        'text:banner_two':        {'label': 'Banner II Link', 'default': '#'},
+        'image:banner_three':     {'label': 'Banner III', 'default': ''},
+        'text:banner_three':      {'label': 'Banner III Link', 'default': '#'},
+    })
+    }}
+  
+    {# CSS #}
+    <link href='{{ shop_config('base_http') }}://fonts.googleapis.com/css?family=Ubuntu:300,500' rel='stylesheet' type='text/css'>
+    {{ theme_css('bootstrap.min.css', true) }}
+    {{ theme_css('animate.min.css', true) }}
+    {{ theme_css('animate.delay.css', true) }}
+    {{ theme_css('application.css', true) }}
+    {{ global_css('jquery.jqzoom.css', true) }}
+    
+    {# Global JS #}
+    {{ global_js('jquery.js', true) }}
+    {{ global_js('jquery-migrate.min.js', true) }}
+    {{ global_js('bootstrap.min.js', true) }}
+    {{ global_js('jquery.maskedinput.js', true) }}
+    {{ global_js('jquery.equalheights.js', true) }}
+    {{ global_js('jquery.jqzoom-core.js', true) }}
+    {{ global_js('jquery.equalheights.js', true) }}
+    {{ global_js('imgLiquid-min.js', true) }}
 
-	{# Local JS #}
-	{{ theme_js('application.js', true) }}
+    {# Local JS #}
+    {{ theme_js('application.js', true) }}
 
-	{# Template Settings #}
-	{% include('template_settings.html') %}
-	
-	{# Insta Feed #}
-	{% if template_settings('if:instagram') %}
-		{{ theme_js('instafeed.min.js', true) }}
-		<script type="text/javascript">
-			var feed = new Instafeed({
-				clientId:'3701c2d86c764eff8195c73cd51d1c3b',
-				{% if(template_settings('select:instaget') == 'Usuário') and template_settings('text:user_id') is not empty %}
-					get:'user',
-					userId: {{ template_settings('text:user_id') }},
-				{% elseif(template_settings('select:instaget') == 'Hashtag')  %}
-					get:'tagged',
-					tagName: '{{ template_settings('text:hashtag') }}',
-				{% endif %}
-				{% if(template_settings('if:order')) %}
-					sortBy: 'random',
-				{% endif %}
-				limit: {{ template_settings('select:limit') }},
-				resolution: 'standard_resolution',
-				template: '<div class="col-xs-2" style="padding-left: 5px; padding-right: 5px;"><a href="((link))" target="_blank"><img src="((image))" style="width: 100%;" /></a></div>'
-			});
-			feed.run();
-		</script>
-	{% endif %}
+    <style type="text/css">
+      
+    body{
+        background-color: {{ template_settings('color:background') }};
+    {% if(template_settings('image:background')) %}
+        background-image: url({{ host_url('uploads/images/full/' ~ template_settings('image:background')) }}); 
+    {% endif %}
+    }
+    {% if(template_settings('font:body')) %}
+    *{
+        font-family: '{{ template_settings('font:body') }}';
+    }
+    {% endif %}
+    #main-menu .navbar-default{
+        background-color: {{ template_settings('color:navbar_bg') }};
+        border-bottom-color: {{ template_settings('color:navbar_border') }};
+    }
+    #main-menu .navbar-nav>li.open>a{
+        background-color: {{ template_settings('color:navbar_open_font') }};
+    }
+    #main-menu .navbar-nav>li>a{
+        color: {{ template_settings('color:navbar_font') }};
+    }
+    #main-menu .navbar-nav>li>a:hover{
+        color: {{ template_settings('color:navbar_font_over') }};
+    }
+
+    footer{
+        background-color: {{ template_settings('color:footer_bg') }};
+    }
+    footer *{
+        color: {{ template_settings('color:footer_font') }} !important;
+    }
+
+    #top{
+        background-color: {{ template_settings('color:top_bg') }};
+    }
+    footer .bottom{
+        background-color: {{ template_settings('color:footer_bg_bottom') }};
+    }
+      
+    {% if template_settings('if:footer_border') %}
+    footer .content{
+        border-top: none;
+    }
+    {% endif %}
+
+    .btn-bck{
+        background: {{ template_settings('color:btn') }};
+        color: {{ template_settings('color:btn_font') }};
+    }
+
+    .btn-bck:hover, .btn-bck:focus{
+        background: {{ template_settings('color:btn_hover') }};
+        color: {{ template_settings('color:btn_font') }};
+    }
+
+    #product .prod-action #buy-btn{
+        background: {{ template_settings('color:btn') }};
+    }
+
+    #product .prod-action #buy-btn:hover{
+        background: {{ template_settings('color:btn_hover') }};
+    }
+      
+    </style>
+  
 </head>
 <body itemscope itemtype="http://schema.org/Organization">
-		{% if design_mode %}
-			 {{ template_navigator() }}
-		{% endif %}
-		<div id="modal-container" class="modal fade"></div>
+    {% if design_mode %}
+       {{ template_navigator() }}
+    {% endif %}
+    <div id="modal-container" class="modal fade"></div>
+    <section id="top">
+      <div class="container">
+        <div class="row pos-relative">
+          <div id="top-search" class="col-xs-4">
+            <div class="pos-relative">
+              {# Pesquisa #}
+              {{ form_open('cart/search', {id: "form-search"}) }}
+                <div class="input-group">
+                  <span class="input-group-btn">
+                    <button class="btn btn-default" type="button">
+                      <i class="glyphicon glyphicon-search"></i>
+                    </button>
+                  </span>
+                  <input type="text" name="term" id="search-engine" class="form-control" placeholder="O que você procura?" autocomplete="off" />
+                </div>
+  
+                {# Carregando #}
+                <div id="search-loader"><img src="{{ theme_url('assets/img/ajax-loader.gif') }}" alt="Carregando" /></div>
+  
+                {# Resultados da pesquisa #}
+                <div id="search-results">
+                  <div class="text-center">
+                    <i class="glyphicon glyphicon-eject"></i>
+                  </div>
+                  <div id="search-results-in"></div>
+                </div>
+  
+              {{ form_close() }}
+            </div>
+          </div>
+      
+          <div id="top-navigation" class="col-xs-8 clearfix">
+            <ul class="list-inline pull-right">
+              <li>
+                <a href="{{ site_url('contact') }}">Fale conosco</a>
+              </li>
+              <li>/</li>
+              {% if logged_in %}
+                <li>
+                  <a href="{{ site_url('secure/my_account') }}">
+                    <i class="glyphicon glyphicon-user"></i>
+                    &nbsp;
+                    Minha conta
+                  </a>
+                </li>
+                <li>/</li>
+                <li>
+                  <a href="{{ site_url('secure/logout') }}">
+                    <i class="glyphicon glyphicon-off"></i>
+                    &nbsp;
+                    Sair
+                  </a>
+                </li>
+              {% else %}
+                <li>
+                  <a href="{{ site_url('secure/login') }}">Acessar sua conta</a>
+                </li>
+              {% endif %}
+              <li>/</li>
+              <li>
+                <a href="{{ site_url('cart/view_cart') }}">
+                  Carrinho {{ cart('total_items') > 0 ? '(' ~ cart('total_items') ~ ')' : '' }}
+                  &nbsp;
+                  <i class="glyphicon glyphicon-shopping-cart"></i>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
 
-		{% if template_settings('layout:header') == 'header1' or template_settings('layout:header') == 'header2' %}
-			<section id="top">
-				<div class="container">
-					<div class="row pos-relative">
-						<div id="top-search" class="col-xs-4">
-							<div class="pos-relative">
-								{# Pesquisa #}
-								{{ form_open('cart/search', {id: "form-search"}) }}
-									<div class="input-group">
-										<span class="input-group-btn">
-											<button class="btn btn-default" type="button">
-												<i class="glyphicon glyphicon-search"></i>
-											</button>
-										</span>
-										<input type="text" name="term" id="search-engine" class="form-control" placeholder="O que você procura?" autocomplete="off" />
-									</div>
-		
-									{# Carregando #}
-									<div id="search-loader"><img src="{{ theme_url('assets/img/ajax-loader.gif') }}" alt="Carregando" /></div>
-		
-									{# Resultados da pesquisa #}
-									<div id="search-results">
-										<div class="text-center">
-											<i class="glyphicon glyphicon-eject"></i>
-										</div>
-										<div id="search-results-in"></div>
-									</div>
-		
-								{{ form_close() }}
-							</div>
-						</div>
-				
-						<div id="top-navigation" class="col-xs-8 clearfix">
-							{% include 'top-navigation.html' %}
-						</div>
-					</div>
-				</div>
-			</section>
-		{% endif %}
+    <header>
+      <div class="container">
+        <div class="row pos-relative">
+          <div class="col-xs-12">
+            <h1 id="site-logo" class="text-center" itemprop="name">
+              <a href="{{ base_url() }}">
+                <img src="{{ theme_url('assets/img/logo.png') }}" alt="{{ shop_config('company_name') }}" />
+              </a>
+            </h1>
+          </div>
+        </div>
+      </div>
+    </header>
+  
+    {# Menu Top #}
+    <section id="main-menu">
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-12">
+            <nav class="navbar navbar-default" role="navigation">
+              <ul class="nav navbar-nav">
+                <li>
+                  <a href="{{ site_url() }}">Home</a>
+                </li>
+                {% for cat in categories %}
+                    {% if cat.category.slug != 'home' %}
+                      {% if cat.children|count > 0 %}
+                        <li class="dropdown" onmouseover="$(this).addClass('open');" onmouseout="$(this).removeClass('open');">
+                          <a href="{{ site_url(cat.category.slug) }}">
+                            {{ cat.category.name }}
+                            <b class="caret"></b>
+                          </a>
+                          <ul class="dropdown-menu">
+                            {% for child in cat.children %}
+                                <li>
+                                  <a href="{{ site_url(cat.category.slug ~ '/' ~ child.category.slug) }}">
+                                    {{ child.category.name }}
+                                  </a>
+                                </li>
+                            {% endfor %}
+                          </ul>
+                        </li>
+                      {% else %}
+                        <li>
+                          <a href="{{ site_url(cat.category.slug) }}">{{ cat.category.name }}</a>
+                        </li>
+                      {% endif %}
+                    {% endif %}
+                {% else %}
+                    Não há categorias.
+                {% endfor %}
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </section>
+  
+    <section id="tarja-banner">
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-12">
+            <ul>
+              {% 
+                set tarjas = [
+                  {title: "Frete Grátis", icon: "glyphicon glyphicon-send", link: "javascript: void(0);"},
+                  {title: "1ª Troca Grátis", icon: "glyphicon glyphicon-transfer", link: "javascript: void(0);"},
+                  {title: "Até 3x sem juros", icon: "glyphicon glyphicon-credit-card", link: "javascript: void(0);"},
+                  {title: "0800 999 9999", icon: "glyphicon glyphicon-phone", link: "javascript: void(0);"}
+                ]
+              %}
+              {% for tarja in tarjas %}
+                  <li>
+                    <a href="{{ tarja.link }}">
+                      <i class="{{ tarja.icon }}"></i>
+                      {{ tarja.title }}
+                    </a>
+                  </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12">
+          {% if flashdata.error %}
+          <div class="alert alert-danger">{{ flashdata.error }}</div>
+          {% endif %}
+          {% if flashdata.message %}
+          <div class="alert alert-info">{{ flashdata.message }}</div>
+          {% endif %}
+          {% if error %}
+          <div class="alert alert-danger">{{ error }}</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
 
-		<header>
-			<div class="container">
-				<div class="row pos-relative">
-				{% if template_settings('layout:header') == 'header1' %}
-					<div class="col-xs-12">
-						<h1 id="site-logo" class="text-center" itemprop="name">
-				{% elseif template_settings('layout:header') == 'header2' or template_settings('layout:header') == 'header3' %}
-					<div class="col-xs-3">
-						<h1 id="site-logo" itemprop="name">
-				{% endif %}
-							<a href="{{ base_url() }}">
-								{% if template_settings('image:logo') %}
-									<img src="{{ host_url('uploads/images/full/' ~ template_settings('image:logo')) }}" alt="{{ shop_config('company_name') }}" />
-								{% else %}
-									<img src="{{ logo_url() }}" alt="{{ shop_config('company_name') }}" />
-								{% endif %}
-							</a>
-						</h1>
-					</div>
-				{% if template_settings('layout:header') == 'header2' %}
-					<div class="col-xs-9" style="margin-top: 40px;">
-						{% include 'main_menu.html' %}
-					</div>
-				{% elseif template_settings('layout:header') == 'header3' %}
-					<div class="col-xs-9">
-						<div id="top-navigation" class="clearfix">
-							{% include 'top-navigation.html' %}
-						</div>
+    {% block banner %}
+  
+    {% endblock %}
+  
+    <section id="store-content">
+      <div class="container">
+        {% block content %}
 
-						<div id="top-search" class="pull-right">
-							<div class="pos-relative">
-								{# Pesquisa #}
-								{{ form_open('cart/search', {id: "form-search"}) }}
-									<div class="input-group">
-										<input type="text" name="term" id="search-engine" class="form-control" placeholder="O que você procura?" autocomplete="off" />
-										<span class="input-group-btn">
-											<button class="btn btn-default" type="button">
-												<i class="glyphicon glyphicon-search"></i>
-											</button>
-										</span>
-									</div>
-		
-									{# Carregando #}
-									<div id="search-loader"><img src="{{ theme_url('assets/img/ajax-loader.gif') }}" alt="Carregando" /></div>
-		
-									{# Resultados da pesquisa #}
-									<div id="search-results">
-										<div class="text-center">
-											<i class="glyphicon glyphicon-eject"></i>
-										</div>
-										<div id="search-results-in"></div>
-									</div>
-		
-								{{ form_close() }}
-							</div>
-						</div>
-					</div>
-				{% endif %}
-				</div>
-			</div>
-		</header>
-	
-		{% if template_settings('layout:header') == 'header1' %}
-			<div class="container">
-				<div class="row">
-					<div class="col-xs-12">
-						{% include 'main_menu.html' %}
-					</div>
-				</div>
-			</div>
-		{% endif %}
-		
-		{% if template_settings('if:tarjabanner') %}
-			<section id="tarja-banner">
-				<div class="container">
-					<div class="row">
-						<div class="col-xs-12">
-							<ul>
-								{% 
-									set boxes = [
-										{active: template_settings('if:box_1'), title: template_settings('text:box_1_title'), icon: "glyphicon glyphicon-send", link: template_settings('text:box_1_link')},
-										{active: template_settings('if:box_2'), title: template_settings('text:box_2_title'), icon: "glyphicon glyphicon-transfer", link: template_settings('text:box_2_link')},
-										{active: template_settings('if:box_3'), title: template_settings('text:box_3_title'), icon: "glyphicon glyphicon-credit-card", link: template_settings('text:box_3_link')},
-										{active: template_settings('if:box_4'), title: template_settings('text:box_4_title'), icon: "glyphicon glyphicon-phone", link: template_settings('text:box_4_link')}
-									]
-								%}
-								{% for box in boxes %}
-									{% if box.active %}
-										<li>
-											<a href="{{ box.link }}">
-												<i class="{{ box.icon }}"></i>
-												{{ box.title }}
-											</a>
-										</li>
-									{% endif %}
-								{% endfor %}
-							</ul>
-						</div>
-					</div>
-				</div>
-			</section>
-		{% endif %}
-
-		<div class="container">
-			<div class="row">
-				<div class="col-xs-12">
-					{% if flashdata.error %}
-					<div class="alert alert-danger">{{ flashdata.error }}</div>
-					{% endif %}
-					{% if flashdata.message %}
-					<div class="alert alert-info">{{ flashdata.message }}</div>
-					{% endif %}
-					{% if error %}
-					<div class="alert alert-danger">{{ error }}</div>
-					{% endif %}
-				</div>
-			</div>
-		</div>
-
-		{% block banner %}
-	
-		{% endblock %}
-	
-		<section id="store-content">
-			<div class="container">
-				{% block content %}
-
-				{% endblock %}
-			</div>
-		</section>
-
-		<section id="h-social">
-			<div class="container">
-				<div class="row">
-					<div class="col-xs-12">
-						<h2><span>{{ template_settings('text:instagram') }}</span></h2>
-						<div id="instafeed" class="clearfix"></div>
-					</div>
-				</div>
-			</div>
-		</section>
-		
-		<footer>
-			<div class="container content">
-				<div class="row">
-					<div class="col-xs-3">
-						<h4>Institucional</h4>
-						<ul>
-							{% for page in get_children_of_page('institucional') %}
-								<li>
-									<a href="{{ site_url(page.slug) }}">{{ page.title }}</a>
-								</li>
-							{% endfor %}
-						</ul>
-					</div>
-					<div class="col-xs-3">
-						<h4>Ajuda</h4>
-						<ul>
-							{% for page in get_children_of_page('ajuda-e-suporte') %}
-								<li>
-									<a href="{{ site_url(page.slug) }}">{{ page.title }}</a>
-								</li>
-							{% endfor %}
-						</ul>
-					</div>
-					<div class="col-xs-6">
-						<div class="row">
-							<div class="col-xs-8">
-								<h4>Forma de Pagamento</h4>
-								<ul class="list-inline">
-									{% set payment_icons = {boleto: 'Boleto', mastercard: 'Mastercard', visa: 'visa', pagseguro: 'Pagseguro'} %}
-									{% for key, value in payment_icons %}
-										<li>
-											<img src="{{ theme_img("f-" ~ key ~ ".png") }}" alt="{{ value }}" style="height: 25px;" />
-										</li>
-									{% endfor %}
-								</ul>
-							</div>
-							<div class="col-xs-4">
-								<h4>Nas Redes Sociais</h4>
-								{% 
-									set socials = {
-										facebook: {link: social_link('facebook'), alt: "Curta nossa página no Facebook"},
-										twitter: {link: social_link('twitter'), alt: "Siga-nos no Twitter"},
-										instagram: {link: social_link('instagram'), alt: "Siga-nos no Instagram"},
-										google: {link: social_link('google'), alt: "Siga-nos no Google"},
-										youtube: {link: social_link('youtube'), alt: "Siga-nos nosso canal no Youtube"},
-										pinterest: {link: social_link('pinterest'), alt: "Siga-nos no Pinterest"}
-									}
-								%}
-								{% for social, attr in socials %}
-									{% if attr.link %}
-										<a href="{{ attr.link }}" target="_blank">
-											<img src="{{ theme_img("icon-" ~ social ~ ".png") }}" alt="{{ attr.alt }}" style="margin-bottom: 3px;" />
-										</a>
-									{% endif %}
-								{% endfor %}
-							</div>
-						</div>
-						<div class="row margin-top">
-							<div class="col-xs-12 margin-top">
-								{{ form_open('contact/newsletter_signup') }}
-									<table class="tbl-newsletter pull-right">
-										<tr>
-											<td>
-												<label for="newsletter">Assine nossa newsletter</label>
-											</td>
-											<td>
-												<div class="input-group">
-													<input type="text" name="email" id="newsletter" placeholder="Insira seu e-mail" class="form-control" />
-													<span class="input-group-btn">
-														<button type="submit" class="btn btn-bck">
-															Enviar
-														</button>
-													</span>
-												</div>
-											</td>
-										</tr>
-									</table>
-								{{ form_close() }}
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row margin-top">
-					<div class="col-xs-12 margin-top">
-						<small class="pull-right color3">
-							{{ shop_config('cnpj') is not empty? 'CNPJ: ' ~ shop_config('cnpj') ~ '| ' : '' }}
-							{{ shop_config('company_registration') is not empty? 'Razão Social: ' ~ shop_config('company_registration') ~ '| ' : '' }}
-							{{ shop_config('address1') is not empty? 'Endereço: ' ~ shop_config('address1') ~ ' ' ~ shop_config('address2') ~ ' ' ~ shop_config('district') ~ ' ' ~ shop_config('city') ~ ' ' ~ shop_config('state') : '' }}
-						</small>
-					</div>
-				</div>
-			</div>
-			<div class="bottom">
-				<div class="container">
-					<div class="row">
-						<div class="col-xs-5">
-							<small>
-								&copy; {{ shop_config('company_name') }} {{ "now"|date('Y') }} | Todos os direitos Reservados.
-							</small>
-						</div>
-						<div class="col-xs-5 text-center">
-							<small>
-								{% if template_settings('image:designed') %}
-									Designed by
-									&nbsp;
-									<a href="{{ template_settings('text:designed') }}" target="_blank">
-										<img src="{{ host_url('uploads/images/full/' ~ template_settings('image:designed')) }}" alt="Designer" />
-									</a>
-									&nbsp;&nbsp;|&nbsp;&nbsp;
-								{% endif %}
-								Powered by
-								<a href="http://xtechcommerce.com.br" target="_blank">{{ theme_img("xtech.png", true) }}</a>
-							</small>
-						</div>
-						<div class="col-xs-2">
-							<small class="pull-right">
-								{{ theme_img("f_site_seguro.png", true) }}
-							</small>
-						</div>
-					</div>
-				</div>
-			</div>
-		</footer>
-	</body>
+        {% endblock %}  
+      </div>
+    </section>
+    
+    <footer>
+      <div class="container content">
+        <div class="row">
+          <div class="col-xs-3">
+            <h4>Institucional</h4>
+            <ul>
+              {% for page in get_children_of_page('institucional') %}
+                <li>
+                  <a href="{{ site_url(page.slug) }}">{{ page.title }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+          <div class="col-xs-3">
+            <h4>Ajuda</h4>
+            <ul>
+              {% for page in get_children_of_page('ajuda-e-suporte') %}
+                <li>
+                  <a href="{{ site_url(page.slug) }}">{{ page.title }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+          <div class="col-xs-6">
+            <div class="row">
+              <div class="col-xs-8">
+                <h4>Forma de Pagamento</h4>
+                <ul class="list-inline">
+                  {% set payment_icons = {boleto: 'Boleto', mastercard: 'Mastercard', visa: 'visa', pagseguro: 'Pagseguro'} %}
+                  {% for key, value in payment_icons %}
+                    <li>
+                      <img src="{{ theme_img("f-" ~ key ~ ".png") }}" alt="{{ value }}" style="height: 25px;" />
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+              <div class="col-xs-4">
+                <h4>Nas Redes Sociais</h4>
+                {% 
+                  set socials = {
+                    facebook: {link: social_link('facebook'), alt: "Curta nossa página no Facebook"},
+                    twitter: {link: social_link('twitter'), alt: "Siga-nos no Twitter"},
+                    instagram: {link: social_link('instagram'), alt: "Siga-nos no Instagram"},
+                    google: {link: social_link('google'), alt: "Siga-nos no Google"},
+                    pinterest: {link: social_link('pinterest'), alt: "Siga-nos no Pinterest"}
+                  }
+                %}
+                {% for social, attr in socials %}
+                  {% if attr.link %}
+                    <a href="{{ attr.link }}" target="_blank">
+                      <img src="{{ theme_img("icon-" ~ social ~ ".png") }}" alt="{{ attr.alt }}" />
+                    </a>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+            <div class="row margin-top">
+              <div class="col-xs-12 margin-top">
+                {{ form_open('contact/newsletter_signup') }}
+                  <table class="tbl-newsletter pull-right">
+                    <tr>
+                      <td>
+                        <label for="newsletter">Assine nossa newsletter</label>
+                      </td>
+                      <td>
+                        <div class="input-group">
+                          <input type="text" name="email" id="newsletter" placeholder="Insira seu e-mail" class="form-control" />
+                          <span class="input-group-btn">
+                            <button type="submit" class="btn btn-bck">
+                              Enviar
+                            </button>
+                          </span>
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                {{ form_close() }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row margin-top">
+          <div class="col-xs-12 text-right">
+            <small class="color3">
+              CNPJ: {{ shop_config('cnpj') }}
+              |
+              Razão Social: {{ shop_config('company_registration') }}
+              |
+              Endereço:
+              {{ shop_config('address1') }}
+              {{ shop_config('address2') }}
+              {{ shop_config('district') }}
+              {{ shop_config('city') }}
+              {{ shop_config('state') }}
+            </small>
+          </div>
+        </div>
+      </div>
+      <div class="bottom margin-top">
+        <div class="container">
+          <div class="row">
+            <div class="col-xs-5">
+              <small>
+                &copy; {{ shop_config('company_name') }} {{ "now"|date('Y') }} | Todos os direitos Reservados.
+              </small>
+            </div>
+            <div class="col-xs-5 text-center">
+              <small>
+                Designed by 
+                <a href="http://marketingshop.com.br" target="_blank">{{ theme_img("marketingshop.png", true) }}</a>
+                |
+                Powered by
+                <a href="http://xtechcommerce.com.br" target="_blank">{{ theme_img("xtech.png", true) }}</a>
+              </small>
+            </div>
+            <div class="col-xs-2">
+              <small class="pull-right">
+                {{ theme_img("f_site_seguro.png", true) }}
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
 </html>
