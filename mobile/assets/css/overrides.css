@@ -1,0 +1,186 @@
+body {
+  color: #555555;
+  font-size: 13px;  
+  
+  	font-family: Helvetica, Arial, sans-serif;
+  
+   line-height: 150%;
+}
+@font-face{font-family:'FontAwesome';src:url(http://cdn.shopify.com/s/files/1/0192/0564/t/3/assets/fontawesome-webfont.eot?3212);src:url(http://cdn.shopify.com/s/files/1/0192/0564/t/3/assets/fontawesome-webfont.eot?%23iefix&3212) format('embedded-opentype'),url(http://cdn.shopify.com/s/files/1/0192/0564/t/3/assets/fontawesome-webfont.woff?3212) format('woff'),url(http://cdn.shopify.com/s/files/1/0192/0564/t/3/assets/fontawesome-webfont.ttf?3212) format('truetype'),url(http://cdn.shopify.com/s/files/1/0192/0564/t/3/assets/fontawesome-webfont.svg%23FontAwesome?3212) format('svg');font-weight:normal;font-style:normal;}[class^="icon-"]:before,[class*=" icon-"]:before{font-family:FontAwesome;font-weight:normal;font-style:normal;display:inline-block;text-decoration:inherit;}
+.wrapper {
+    
+    background-color: #ffffff;
+    
+}
+.wrapper .body {
+	border-top: 1px solid #eeeeee;
+}
+
+.wrapper .body.index {
+	border-top: none;
+}
+
+a:link,
+a:visited, #customer-accounts h1 a.icon {
+  color: #222222;
+}
+h1, h2, h3, h4, h5, h6 {
+  
+  	font-family: 'Raleway';
+  
+  font-weight: 400;
+  text-transform: uppercase;
+}
+h1 {
+  font-size: 22px;
+  line-height: 125%;
+}
+h2 {
+  font-size: 18px;
+  line-height: 125%;
+}
+h3 {
+  font-size: 16px;
+  line-height: 125%;
+}
+h4 {
+  font-size: 14px;
+  line-height: 150%;
+}
+#index h2, #collections h2 {
+  border-top: 1px solid #eeeeee;
+}
+
+
+.alert-info{
+	background-color:#dddddd;
+	border-color:#eeeeee;
+	color: #555555;
+}
+
+.header #logo {
+  
+  	font-family: 'Raleway';
+  
+  font-weight: 400;
+  text-transform: none;
+  font-size: 32px;
+  color: #444444;
+  margin-top: 0;
+  line-height: 150%;
+}
+.header #logo, h1, h2, h3, h4 {
+    
+}
+#toolbar  {
+  background-color: #fcfcfc;
+}
+#toolbar .cart-total-items .badge{
+	background-color: #666666;
+	color: #fcfcfc;
+} 
+.flexslider {
+  margin-bottom: 40px;
+}
+.btn, a.btn:link, a.btn:visited, .btn:hover, a.btn:hover {
+  background-color: #666666;
+  color: #fcfcfc;
+}
+.btn.alternate, a.btn.alternate, .btn.alternate:hover, a.btn.alternate:hover {
+  background-color: #f4f4f4;
+  color: #666666;
+}
+#toolbar a.icon:link,
+#toolbar a.icon:visited {
+  color: #666666;
+}
+.pulldown,
+#secondary-menu ul {
+  background-color: #fcfcfc;
+}
+.pulldown li,
+#secondary-menu ul li, .header.navigation ul#top-nav li {
+  font-size: 14px;
+}
+.pulldown li a,
+#secondary-menu ul li a, .header.navigation ul#top-nav li a {
+  font-weight: 400;
+  text-transform: uppercase;
+  
+  	font-family: 'PT Sans Narrow';
+  
+}
+.pulldown li a,
+#secondary-menu ul li a {
+  color: #666666;
+}
+.header.navigation ul#top-nav li a {
+  color: #444444;
+}
+.pulldown.in, .pulldown li a,
+#secondary-menu ul li a {
+  border-color: #eeeeee;
+}
+.btm-border, .top-border, .table th, .table td {
+  border-color: #eeeeee;
+}
+.pulldown.in, .pulldown li a,
+#secondary-menu ul li a, .btm-border, .top-border {
+  border-style: solid;
+}
+.product .sale {
+  background-color: #666666;
+  color: #fcfcfc;
+}
+.well{
+  border-color: #eeeeee;
+  border-style: solid;
+  border-left: none;
+  border-right: none;
+  background-color:#f5f5f5;
+  -webkit-border-radius:0px;
+  -moz-border-radius:0px;
+  border-radius:0px;
+  -webkit-box-shadow:none;
+  -moz-box-shadow:none;
+  box-shadow:none;
+}
+.credit-cards li.cc{background:url(http://cdn.shopify.com/s/files/1/0192/0564/t/3/assets/credit_cards.png?3212) ;}
+footer {
+  background-color: #f9f9f9;
+}
+footer h2,
+footer h3,
+footer h4,
+footer p,
+footer label {
+  color: #999999;
+}
+footer a:link, footer a:visited, footer a.icon:link, footer a.icon:visited  {
+  color: #666666;
+}
+@media only screen and (min-width : 1280px) {
+  body.vertical {
+    background: url(http://cdn.shopify.com/s/files/1/0192/0564/t/3/assets/Lucid_Design_Mobile_Shopify_themes.png?3212) no-repeat center 20px;
+  }
+  .wrapper {
+    margin-top: 137px;
+    width: 320px;
+    height: 568px;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    margin-bottom: 150px;
+  }
+  #toolbar {
+    position: relative;
+  }
+}
+@media all and (-webkit-min-device-pixel-ratio : 1.5) {
+  .credit-cards li.cc {
+    background-image: url(http://cdn.shopify.com/s/files/1/0192/0564/t/3/assets/credit_cards_2x.png?3212);
+    background-size: 264px 21px;
+  }
+}

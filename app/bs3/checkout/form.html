@@ -1,0 +1,228 @@
+<script type="text/javascript">
+
+var zone_map = {{ zones_map|json_encode }};
+var busca_cep_url = '{{ site_url('shipping/busca_cep') }}';
+var get_frete_url = '{{ site_url('shipping/get_frete') }}';
+var update_cart_url = '{{ site_url('onepage_checkout/set_shipping_method') }}';
+
+{% if logged_in %}
+
+var addresses = {{ customer_addresses_keyed|json_encode }};
+$(document).ready(function(){
+    populate_address({{ customer.default_shipping_address }});
+});
+
+{% endif %}
+
+</script>
+
+
+
+{% import 'bs3/checkout/inputgroup.html' as inputgroup %}
+
+<div class="col-xs-12">
+
+  {# Address form #}
+
+  <div class="row cart-bottom-buffer">
+    <div class="col-xs-6">
+      <h2>
+        1. Cadastro
+      </h2>
+    </div>
+    {% if not logged_in %}
+    <div class="col-xs-6">
+      <span class="pull-right">
+        <button class="btn btn-default" id="company_fields_btn" type="button">
+          {{ lang('account_iam') }} {{ lang('account_am_company') }}
+        </button>
+        <button class="btn btn-default hide" id="person_fields_btn" type="button">
+          {{ lang('account_iam') }} {{ lang('account_am_person') }}
+        </button>
+        
+        <button class="btn btn-default" onclick="$('#login_modal').modal().modal('show');" type="button">
+          <i class="glyphicon glyphicon-user"></i>
+          Ja sou cliente/Login
+        </button>
+      </span>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="row cart-bottom-buffer">
+    <div id="person_fields">
+      {{ inputgroup.input('a_firstname', 'firstname', set_value('firstname', customer.firstname), lang('account_firstname'), 2) }}
+      {{ inputgroup.input('a_lastname', 'lastname', set_value('lastname', customer.lastname), lang('account_lastname'), 2) }}
+      {{ inputgroup.input('a_birthday', 'birthday', set_value('birthday', customer.birthday)|to_formated_date, lang('account_birthday'), 2) }}
+      {{ inputgroup.dropdown('a_sex', 'sex', {0: 'Masculino', 1: 'Feminino'}, set_value('sex', customer.sex), lang('account_sex'), 2) }}
+      {{ inputgroup.input('a_cpf', 'cpf', set_value('cpf', customer.cpf), lang('account_cpf'), 2) }}
+    </div>
+
+    <div id="company_fields" class="hide">
+      {{ inputgroup.input('a_company', 'company', set_value('company', customer.company), lang('account_company'), 2) }}
+      {{ inputgroup.input('a_cnpj', 'cnpj', set_value('cnpj', customer.cnpj), lang('account_cnpj'), 2) }}
+    </div>
+
+    {{ inputgroup.input('phone', 'phone', set_value('phone', customer.phone), lang('address_phone'), 2) }}
+  </div>
+
+  {% if not logged_in %}
+    <div class="row cart-bottom-buffer">
+      {{ inputgroup.input('a_email', 'email', set_value('email', customer.email), lang('address_email'), 4) }}
+      {{ inputgroup.input('a_password', 'password', '', lang('account_password'), 4, 'password') }}
+      {{ inputgroup.input('a_confirm', 'confirm', '', lang('account_confirm'), 4, 'password') }}
+    </div>
+
+    <div class="row">
+      <div class="col-xs-6">
+        <label class="checkbox">
+          <input type="checkbox" name="email_subscribe" value="1" checked="checked" />
+          {{ lang('account_newsletter_subscribe') }}
+        </label>
+      </div>
+    </div>
+  {% else %}
+
+    {{ form_hidden('email', customer.email) }}
+
+  {% endif %}
+
+  <hr>
+
+  <div class="row cart-bottom-buffer">
+    <div class="col-xs-6">
+      <h2>
+        2. Endereço
+      </h2>
+    </div>
+    <div class="col-xs-6">
+      {% if logged_in and customer_addresses|count > 1 %}
+        <button class="btn btn-bck pull-right" onclick="$('#address_manager').modal('show');" type="button">
+          <i class="glyphicon glyphicon-envelope"></i>
+          {{ lang('choose_address') }}
+        </button>
+        {% include 'bs3/checkout/address_modal.html' %}
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="row cart-bottom-buffer">
+    <div class="col-xs-4">
+        <label>
+            {{ lang('address_postcode') }}
+            <sup>*</sup>
+        </label>
+        <div class="input-group">
+            {{ form_input({'data-validate': 'notEmpty', 'autocomplete': 'off', 'id': 'zip_code', 'class': 'address form-control', 'name': 'zip', 'value': set_value('zip', customer.ship_address.zip)}) }}
+            <span class="input-group-btn">
+                <a href="http://www.buscacep.correios.com.br/servicos/dnec/menuAction.do?Metodo=menuEndereco" class="btn btn-default" target="_blank">
+                    Consultar CEP
+                </a>
+            </span>
+        </div>
+    </div>
+    {{ inputgroup.dropdown('zone_id', 'zone_id', zones_menu, set_value('zone_id', customer.ship_address.zone_id), lang('address_state'), 3) }}
+    {{ inputgroup.input('a_city', 'city', set_value('city', customer.ship_address.city), lang('address_city'), 2) }}
+    {{ inputgroup.input('a_district', 'district', set_value('district', customer.ship_address.district), lang('district'), 3) }}
+  </div>
+
+  <div class="row cart-bottom-buffer">
+    {{ inputgroup.input('a_address1', 'address1', set_value('address1', customer.ship_address.address1), lang('address1'), 7) }}
+    {{ inputgroup.input('a_anumber', 'anumber', set_value('anumber', customer.ship_address.anumber), lang('anumber'), 2) }}
+    {{ inputgroup.input('a_address2', 'address2', set_value('address2', customer.ship_address.address2), lang('address2'), 3, 'text', 'noValidate', true) }}
+  </div>
+
+  {{ form_hidden('country_id', country_id) }}
+  {{ form_hidden('address_id', address_id) }}
+
+  <hr>
+
+  {# Shipping form #}
+
+  <div class="row cart-bottom-buffer shippingwrap">
+    <div class="col-xs-6">
+      <h2>
+        3. {{ lang('shipping_method') }}
+      </h2>
+
+      <table id="shipping_table" class="table">
+        <tr>
+          <td>
+            <i class="glyphicon glyphicon-refresh hide"></i>
+            Por favor informe seu CEP primeiro.
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="col-xs-6">
+      <h2>
+        Observações
+      </h2>
+      {{ form_textarea({'class': 'address cart-shipping-notes form-control', 'name': 'shipping_notes', 'value': set_value('shipping_notes')}) }}
+    </div>
+  </div>
+
+  <input id="curr_shipping_code" value="{{ shipping_code }}" type="hidden" />
+
+  {# Payment form #}
+
+  <div class="row cart-bottom-buffer-md paymentwrap">
+    <div class="col-xs-12">
+      <h2>
+        4. {{ lang('payment_method') }}
+      </h2>
+
+      <div id="payment_tabs">
+        <div class="shipping_cost pull-right">
+          <span class="total">
+            {{ lang('grand_total') }}: {{ cart('total')|format_currency }}
+          </span>
+          <span class="shipping">
+            {% if cart('shipping_cost') > 0 %}
+              (
+                {{ cart('subtotal')|format_currency }} + {{ lang('shipping') }}: 
+                {{ cart('shipping_cost')|format_currency }}
+              )
+            {% endif %}
+          </span>
+        </div>
+
+        {% if payment_method.module %}
+          <input type="hidden" name="module" value="{{ payment_method.module }}" />
+        {% else %}
+          <input type="hidden" name="module" value="{{ payment_methods|key }}" />
+        {% endif %}
+
+        <ul class="nav nav-tabs">
+          {% for method, info in payment_methods %}
+            <li class="{{ loop.first ? 'active' : 'inactive' }}">
+              <a class="payment-method-nav" data-toggle="data" href="#payment-{{ method }}">
+                {{ info.name }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+
+        <div class="tab-content">
+          {% for method, info in payment_methods %}
+            <div id="payment-{{ method }}" class="tab-pane payment-method{{ loop.first ? ' active' : '' }}">
+              {{ info.form|raw }}
+            </div>
+          {% endfor %}
+        </div>
+      
+      </div>
+    </div>
+  </div>
+
+  <div class="row cart-bottom-buffer-md text-center">
+    <button type="submit" class="btn btn-lg btn-primary">
+      <i class="glyphicon glyphicon-ok"></i> Finalizar compra
+    </button>
+  </div>
+
+</div>
+
+
+

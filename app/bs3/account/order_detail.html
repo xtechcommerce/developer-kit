@@ -1,0 +1,156 @@
+<h1 class="page-title">
+  <div class="pull-right">
+    {% if boletourl %}
+    <a class="btn" target="_blank" href="{{ boletourl }}">Imprimir Boleto</a>
+    {% endif %}
+    <a href="{{ site_url('secure/duplicate_cart/' ~ order_id) }}" class="btn btn-default">Duplicar</a>
+    <a href="{{ site_url('secure/print_order/' ~ order_id) }}" class="btn btn-primary" target="_blank">Imprimir</a>
+  </div>
+  Pedido #{{ order_id }}
+</h1>
+
+<div class="row">
+    <div class="col-xs-12">    
+        <div class="order-detail-wrap">
+            <div class="row">
+                <div class="col-md-4">
+                    <h3>Endereço</h3>
+                    {{ customer.ship_address|format_address_nl2br }}
+                </div>
+                <div class="col-md-4">
+                    <h3>{{ lang('shipping_method') }}</h3>
+                    {{ shipping.method }}
+                </div>
+
+                <div class="col-md-4">
+                    <h3>Forma de pagamento</h3>
+                    {{ format_payment_desc(payment.description) }}
+                </div>
+            </div>
+
+            <table class="table table-light" style="margin-top:20px;">
+                <thead>
+                    <tr>
+                        <th colspan="2">
+                          {{lang('name') }}
+                        </th>
+                        <th style="width: 15%;">
+                          {{lang('price') }}
+                        </th>
+                        <th style="width: 12%;">
+                          {{lang('quantity') }}
+                        </th>
+                        <th style="width: 15%;">
+                          {{lang('totals') }}
+                        </th>
+                    </tr>
+                </thead>
+
+                <tfoot>
+                    {% if loja.group_discount > 0 %}
+                      <tr>
+                        <td colspan="4">
+                          <strong>
+                            {{ lang('group_discount') }}
+                          </strong>
+                        </td>
+                        <td>
+                          {{ (0 - loja.group_discount)|format_currency }}
+                        </td>
+                      </tr>
+                    {% endif %}
+
+                    <tr>
+                      <td colspan="4">
+                        <strong>
+                          {{ lang('subtotal') }}
+                        </strong>
+                      </td>
+                      <td>
+                        {{ loja.subtotal|format_currency }}
+                      </td>
+                    </tr>
+
+                    {% if loja.shipping_cost > 0 %}
+                      <tr>
+                        <td colspan="4">
+                          <strong>
+                            {{ lang('shipping') }}
+                          </strong>
+                        </td>
+                        <td>
+                          {{ loja.shipping_cost|format_currency }}
+                        </td>
+                      </tr>
+                    {% endif %}
+
+                    {% if loja.coupon_discount > 0 %}
+                      <tr>
+                        <td colspan="4">
+                          <strong>
+                            {{ lang('coupon_discount') }}
+                          </strong>
+                        </td>
+                        <td>
+                          -{{ loja.coupon_discount|format_currency }}
+                        </td>
+                      </tr>
+                    {% endif %}
+
+                    <tr>
+                      <td colspan="4">
+                        <strong>
+                          {{ lang('grand_total') }}
+                        </strong>
+                      </td>
+                      <td>
+                        {{ loja.total|format_currency }}
+                      </td>
+                    </tr>
+                </tfoot>
+
+                <tbody>
+                    {% for cartkey, product in loja.contents %}
+                      <tr>
+                        <td width="7%" class="cart-product-img">{{ product_img(product, 'thumbnails', {'width': 78}) }}</td>
+                        <td>
+                          <strong>{{ product.name }}{{ product.sku ? ' (' ~ product.sku ~ ')' : '' }}</strong>
+                          {% for name, value in product.options %}
+                            <div>
+                              {{ name }}: {{ value }}
+                            </div>
+                          {% endfor %}
+                        </td>
+                        <td>
+                          {{ product.price|format_currency }}
+                        </td>
+                        <td>
+                          {{ product.quantity }}
+                        </td>
+                        <td>
+                          {{ (product.price * product.quantity)|format_currency }}
+                        </td>
+                      </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            {% if loja.history %}
+            <table class="table table-light" style="margin-top:20px;">
+                <thead>
+                    <tr>
+                        <th>{{ lang('history') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for history in loja.history %}
+                   <tr>
+                       <td>{{ history }}</td>
+                   </tr> 
+                {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+        </div>
+    </div>
+</div>

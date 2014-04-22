@@ -1,0 +1,39 @@
+{% extends _layout %}
+
+{% block content %}
+
+<div class="jumbotron">
+  <h1 class="text-center" style="margin-bottom:25px">
+    Looks
+  </h1>
+</div>
+
+<div class="row prod-list">
+  {% for look in looks %}
+    <div class="product-list-item col-xs-3">
+        <div class="prod-wrapper">
+            <a class="prod-overlay" title="{{ product.name }}" href="{{ site_url('look/' ~ look.slug) }}"></a>
+            
+            <div class="prod-image imgLiquidFill imgLiquid">
+                <div class="prod-image-overflow">
+                    <img src="{{ product_img(look, 'small', {'only_link': true}) }}" alt="{{ look.name }}" class="first" style="display: block;" />
+                </div>
+            </div>
+        
+            <div class="prod-info">
+                <h3>{{ look.name }}</h3>
+                <span class="price">
+                    
+                    <strong class="buy-price">
+                        {{ (look.saleprice > 0 ? '<span class="slash">' ~ look.price|format_currency ~ '</span>' : '')|raw }}
+                        <span class="sale">{{ (look.saleprice > 0 ? look.saleprice : look.price)|format_currency }}</span>
+                    </strong>
+        
+                </span>
+            </div>
+        </div>
+    </div>
+  {% endfor %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,42 @@
+<ul class="list-inline pull-right">
+	<li>
+		<a href="tel:(21) 9.8888-8888" style="font-size: 13px;">
+			<img src="{{ theme_img('ws.png') }}" alt="Whatsapp" style="height: 20px;">
+			(21) 9.8888-8888
+		</a>
+	</li>
+	<li>/</li>
+	<li>
+		<a href="{{ site_url('contato') }}">Fale conosco</a>
+	</li>
+	<li>/</li>
+	{% if logged_in %}
+		<li>
+			<a href="{{ site_url('secure/my_account') }}">
+				<i class="glyphicon glyphicon-user"></i>
+				&nbsp;
+				Minha conta
+			</a>
+		</li>
+		<li>/</li>
+		<li>
+			<a href="{{ site_url('secure/logout') }}">
+				<i class="glyphicon glyphicon-off"></i>
+				&nbsp;
+				Sair
+			</a>
+		</li>
+	{% else %}
+		<li>
+			<a href="{{ site_url('secure/login') }}">Acessar sua conta</a>
+		</li>
+	{% endif %}
+	<li>/</li>
+	<li>
+		<a href="{{ site_url('cart/view_cart') }}">
+			{{ template_settings('text:cart_text') }} {{ cart('total_items') > 0 ? '(' ~ cart('total_items') ~ ')' : '' }}
+			&nbsp;
+			<i class="glyphicon glyphicon-shopping-cart"></i>
+		</a>
+	</li>
+</ul>

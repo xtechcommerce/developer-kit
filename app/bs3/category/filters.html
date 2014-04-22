@@ -1,0 +1,84 @@
+<!-- The visible part in the template: -->
+
+<div class="filters order">
+    <a class="main" href="#"><span class="glyphicon glyphicon-chevron-down"></span> Organizar por</a>
+    <ul>
+        <li><a class="sub" href="#order_price">Menor preço</a></li>
+        <li><a class="sub" href="#order_bestseller">Mais vendidas</a></li>
+        <li><a class="sub" href="#order_rating">Melhor nota</a></li>
+    </ul>
+</div>
+{% for property in properties %}
+    {% if property.children|count > 0 %}
+        <div id="product_filter" class="filters filter">
+          <a class="main" href="#"><span class="glyphicon glyphicon-chevron-down"></span> Filtrar por {{ property.category.name }}</a>
+          <ul>
+            {% for child in property.children %}
+                <li><a class="sub" href="#filter_property{{ child.category.id }}">{{ child.category.name }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+    {% endif %}
+{% endfor %}
+
+<!-- End -->
+
+<!-- The unvisible form for submitting -->
+
+{{ form_open(current_url(), {'id': 'filter_form', 'style': 'display:none;', 'method': 'get'}) }}
+    {% if properties|count > 0 %}
+        {% for prop in properties %}
+            {% for child in prop.children %}
+                <input type="checkbox" name="properties[]" value="{{ child.category.id }}" id="filter_property{{ child.category.id }}" {{ selected_properties and child.category.id in selected_properties ? ' checked' : '' }}/>
+            {% endfor %}
+        {% endfor %}
+    {% endif %}
+    <input class="order_by_hidden" type="checkbox" name="by" value="price/desc" id="order_price" {{ sort_by == 'sort_price' ? 'checked' : '' }}/>
+    <input class="order_by_hidden" type="checkbox" name="by" value="bestsellers/asc" id="order_bestseller" {{ sort_by == 'quantity_order' ? 'checked' : '' }}/>
+    <input class="order_by_hidden" type="checkbox" name="by" value="rating/desc" id="order_rating" {{ sort_by == 'rating' ? 'checked' : '' }}/>
+{{ form_close() }}
+
+<!-- End -->
+
+<!-- The javascript part -->
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+    if ($('.filters').length>0) {
+        // For IE and mobile
+        $('.filters .main').click(function(e){
+            e.preventDefault();
+            $(this).next().show();
+        });
+
+        // Apply Filters
+        $('.filters .sub').click(function(e){
+            e.preventDefault();
+            href = $(this).attr('href');
+            if ($(href).prop('checked')==true) {
+                $(href).prop('checked', false);
+                $(this).removeClass('active');
+                $(this).remove('.glyphicon');
+            }else{
+                if ($(this).parents('.order').length>0) {
+                    $(this).parents('.order').find('.sub').removeClass('active');
+                    $('.order_by_hidden').prop('checked', false);
+                };
+                $(href).prop('checked', true);
+                $(this).addClass('active');
+                $(this).prepend('<span class="glyphicon glyphicon-ok"></span> ');
+            };
+            $('#filter_form').submit();
+        });
+    };
+    $('.filters .sub').each(function(){
+        href = $(this).attr('href');
+        if ($(href).prop('checked')==true) {
+            $(this).addClass('active');
+            $(this).prepend('<span class="glyphicon glyphicon-ok"></span> ');
+        };
+    })
+});
+
+</script>

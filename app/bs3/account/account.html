@@ -1,0 +1,591 @@
+<div class="myaccount row">
+
+    {% if validation_errors() %}
+      <div class="alert alert-danger">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        {{ validation_errors() }}
+      </div>
+    {% endif %}
+
+
+    <div class="col-xs-3 tabbable">
+        
+        <ul id="mytabs" class="nav nav-pills nav-stacked">
+            
+            <li class="active">
+
+                <a href="#dashboard" data-toggle="tab">
+                    <i class="glyphicon glyphicon-home"></i>
+                    Painel Principal
+                </a>
+
+            </li>
+
+            <li>
+
+                <a href="#myaccount" data-toggle="tab">
+                    <i class="glyphicon glyphicon-user"></i>
+                    Dados Pessoais
+                </a>
+
+            </li>
+
+            <li>
+
+                <a href="#addresses" data-toggle="tab">
+                    <i class="glyphicon glyphicon-map-marker"></i>
+                    Endereços
+                </a>
+
+            </li>
+
+            <li>
+
+                <a href="#myorders" data-toggle="tab">
+                    <i class="glyphicon glyphicon-shopping-cart"></i>
+                    Histórico de Pedidos
+                </a>
+
+            </li>
+
+        </ul>
+
+    </div>
+
+    <div class="col-xs-9">
+        
+        <div class="tab-content">
+            
+            <div class="tab-pane active" id="dashboard">
+
+                <h1 class="page-title">Painel Principal</h1>
+
+                <p>
+                    
+                    No Painel Principal você pode visualizar um resumo das atividades da sua conta mais recentes e atualizar 
+                    suas informações de conta. Selecione um link abaixo para visualizar ou editar informações.
+
+                </p>
+
+                <hr />
+
+                <div class="row">
+                    
+                    <div class="col-xs-6">
+                        
+                        <h4>
+                            
+                            <a href="#" id="edit_account" class="btn pull-right">
+                                Editar
+                            </a>
+
+                            Informações da Conta
+
+                        </h4>
+
+                        <div class="panel panel-default">
+
+                            <div class="panel-body">
+
+                                {{ customer.firstname }}
+                                {{ customer.lastname }}<br />
+                                {{ customer.email }}<br />
+                                {{ customer.phone }}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-xs-6">
+
+                        <!-- Pego os dados do endereço principal -->
+                        
+                        <h4>
+                            
+                            <span class="btn-group pull-right">
+
+                                <a href="#" id="list_all" class="btn">
+                                    Listar Todos
+                                </a>
+
+                            </span>
+
+                            Endereço Principal
+
+                        </h4>
+
+                        <div class="panel panel-default">
+
+                            <div class="panel-body">
+
+                                {% if default_address %}
+                                    {{ default_address.field_data|format_address_nl2br }}
+                                {% else %}
+                                    Não há endereço ainda.
+                                {% endif %}
+                                
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+            
+
+            <div class="tab-pane" id="myaccount">
+
+                <h1 class="page-title">Dados Pessoais</h1>
+
+                {{ form_open('secure/my_account', 'class="form-horizontal"') }}
+
+                    <!-- Dados para acesso -->
+                    <div class="panel panel-default">
+
+                        <div class="panel-heading">
+
+                            <h3 class="panel-title">
+
+                                <i class="glyphicon glyphicon-asterisk"></i>
+                                Dados para acesso
+
+                            </h3>
+
+                        </div>
+
+                        <div class="panel-body">
+
+                            <p>Se você não quiser alterar sua senha, deixar os campos em branco.</p>
+
+                            <div class="form-group">
+
+                                <label for="email" class="col-xs-3 control-label">
+                                    E-mail
+                                    <sup>*</sup>
+                                </label>
+
+                                <div class="col-xs-5">
+                                    {{ form_input({'name': 'email', 'placeholder': lang('account_email'), 'class': 'form-control', 'value': set_value('email', customer.email), 'autocomplete': 'off'}) }}
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label for="password" class="col-xs-3 control-label">
+                                    Senha
+                                </label>
+
+                                <div class="col-xs-5">
+                                    {{ form_input({'name': 'password', 'type': 'password', 'placeholder': lang('account_password'), 'class': 'form-control', 'value': '', 'autocomplete': 'off'}) }}
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label for="confirm" class="col-xs-3 control-label">
+                                    Confirme
+                                </label>
+
+                                <div class="col-xs-5">
+                                    {{ form_input({'name': 'confirm', 'type': 'confirm', 'placeholder': lang('account_confirm'), 'class': 'form-control', 'value': '', 'autocomplete': 'off'}) }}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Dados Pessoais -->
+                    <div class="panel panel-default">
+
+                        <div class="panel-heading">
+
+                            <h3 class="panel-title">
+
+                                <i class="glyphicon glyphicon-bookmark"></i>
+                                Dados pessoais
+
+                            </h3>
+
+                        </div>
+
+                        <div class="panel-body">
+
+                            <div class="form-group">
+
+                                <label for="name" class="col-xs-3 control-label">
+                                    Nome
+                                    <sup>*</sup>
+                                </label>
+
+                                <div class="col-xs-5">
+                                    {{ form_input({'name': 'firstname', 'placeholder': lang('address_firstname'), 'class': 'form-control', 'value': set_value('firstname', customer.firstname)}) }}
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label for="name" class="col-xs-3 control-label">
+                                    Sobrenome
+                                    <sup>*</sup>
+                                </label>
+
+                                <div class="col-xs-5">
+                                    {{ form_input({'name': 'lastname', 'placeholder': lang('address_lastname'), 'class': 'form-control', 'value': set_value('lastname', customer.lastname)}) }}
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label for="telephone" class="col-xs-3 control-label">
+                                    Telefone
+                                    <sup>*</sup>
+                                </label>
+
+                                <div class="col-xs-5">
+                                    {{ form_input({'name': 'phone', 'placeholder': lang('address_phone'), 'class': 'form-control', 'value': set_value('phone', customer.phone)}) }}
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label for="cpf" class="col-xs-3 control-label">
+                                    CPF
+                                    <sup>*</sup>
+                                </label>
+
+                                <div class="col-xs-5">
+                                    {{ form_input({'name': 'cpf', 'placeholder': lang('address_cpf'), 'class': 'form-control', 'value': set_value('cpf', customer.cpf)}) }}
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label for="sex" class="col-xs-3 control-label">
+                                    Sexo
+                                </label>
+
+                                <div class="col-xs-5">
+                                    {{ form_dropdown('sex', {0: 'Masculino', 1: 'Feminino'}, set_value('sex', customer.sex), 'class="form-control"') }}
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label for="birthday" class="col-xs-3 control-label">
+                                    Data de Nascimento
+                                </label>
+
+                                <div class="col-xs-5">
+                                    {{ form_input({'name': 'birthday', 'placeholder': lang('address_birthday'), 'class': 'form-control', 'value': set_value('birthday', customer.birthday|to_formated_date)}) }}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Checkbox Newsletter -->
+                    <div class="panel panel-default">
+
+                        <div class="panel-heading">
+
+                            <div class="pull-left">
+
+                                <label>
+                                    
+                                    <input type="checkbox" name="email_subscribe" value="1" {{ set_radio('email_subscribe', '1', true) }} />
+                                    Deseja receber nossa newsletter?
+
+                                </label>
+                                <br />
+                                <small>(Não compartilhamos seu email com terceiros)</small>
+
+                            </div>
+
+                            
+                            <div class="pull-right">
+                                
+                                * Campos obrigatórios
+
+                            </div>
+
+
+                            <div class="clearfix"></div>
+                        
+                        </div>
+                    
+                    </div>
+
+
+
+                    <!-- Editar -->
+                    <div class="pull-right">
+
+                        <input type="submit" value="ATUALIZAR" class="btn btn-primary btn-bck" />
+                        
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <div class="tab-pane" id="addresses">
+
+                <div class="row">
+
+                    <h1 class="col-xs-9 page-title">Endereços</h1>
+
+                    <div class="col-xs-3 margin-top">
+                        
+                        <input type="button" class="btn btn-link edit_address pull-right" rel="0" value="{{ lang('add_address') }}" />
+
+                    </div>
+
+                </div>
+
+
+                {% if addresses|count > 0 %}
+
+                    <table class="table table-striped">
+                        
+                        {% for address in addresses %}
+
+                            <tr id="address_{{ address.id }}">
+                                
+                                <td>
+                                    
+                                    {{ address.field_data|format_address_nl2br }}
+
+                                </td>
+
+                                <td>
+
+                                    <div class="row">
+
+                                        <div class="col-xs-12">
+
+                                            <div class="btn-group pull-right">
+
+                                                <input type="button" class="btn btn-default edit_address" rel="{{ address.id }}" value="{{ lang('form_edit') }}" />
+
+                                                <input type="button" class="btn btn-danger delete_address" rel="{{ address.id }}" value="{{ lang('form_delete') }}" />
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row">
+
+                                        <div class="col-xs-12">
+
+                                            <div class="pull-right" style="padding-top: 10px;">
+
+                                                <input type="radio" name="ship_chk" onclick="set_default({{ address.id }},'ship')" {{ default_address.id == address.id ? 'checked="checked"' : '' }}/>
+                                                {{ lang('default_shipping') }}
+                                                
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </table>
+
+                {% else %}
+
+                    {{ lang('no_addresses') }}
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="tab-pane" id="myorders">
+
+                <h1 class="page-title">Histórico de Pedidos</h1>
+
+                {% if orders|count > 0 %}
+
+                    <table class="table table-striped">
+                        <thead>
+                            
+                            <tr>
+
+                                <th>{{ lang('order_date') }}</th>
+                                <th>{{ lang('order_number') }}</th>
+                                <th>{{ lang('order_status') }}</th>
+                                <th>Refazer Pedido?</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {% for order in orders %}
+                            
+                                <tr>
+
+                                    <td>
+
+                                        {{ order.ordered_on|to_formated_date('date_format_long') }}
+
+                                    </td>
+
+                                    <td>
+
+                                        <a href="{{ site_url('secure/order/' ~ order.order_number) }}">
+
+                                            {{ order.order_number }}
+
+                                        </a>
+
+                                    </td>
+                                    
+                                    <td>
+
+                                        <span class="label {{ order.status|get_status_label }}">{{ order.status|translate_order_status }}</span>
+
+                                    </td>
+                                    
+                                    <td>
+
+                                        <a href="{{ site_url('secure/duplicate_cart/' ~ order.order_number) }}" class="btn btn-sm btn-success">
+                                            Refazer
+                                        </a>
+
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                {% else %}
+
+                    {{ lang('no_order_history') }}
+                    
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script type="text/javascript">
+<!--
+    $(document).ready(function(){
+
+        $('#mytabs a').click(function(e){
+
+            e.preventDefault();
+            $(this).tab('show');
+
+        });
+
+        // Abrir a pagina numa tab especifica
+        {% if tab %}
+            $('#mytabs a[href="#{{ tab }}"]').tab('show');
+        {% endif %}
+
+
+        // Dashboard
+        $('#list_all').click(function(e){
+
+            e.preventDefault();
+            $('#mytabs a[href="#addresses"]').tab('show');
+
+        });
+
+        $('#edit_account').click(function(e){
+
+            e.preventDefault();
+            $('#mytabs a[href="#myaccount"]').tab('show');
+
+        });
+
+
+
+        // Meus dados
+        $('input[name=phone]').mask_brazilian_phone();
+        $('input[name=cpf]').mask('999.999.999-99');
+        $('input[name=birthday]').mask('99/99/9999');
+
+
+        // Endereços
+        $('.delete_address').click(function(){
+
+            if($('.delete_address').length > 1){
+
+                if(confirm('{{ lang('delete_address_confirmation') }}')){
+
+                    $.post("{{ site_url('secure/delete_address') }}", { id: $(this).attr('rel') },
+                    function(data){
+                        $('#address_'+data).remove();
+                    });
+
+                }
+
+            } else{
+
+                alert('{{ lang('error_must_have_address') }}');
+
+            }   
+        });
+
+        $('.edit_address').click(function(e){
+
+            e.preventDefault();
+            
+            $.post('{{ site_url('secure/address_form') }}/' + $(this).attr('rel'),
+                function(data){
+                    $('#modal-container').html(data).modal('show');
+                }
+            );
+
+        });
+
+        function set_default(address_id, type){
+
+            $.post('{{ site_url('secure/set_default_address') }}/',{id:address_id, type:type});
+
+        }
+
+    });
+
+//-->
+</script>

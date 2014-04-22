@@ -1,0 +1,81 @@
+{{ global_css('view_cart.css', true) }}
+{{ global_js('tinyvalidation.js', true) }}
+{{ global_js('shop.js', true) }}
+
+<div id="cartview">
+  {% if cart.total_items == 0 %}
+
+    <div class="alert alert-info">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      {{ lang('empty_view_cart') }}
+    </div>
+
+  {% else %}
+
+    <div class="summary">
+
+      <div class="page-header">
+        <h2>{{ lang('your_cart') }}</h2>
+      </div>
+
+      {{ form_open('cart/update_cart', {'id': 'update_cart_form'}) }}
+
+        <div id="checkout_summary">
+          {% include 'bs3/checkout/summary.html' %}
+        </div>
+
+        <div class="row">
+
+            <div class="col-xs-6">
+              <label>
+                {{ lang('coupon_label') }}
+              </label>
+              <div class="input-group">
+                <input type="text" name="coupon_code" class="form-control" style="width: 50%;" />
+                <input type="submit" class="btn btn-default" value="{{ lang('apply_coupon') }}" />
+              </div>
+            </div>
+            
+            <div class="col-xs-6">
+              <span class="pull-right">
+                {{ theme_img('compra-segura.png', 'Compra segura') }}
+              </span>
+            </div>
+
+        </div>
+
+      {{ form_close() }}
+
+    </div>
+
+
+    <div class="checkout">
+      <div class="row">
+
+        <!-- Onepage Checkout Form -->
+
+        {% if validation_errors() %}
+          <div class="col-xs-12">
+            <div class="alert alert-danger">
+              <a class="close" data-dismiss="alert">×</a>
+              {{ validation_errors() }}
+            </div>
+          </div>
+        {% endif %}
+
+        {{ form_open('checkout/create', 'id="onepage_checkoutform" data-validate-on-load="true"') }}
+
+          {% include 'bs3/checkout/form.html' %}
+
+        {{ form_close() }}
+
+        {% if not logged_in %}
+          {% include 'bs3/checkout/login_modal.html' %}
+        {% endif %}
+
+      </div>
+    </div>
+
+
+  {% endif %}
+</div>

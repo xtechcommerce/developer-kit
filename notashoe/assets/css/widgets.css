@@ -1,0 +1,41 @@
+/* @override 
+	http://demo.localhost.com/loja/themes/default/assets/css/widgets.css */
+
+/* @group Testimonials */
+
+.testimonials-rating-totals,
+.testimonials-ratings {
+	list-style: none;
+	padding: 0 0 20px 0;
+	overflow: hidden;
+	margin: 10px 0 20px 0;
+	border-bottom: 1px solid #333;
+	border-color: #e1e1e1;
+}
+.testimonials-ratings{
+	padding: 20px 0;
+}
+.testimonials-rating-totals li,
+.testimonials-ratings li {
+	float: left;
+	width: 24.444%;
+}
+.testimonial-message{
+	font-size: 90%;
+}
+span.testimonial-rating-avg {
+	display: inline-block;
+	margin-left: 20px;
+}
+
+span.testimonial-product {
+	display: inline-block;
+	margin-left: 20px;
+}
+
+span.testimonial-rating-avg div.rating-stars {
+	display: inline-block;
+	vertical-align: text-bottom;
+}
+
+/* @end */

@@ -1,0 +1,252 @@
+<form id="address_modal_form">
+
+{{ form_input({'name': 'id', 'type': 'hidden', 'value': set_value('id', id)}) }}
+{{ form_input({'name': 'id', 'type': 'hidden', 'value': set_value('id', id)}) }}
+
+<div class="modal-dialog">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+
+            <button type="button" class="close" data-dismiss="modal">×</button>
+
+            <h3 class="no-margin">
+                {{ lang('address_form') }}
+            </h3>
+
+        </div>
+
+        <div class="modal-body">
+
+            <!-- Alertas -->
+            <div class="alert alert-danger form-error hide">
+              
+            </div>
+
+            <div class="row margin-bottom">
+
+                <div class="col-xs-6">
+
+                    <label>
+
+                        {{ lang('address_firstname') }}
+                        <sup>*</sup>
+
+                    </label>
+
+                    {{ form_input({'name': 'firstname', 'placeholder': lang('address_firstname'), 'class': 'form-control', 'value': set_value('firstname', firstname)}) }}
+
+                </div>
+
+                <div class="col-xs-6">
+
+                    <label>
+
+                        {{ lang('address_lastname') }}
+                        <sup>*</sup>
+
+                    </label>
+
+                    {{ form_input({'name': 'lastname', 'placeholder': lang('address_lastname'), 'class': 'form-control', 'value': set_value('lastname', lastname)}) }}
+
+                </div>
+
+            </div>
+
+            <div class="row margin-bottom">
+
+                <div class="col-xs-6">
+
+                    <label>
+
+                        {{ lang('address_email') }}
+                        <sup>*</sup>
+
+                    </label>
+
+                    {{ form_input({'name': 'email', 'placeholder': lang('address_email'), 'class': 'form-control', 'value': set_value('email', email)}) }}
+
+                </div>
+
+                <div class="col-xs-6">
+
+                    <label>
+
+                        {{ lang('address_phone') }}
+                        <sup>*</sup>
+
+                    </label>
+
+                    {{ form_input({'name': 'phone', 'placeholder': lang('address_phone'), 'class': 'form-control', 'value': set_value('phone', phone)}) }}
+
+                </div>
+
+            </div>
+
+            <div class="row margin-bottom">
+
+                <div class="col-xs-6">
+
+                    <label>
+
+                        {{ lang('address_postcode') }}
+                        <sup>*</sup>
+
+                    </label>
+
+                    {{ form_input({'name': 'zip', 'placeholder': lang('address_zip'), 'class': 'form-control', 'value': set_value('zip', zip)}) }}
+
+                </div>
+
+                <div class="col-xs-6">
+
+                    <label>&nbsp;</label>
+
+                    <a href="http://www.buscacep.correios.com.br/servicos/dnec/menuAction.do?Metodo=menuEndereco" target="_blank" class="btn btn-default" style="display: block;">
+                        Não sabe seu CEP? Consulte aqui.
+                    </a>
+                
+                </div>
+
+            </div>
+
+            <div class="row margin-bottom">
+
+                <div class="col-xs-5">
+
+                    <label>
+
+                        {{ lang('address1') }}
+                        <sup>*</sup>
+
+                    </label>
+
+                    {{ form_input({'name': 'address1', 'placeholder': lang('address1'), 'class': 'form-control', 'value': set_value('address1', address1)}) }}
+
+                </div>
+
+                <div class="col-xs-3">
+
+                    <label>
+
+                        {{ lang('anumber') }}
+                        <sup>*</sup>
+
+                    </label>
+
+                    {{ form_input({'name': 'anumber', 'placeholder': lang('anumber'), 'class': 'form-control', 'value': set_value('anumber', anumber)}) }}
+
+                </div>
+
+                <div class="col-xs-4">
+
+                    <label>
+
+                        {{ lang('address2') }}
+
+                    </label>
+
+                    {{ form_input({'name': 'address2', 'placeholder': lang('address2'), 'class': 'form-control', 'value': set_value('address2', address2)}) }}
+
+                </div>
+
+            </div>
+
+            <div class="row margin-bottom">
+
+                <div class="col-xs-4">
+
+                    <label>
+
+                        {{ lang('address_city') }}
+                        <sup>*</sup>
+
+                    </label>
+
+                    {{ form_input({'name': 'city', 'placeholder': lang('city'), 'class': 'form-control', 'value': set_value('city', city)}) }}
+
+                </div>
+
+                <div class="col-xs-4">
+
+                    <label>
+
+                        {{ lang('address_state') }}
+                        <sup>*</sup>
+
+                    </label>
+
+                    {{ form_dropdown('zone_id', zones_menu, set_value('zone_id', zone_id), 'class="form-control"') }}
+
+                </div>
+
+                <div class="col-xs-4">
+
+                    <label>
+
+                        {{ lang('district') }}
+                        <sup>*</sup>
+
+                    </label>
+
+                    {{ form_input({'name': 'district', 'placeholder': lang('district'), 'class': 'form-control', 'value': set_value('district', district)}) }}
+
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-xs-12">
+
+                    <label>
+
+                        {{ lang('reference') }}
+
+                    </label>
+
+                    {{ form_input({'name': 'reference', 'placeholder': lang('reference'), 'class': 'form-control', 'value': set_value('reference', reference)}) }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="modal-footer">
+
+            <a href="#" class="btn btn-default" data-dismiss="modal">
+                {{ lang('close') }}
+            </a>
+
+            <a href="#" class="btn btn-bck" type="button" onclick="save_address(); return false;">
+                {{ lang('form_submit') }}
+            </a>
+
+        </div>
+    
+    </div>
+
+</div>
+
+</form>
+
+<script type="text/javascript">
+<!--
+
+    function save_address(){
+
+        $.post("{{ site_url('secure/address_form/' ~ id) }}", $('#address_modal_form').serialize(),
+            function(data){
+                if(data == 1){
+                    window.location = "{{ site_url('secure/my_account') }}?tab=addresses";
+                } else{
+                    $('#address_modal_form .form-error').html(data).removeClass('hide');
+                }
+            });
+
+    }
+
+//-->
+</script>

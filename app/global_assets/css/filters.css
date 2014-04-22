@@ -1,0 +1,54 @@
+/* @group Filters */
+
+.filters {
+    float: right;
+    margin-right: 10px;
+    margin-top: 8px;
+    position: relative;
+}
+.filters ul {
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+}
+.filters a{
+    font-weight: normal;
+}
+.filters a.main {
+    display: block;
+    line-height: 30px;
+    margin: 0;
+    padding: 0 13px 0 0;
+    position: relative;
+}
+.filters ul {
+    background-color: white;
+    border: 1px solid lightgrey;
+    box-shadow: 0 0 2px #AFAFAF;
+    display: none;
+    padding: 5px 0;
+    position: absolute;
+    right: 0;
+    top: 28px;
+    z-index: 600;
+}
+.filters ul li {
+    margin: 0;
+    padding: 0;
+}
+.filters ul li .sub {
+  display: block;
+  line-height: 20px;
+  padding: 6px 30px 6px 10px;
+  width: 180px;
+}
+.filters ul li .sub:hover {
+    background-color: #F7F7F7;
+}
+.filters ul li .active {
+    background-color: #F7F7F7;
+}
+.filters:hover ul {
+    display: block;
+}
+/* @end */

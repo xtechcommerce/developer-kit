@@ -1,0 +1,24 @@
+{% macro input(id, name, value, label, cols, type, validate, hide_asterix) %}
+  <div class="col-xs-{{ cols }}">
+    <label>
+      {{ label }}
+      {% if not hide_asterix %}
+        <sup>*</sup>
+      {% endif %}
+    </label>
+    {% if validate == 'noValidate' %}
+      {{ form_input({'autocomplete': 'off', 'id': id, 'type': type|default('text'), 'class': 'address form-control', 'name': name, 'value': value}) }}
+    {% else %}
+      {{ form_input({'data-validate': validate|default('notEmpty'), 'autocomplete': 'off', 'id': id, 'type': type|default('text'), 'class': 'address form-control', 'name': name, 'value': value}) }}
+    {% endif %}
+  </div>
+{% endmacro %}
+{% macro dropdown(id, name, options, value, label, cols) %}
+  <div class="col-xs-{{ cols }}">
+    <label>
+      {{ label }}
+      <sup>*</sup>
+    </label>
+    {{ form_dropdown(name, options, value, 'class="form-control" id="' ~ id ~ '"') }}
+  </div>
+{% endmacro %}

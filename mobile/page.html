@@ -1,0 +1,18 @@
+{% extends _layout %}
+
+{% block content %}
+
+<div class="body">
+    
+  <div id="page" class="clearfix side-pad">
+
+    <h1 class="title">{{ page.title }}</h1>
+    <div class="description">
+        {{ page.content|raw }}
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}

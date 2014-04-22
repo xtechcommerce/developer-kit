@@ -1,0 +1,162 @@
+{{
+	template_settings({
+		'group:logo':					{'label': 'Logo e Favicon'},
+		'image:logo':					{'label': 'Logotipo', 'default': ''},
+		'image:favicon':				{'label': 'Favicon', 'default': ''},
+
+		'group:general':				{'label': 'Gerais'},
+		'color:background':				{'label': 'Cor de Fundo da Loja', 'default': ''},
+		'image:background':				{'label': 'Imagem de Fundo da Loja', 'default': ''},
+		'select:list_prod_cols':		{'label': 'Quantidade de Produtos por Linha', 'default': '4', 'options': ['2', '3', '4', '6']},
+		'font:body':					{'label': 'Fonte padrão da Loja', 'default': 'Ubuntu'},
+		'color:btn':					{'label': 'Cor de Fundo dos Botões', 'default': ''},
+		'color:btn_font': 				{'label': 'Cor da Fonte dos Botões ', 'default': ''},
+		'color:btn_hover':				{'label': 'Cor do Hover dos Botões', 'default': ''},
+
+		'group:popup':					{'label': 'Pop-up ao iniciar'},
+
+		'group:header':					{'label': 'Cabeçalho'},
+		'layout:header': 				{'label': 'Layout do Cabeçalho', 'default': 'header3', 'options': ['header1', 'header2', 'header3']},
+		'color:header':					{'label': 'Cor de Fundo do Cabeçalho', 'default': ''},
+		'image:header_bck':				{'label': 'Imagem de Fundo do Cabeçalho', 'default': ''},
+
+		'group:top':					{'label': 'Barra Fixa'},
+		'color:top_bg':					{'label': 'Fundo da Barra Fixa', 'default': ''},
+		'color:top_color_text':			{'label': 'Cor da Fonte da Barra Fixa', 'default': ''},
+		'text:cart_text':				{'label': 'Título do Carrinho no Topo', 'default': 'Carrinho'},
+
+		'group:navi':					{'label': 'Menu de Navegação'},
+		'color:navbar_bg':				{'label': 'Cor de Fundo', 'default': ''},
+		'color:navbar_border':			{'label': 'Cor da Linha', 'default': ''},
+		'color:navbar_open_font':		{'label': 'Cor de Fundo Link Aberto', 'default': ''},
+		'color:navbar_font': 			{'label': 'Cor de Fonte do Menu de Navegação', 'default': ''},
+		'color:navbar_font_over':		{'label': 'Fonte do Menu de Navegação hover', 'default': ''},
+
+		'group:tarjabanner':			{'label': 'Banner de Vantagens'},
+		'if:tarjabanner':				{'label': 'Terá Banner de Vantagens?', 'default': '1'},
+		'if:box_1':						{'label': 'Exibir Caixa de Frete', 'default': '1'},
+		'text:box_1_title':				{'label': 'Texto da Caixa de Frete', 'default': 'Frete Grátis'},
+		'text:box_1_link':				{'label': 'Link da Caixa de Frete', 'default': '#'},
+		'if:box_2':						{'label': 'Exibir Caixa de Troca', 'default': '1'},
+		'text:box_2_title':				{'label': 'Texto da Caixa de Troca', 'default': '1ª Troca Grátis'},
+		'text:box_2_link':				{'label': 'Link da Caixa de Troca', 'default': '#'},
+		'if:box_3':						{'label': 'Exibir Caixa de Parcelas', 'default': '1'},
+		'text:box_3_title':				{'label': 'Texto da Caixa de Parcelas', 'default': 'Até 3x sem juros'},
+		'text:box_3_link':				{'label': 'Link da Caixa de Parcelas', 'default': '#'},
+		'if:box_4':						{'label': 'Exibir Caixa de Telefone', 'default': '1'},
+		'text:box_4_title':				{'label': 'Texto da Caixa de Telefone', 'default': '0800 999 9999'},
+		'text:box_4_link':				{'label': 'Link da Caixa de Telefone', 'default': '#'},
+
+		'group:banners':				{'label': 'Banners Principais'},
+		'layout:banners': 				{'label': 'Layout do Banner', 'default': 'banner1', 'options': ['banner1', 'banner2', 'banner3', 'banner4']},
+		'image:banner_one':				{'label': 'Mini-Banner I', 'default': ''},
+		'text:banner_one_link':			{'label': 'Link Mini-Banner I', 'default': ''},
+		'image:banner_two':				{'label': 'Mini-Banner II', 'default': ''},
+		'text:banner_two_link':			{'label': 'Link Mini-Banner II', 'default': ''},
+		'image:banner_three':			{'label': 'Mini-Banner III', 'default': ''},
+		'text:banner_three_link':		{'label': 'Link Mini-Banner III', 'default': ''},
+
+		'group:instagram':				{'label': 'Instagram'},
+		'if:instagram':					{'label': 'Posts do Instagram?', 'default': '1'},
+		'select:instaget':				{'label': 'Exibir Posts de Usuário ou Hashtag?', 'default': 'Usuário', 'options': ['Usuário', 'Hashtag']},
+		'text:instagram':				{'label': 'Título da caixa Instagram', 'default': 'Instagram'},
+		'text:user_id':					{'label': 'User ID Instagram (<a href="http://jelled.com/instagram/lookup-user-id" target="_blank">descubra aqui</a>)', 'default': ''},
+		'text:hashtag':					{'label': 'Hashtag Instagram', 'default': '#popular'},
+		'select:limit':					{'label': 'Limite de Fotos', 'default': '6', 'options': ['6', '12','18']},
+		'if:order':						{'label': 'Ordem de Fotos aleatórias?', 'default': '0'},
+
+		'group:footer':					{'label': 'Rodapé'},
+		'if:footer_border':				{'label': 'Esconder Linha do Rodape', 'default': ''},
+		'color:footer_bg':				{'label': 'Fundo do Rodape', 'default': ''},
+		'color:footer_font': 			{'label': 'Cor da Fonte do Rodape', 'default': ''},
+		'color:footer_bg_bottom':		{'label': 'Fundo Rodape Baixo', 'default': ''},
+		'color:footer_color_bottom':	{'label': 'Cor da Fonte do Rodape Baixo', 'default': ''},
+		'image:designed':				{'label': 'Logo do Designer no Rodapé', 'default': ''},
+		'text:designed':				{'label': 'Link do Designer no Rodapé', 'default': ''},
+  })
+}}
+
+<script src="//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js"></script>
+<script>WebFont.load({google: {families: ['{{ template_settings('font:body')|default('Ubuntu') }}:300,500']}});</script>
+
+<script type="text/javascript">
+	$('link[rel="icon"], link[rel="apple-touch-icon"]').attr('href', '{{ host_url('uploads/images/full/' ~ template_settings('image:favicon')) }}');
+</script>
+
+
+<style type="text/css">
+
+	body{
+		background-color: {{ template_settings('color:background') }};
+		{% if(template_settings('image:background')) %}
+			background-image: url({{ host_url('uploads/images/full/' ~ template_settings('image:background')) }}); 
+		{% endif %}
+	}
+	*, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
+		font-family: '{{ template_settings('font:body')|replace({'+': ' '})|default('Ubuntu') }}';
+	}
+	#top{
+		background-color: {{ template_settings('color:top_bg') }};
+	}
+	#top a,
+	#top-search input,
+	#top-search button{
+		color: {{ template_settings('color:top_color_text') }};
+	}
+	header{
+		background-color: {{ template_settings('color:header') }};
+		{% if(template_settings('image:header_bck')) %}
+			background-image: url({{ host_url('uploads/images/full/' ~ template_settings('image:header_bck')) }}); 
+		{% endif %}
+		{% if template_settings('layout:header') == 'header3' %}
+			margin: 0;
+		{% endif %}
+	}
+	#main-menu{
+		background-color: {{ template_settings('color:navbar_bg') }};
+	}
+	#main-menu .navbar-default{
+		border-bottom-color: {{ template_settings('color:navbar_border') }};
+	}
+	#main-menu .navbar-nav>li.open>a{
+		background-color: {{ template_settings('color:navbar_open_font') }};
+	}
+	#main-menu .navbar-nav>li>a{
+		color: {{ template_settings('color:navbar_font') }};
+	}
+	#main-menu .navbar-nav>li>a:hover{
+		color: {{ template_settings('color:navbar_font_over') }};
+	}
+	.btn-bck{
+		background: {{ template_settings('color:btn') }};
+		color: {{ template_settings('color:btn_font') }};
+	}
+	.btn-bck:hover, .btn-bck:focus{
+		background: {{ template_settings('color:btn_hover') }};
+		color: {{ template_settings('color:btn_font') }};
+	}
+	#product .prod-action #buy-btn{
+		background: {{ template_settings('color:btn') }};
+	}
+	#product .prod-action #buy-btn:hover{
+		background: {{ template_settings('color:btn_hover') }};
+	}
+	footer{
+		background-color: {{ template_settings('color:footer_bg') }};
+	}
+	footer h4{
+		color: {{ template_settings('color:footer_font') }};
+	}
+	footer .bottom{
+		background-color: {{ template_settings('color:footer_bg_bottom') }};
+		color: {{ template_settings('color:footer_color_bottom') }};
+	}
+	{% if template_settings('if:footer_border') %}
+		footer .content{
+			border-top: none;
+		}
+	{% endif %}
+
+</style>
+
+

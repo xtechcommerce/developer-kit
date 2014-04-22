@@ -1,0 +1,167 @@
+{% extends _layout %}
+
+{% block content %}
+
+<div id="product" itemscope="" itemtype="http://schema.org/Product">
+    {{ breadcrumbs_widget() }}
+    <div class="row showcase">
+        <div class="col-xs-6">
+            <div class="prod-image text-center">
+                {{ product_img(look, 'medium', {'jqzoom': true, 'width': 465}) }}
+            </div>
+            <div class="prod-image-thumbs">
+                <ul class="list-inline">
+                    {% for image in look.images %}
+                        <li>
+                            {% if design_mode %}
+                               <a href='javascript: void(0);' rel="{gallery: 'gal1', smallimage: 'http://placehold.it/350x350', largeimage: 'http://placehold.it/1000x1000'}">
+                                <img src='http://placehold.it/350x350' style="max-width: 140px;" alt="{{ look.name }}" />
+                               </a>
+                            {% else %}
+                                <a href='javascript: void(0);' rel="{gallery: 'gal1', smallimage: '{{ theme_upload_url('images/medium/' ~ image.filename) }}', largeimage: '{{ theme_upload_url('images/full/' ~ image.filename) }}'}">
+                                    <img src='{{ theme_upload_url('images/medium/' ~ image.filename) }}' style="max-width: 140px;" alt="{{ look.name }}" />
+                                </a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <h1 class="prod-title color2" itemprop="name">
+                {{ look.name }}
+            </h1>
+
+            {% if look.excerpt %}
+                <div class="prod-excerpt">
+                    <p>
+                        {{ look.excerpt }}
+                    </p>
+                </div>
+            {% endif %}
+
+            {{ form_open('cart/add_to_cart', '', {'look': look.id}) }}
+            <h5>Produtos do look:</h5>
+            {{ global_js('product-variants.js', true) }}
+            {% for product in look.products %}
+                <div class="well">
+                <div class="row lookitem" id="lookitem-{{ product.id }}">
+                    <div class="col-md-4">
+                        {{ product_img(product, 'thumbnails', {'class': 'thumbnail'}) }}
+                    </div>
+                    <div class="col-md-8">
+                        <label>
+                            {{ form_input({'name': 'product[' ~ product.id ~ '][variant_id]', 'value': '', 'type': 'hidden', 'id': 'lookitem-variant-' ~ product.id}) }}
+                            {{ form_input({'name': 'product[' ~ product.id ~ '][id]', 'value': product.id, 'type': 'checkbox', 'checked': 'checked'}) }} {{ product.name }}
+                        </label>
+                        <div class="options clearfix">
+                            <div class="variants-wrapper clearfix form-group">
+                                {{ variation_select(product, {'exclude_js': true}) }}
+                                <script type="text/javascript">
+                                    $(document).ready(function(){
+                                        var productvariants_settings = productvariants_settings_{{ product.id }};
+                                        productvariants_settings.container = '#lookitem-{{ product.id }}';
+                                        productvariants_settings.customInput = '#lookitem-variant-{{ product.id }}';
+                                        var productvariants_{{ product.id }} = new ProductVariants('#product-variants-{{ product.id }}', productvariants_settings);
+                                    });
+                                </script>
+                            </div>
+                            <div class="price">
+                                <span class="buy-message hide pull-right"></span>
+                                {{ product.price|format_currency }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            {% endfor %}
+
+            <div class="prod-action">
+                <div class="row">
+
+                    <div class="col-xs-7">
+                        <div class="price" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer">
+                            <span class="price">
+                                <strong class="buy-price">
+                                    {% if look.saleprice > 0 %}
+                                        <span class="slash">{{ look.price|format_currency }}</span>
+                                        <span class="sale color" itemprop="price">{{ look.saleprice|format_currency }}</span>
+                                        <p>Compre junto e ganha {{ (look.price - look.saleprice)|format_currency }}!</p>
+                                    {% else %}
+                                        <span class="sale color" itemprop="price">{{ look.price|format_currency }}</span>
+                                    {% endif %}
+                                </strong>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-5">
+                        <div class="pull-right">
+                            <button class="btn btn-primary btn-lg btn-buy-look" type="submit" value="submit"><i class="glyphicon glyphicon-shopping-cart"></i> Comprar look</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="prod-secure text-center">
+                {{ theme_img('secure-process.png', 'Compre de forma segura, seu pedido é enviado e você recebe em sua casa.') }}
+            </div>
+
+            <div class="prod-share margin-top">
+                {#
+                <div class="addthis_toolbox addthis_default_style ">
+                    <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+                    <a class="addthis_button_tweet"></a>
+                    <a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+                    <a class="addthis_counter addthis_pill_style"></a>
+                </div>
+                <script type="text/javascript">var addthis_config = {"data_track_addressbar":true, ui_language: "pt"};</script>
+                <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51343c292a608814"></script>
+                #}
+            </div>
+        </div>
+
+        {{ form_close() }}
+    </div>
+
+    {% if look.description %}
+
+        <div class="prod-description">
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a href="#tab-description" data-toggle="tab">Descrição</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab-description">
+                    {{ look.description|raw }}
+                </div>
+            </div>
+
+        </div>
+
+    {% endif %}
+
+
+    {# Comentarios Facebook #}
+    <div class="prod-comments">
+        <div class="fb-comments" data-href="{{ site_url(uri_string()) }}" data-width="960" data-num-posts="5"></div>
+    </div>
+
+</div>
+{#
+<!-- Facebook -->
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=295078817182075";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+#}
+
+
+{% endblock %}

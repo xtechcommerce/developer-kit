@@ -1,0 +1,156 @@
+{% extends _layout %}
+
+{% block content %}
+
+<div class="body">
+        
+  <div id="customer-accounts" class="clearfix">
+       
+    <div class="side-pad btm-margin">
+        
+        <h1 class="title">Pedido #{{ order_id }}</h1>
+        <p>
+            {{ customer.ship_address|format_address_nl2br }}
+        </p>
+        <p>
+            Forma de entrega: {{ shipping.method }}<br>
+            Forma de pagamento: {{ format_payment_desc(payment.description) }}
+        </p>
+        
+    </div>
+
+    <table class="table">
+
+      <thead>
+
+        <tr>
+          <th width="50%">
+            {{ lang('product') }}
+          </th>
+          <th>
+            {{ lang('quantity') }}
+          </th>
+          <th>
+            {{ lang('totals') }}
+          </th>
+        </tr>
+
+      </thead>
+
+      <tfoot>
+          {% if loja.group_discount > 0 %}
+            <tr>
+              <td colspan="2">
+                <strong>
+                  {{ lang('group_discount') }}
+                </strong>
+              </td>
+              <td>
+                {{ (0 - loja.group_discount)|format_currency }}
+              </td>
+            </tr>
+          {% endif %}
+
+          <tr>
+            <td colspan="2">
+              <strong>
+                {{ lang('subtotal') }}
+              </strong>
+            </td>
+            <td>
+              {{ loja.subtotal|format_currency }}
+            </td>
+          </tr>
+
+          {% if loja.shipping_cost > 0 %}
+            <tr>
+              <td colspan="2">
+                <strong>
+                  {{ lang('shipping') }}
+                </strong>
+              </td>
+              <td>
+                {{ loja.shipping_cost|format_currency }}
+              </td>
+            </tr>
+          {% endif %}
+
+          {% if loja.coupon_discount > 0 %}
+            <tr>
+              <td colspan="2">
+                <strong>
+                  {{ lang('coupon_discount') }}
+                </strong>
+              </td>
+              <td>
+                -{{ loja.coupon_discount|format_currency }}
+              </td>
+            </tr>
+          {% endif %}
+
+          <tr>
+            <td colspan="2">
+              <strong>
+                {{ lang('grand_total') }}
+              </strong>
+            </td>
+            <td>
+              {{ loja.total|format_currency }}
+            </td>
+          </tr>
+      </tfoot>
+
+      <tbody>
+
+        {% for cartkey, product in loja.contents %}
+          <tr>
+            <td>
+              {{ product_img(product, 'thumbnails', {'width': 50}) }}<br>
+              <strong>{{ product.name }}{{ product.sku ? ' (' ~ product.sku ~ ')' : '' }}</strong>
+              {% for name, value in product.options %}
+                <div>
+                  {{ name }}: {{ value }}
+                </div>
+              {% endfor %}
+            </td>
+            <td>
+              {{ product.quantity }}
+            </td>
+            <td>
+              {{ (product.price * product.quantity)|format_currency }}
+            </td>
+          </tr>
+        {% endfor %}
+
+      </tbody>
+      
+    </table>
+
+    {% if loja.history %}
+
+    <hr>
+    
+    <table class="table table-light">
+        <thead>
+            <tr>
+                <th>{{ lang('history') }}</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for history in loja.history %}
+           <tr>
+               <td>{{ history }}</td>
+           </tr> 
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+  </div>
+
+</div>
+
+
+{% endblock %}
+
+

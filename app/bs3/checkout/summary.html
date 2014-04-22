@@ -1,0 +1,140 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th colspan="2">
+        {{ lang('name') }}
+      </th>
+      <th style="width: 15%;">
+        {{ lang('price') }}
+      </th>
+      <th style="width: 12%;">
+        {{ lang('quantity') }}
+      </th>
+      <th style="width: 15%;">
+        {{ lang('totals') }}
+      </th>
+    </tr>
+  </thead>
+
+    
+  <tbody>
+    {% for cartkey, product in cart('contents') %}
+      <tr>
+        <td width="7%" class="cart-product-img">{{ product_img(product, 'thumbnails', {'width': 78}) }}</td>
+        <td>
+          <strong>{{ product.name }}{{ product.sku ? ' (' ~ product.sku ~ ')' : '' }}</strong>
+          {% for name, value in product.options %}
+            <div>
+              {{ name }}: {{ value }}
+            </div>
+          {% endfor %}
+        </td>
+        <td>
+          {{ product.price|format_currency }}
+        </td>
+        <td>
+          <div class="control-group">
+            <div class="controls">
+              <div class="input-group">
+                <input class="form-control" name="cartkey[{{ cartkey }}]" value="{{ product.quantity }}" style="width: 50%;" type="text"{{ product.fixed_quantity ? ' readonly="true"' : '' }} />
+                <button class="btn btn-danger" type="button" onclick="if(confirm('{{ lang('remove_item') }}')){ window.location='{{ site_url('cart/remove_item/' ~ cartkey) }}'; }">
+                  <span class="glyphicon glyphicon-remove"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+  
+          {% if not product.fixed_quantity %}
+            <a class="alter_qty" href="#" onclick="$(this).parents('form:first').submit(); return false;">
+              Alterar
+            </a>
+          {% endif %}
+        </td>
+        <td>
+          {{ (product.price * product.quantity)|format_currency }}
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+
+  <tfoot>
+
+    {% if cart('group_discount') > 0 %}
+      <tr>
+        <td colspan="4">
+          <strong>
+            {{ lang('group_discount') }}
+          </strong>
+        </td>
+        <td>
+          {{ (0 - cart('group_discount'))|format_currency }}
+        </td>
+      </tr>
+    {% endif %}
+
+    <tr>
+      <td colspan="4">
+        <strong>
+          {{ lang('subtotal') }}
+        </strong>
+      </td>
+      <td>
+        {{ cart('subtotal')|format_currency }}
+      </td>
+    </tr>
+
+    {% if cart('shipping_cost') > 0 %}
+      <tr>
+        <td colspan="4">
+          <strong>
+            {{ lang('shipping') }}
+          </strong>
+        </td>
+        <td>
+          {{ cart('shipping_cost')|format_currency }}
+        </td>
+      </tr>
+    {% endif %}
+
+    {% if cart('coupon_discount') > 0 %}
+      <tr>
+        <td colspan="4">
+          <strong>
+            {{ lang('coupon_discount') }}
+          </strong>
+        </td>
+        <td>
+          -{{ cart('coupon_discount')|format_currency }}
+        </td>
+      </tr>
+    {% endif %}
+
+    {% if cart('get_custom_charges')|count > 0 %}
+      {% for name, price in cart('get_custom_charges') %}
+        <tr>
+          <td colspan="4">
+            <strong>
+              {{ name }}
+            </strong>
+          </td>
+          <td>
+            {{ (price)|format_currency }}
+          </td>
+        </tr>
+      {% endfor %}
+    {% endif %}
+
+    <tr>
+      <td colspan="4">
+        <strong>
+          {{ lang('grand_total') }}
+        </strong>
+      </td>
+      <td>
+        {{ cart('total')|format_currency }}
+      </td>
+    </tr>
+
+  </tfoot>
+
+</table>

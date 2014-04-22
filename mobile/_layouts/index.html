@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  
+  <title>{{ shop_config('company_name') }} | {{ document_title(seo_title) }}</title>
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+
+  <!--[if lt IE 9]>
+  <script src="dist/html5shiv.js"></script>
+  <![endif]-->
+  
+  <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+  <!-- jQuery -->
+  {{ theme_js('jquery.min.js', true) }}
+  {{ theme_css('flexslider.css', true) }}
+  {{ theme_css('styles_less.css', true) }}
+  {{ theme_css('overrides.css', true) }}
+    
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Raleway:300,400,700">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans+Narrow:300,400,700">
+  
+  <script src="//cdn.shopify.com/s/files/1/0192/0564/t/3/assets/modernizr.js?3213" type="text/javascript"></script>
+    
+</head>
+<body class="loading vertical">
+  {% if design_mode %}
+     {{ template_navigator() }}
+  {% endif %}
+  <div class="wrapper">
+    <!-- TOP NAV -->
+    <div id="toolbar">
+      <a href="#search" class="icon icon-search accordion-toggle" data-toggle="collapse" data-parent="#toolbar">&nbsp;</a>
+      <a href="#email" class="icon icon-envelope accordion-toggle" data-toggle="collapse" data-parent="#toolbar">&nbsp;</a>
+      <a href="{{ site_url('secure/my_account') }}" class="icon icon-user">&nbsp;</a>
+      <a href="/cart" class="icon icon-shopping-cart">&nbsp;</a><a href="/cart" class="cart-total-items"><span class="badge">{{ items_in_cart() }}</span></a>
+      
+      <a href="#menu" data-toggle="collapse" data-parent="#toolbar" class="menu icon icon-reorder accordion-toggle">&nbsp;</a>
+      <nav id="menu" class="collapse">
+        <ul id="pulldown" class="pulldown">
+          {% for cat in categories %}
+            <li><a href="{{ site_url(cat.category.slug) }}">{{ cat.category.name }}</a></li>
+          {% endfor %}
+        </ul>
+      </nav>
+      
+      
+      <div id="email" class="pulldown email collapse">
+        <div class="full-pad">
+          <a href="mailto:{{ shop_config('email') }}" class="btn alternate">Email {{ shop_config('email') }}</a>
+        </div>
+      </div>
+      
+      {#       
+      <div id="phone" class="pulldown phone collapse">
+        <div class="full-pad">
+          <a href="tel:(123)%20456%207890" class="btn alternate"><span class="icon-phone"></span> Call (123) 456 7890</a>
+        </div>
+      </div>
+      #}
+      
+      <div id="search" class="pulldown search collapse ">
+        {{ form_open('cart/search', 'id="form-search" class="full-pad input-append"') }}
+          <input type="text" name="term" class="replace product_search" title="Search" placeholder="Search..." />
+          <button type="submit" class="submit btn alternate go_search">Search</button>
+        {{ form_close() }}
+      </div>
+    </div>
+    <!-- LOGO -->
+    <div class="header rel side-margin">
+    <a id="logo" class="bl" href="/">
+
+      <img src="{{ logo_url('dark') }}">
+
+    </a>
+    </div>
+    <!-- NAV -->
+    
+    <!-- CONTENT -->
+
+    {% if flashdata.error %}
+    <div class="alert alert-danger">{{ flashdata.error }}</div>
+    {% endif %}
+    {% if flashdata.message %}
+    <div class="alert alert-info">{{ flashdata.message }}</div>
+    {% endif %}
+
+    {% block content %}
+    
+    {% endblock %}
+
+    <!-- SECONDARY NAV -->
+    <nav id="secondary-menu">
+      <ul>
+        {% for cat in categories %}
+          <li><a href="{{ site_url(cat.category.slug) }}">{{ cat.category.name }}</a></li>
+        {% endfor %}
+      </ul>
+    </nav>
+
+    <!-- FOOTER -->
+    <footer class="side-pad">
+    
+      <div id="sign-up">
+        <h4>Assine nossa newsletter</h4>
+        
+        {{ form_open('contact/newsletter_signup', 'class="contact-form input-append"') }}
+          <input type="email" value="" name="email" class="required email" id="contact_email" placeholder="Email address">
+          <button type="submit" name="subscribe" id="mc-embedded-subscribe" class="submit btn">Cadastrar!</button>
+        {{ form_close() }}
+        
+      </div>
+    
+    
+      <aside id="social-media">
+        {% if social_link('facebook') %}
+          <a href="{{ social_link('facebook') }}" title="Mostrar Facebook Fanpage" class="icon icon-facebook-sign"></a>
+        {% endif %}
+        {% if social_link('twitter') %}
+          <a href="{{ social_link('twitter') }}" title="Mostrar Twitter Fanpage" class="icon icon-twitter-sign"></a>
+        {% endif %}
+      </aside>
+    
+      <nav class="footer navigation clearfix">
+        <ul id="footer_navigation">
+          {% for page in get_children_of_page('institucional') %}
+            <li>
+              <a href="{{ site_url(page.slug) }}">{{ page.title }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </nav>
+      <div class="credit-cards">
+        <ul>      
+          <li class="cc visa"></li>
+          <li class="cc mc"></li>
+        </ul>
+      </div>
+      <div class="credits">
+        <p>Mobile / <a href="/?theme=main">Desktop</a></p>
+        <p>Powered by <a href="http://www.xtechcommerce.com.br/" target="_blank">Xtech</a></p>
+      </div>
+    </footer>
+  </div>
+  
+  {{ theme_js('retina.js', true) }}
+  {{ theme_js('bootstrap-transition.js', true) }}
+  {{ theme_js('bootstrap-collapse.js', true) }}
+  {{ theme_js('jquery.flexslider-min.js', true) }}
+  {{ theme_js('jquery.easing.js', true) }}
+
+</body>
+</html>

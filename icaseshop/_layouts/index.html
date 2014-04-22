@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="pt-BR" dir="ltr">
+   <head>
+      {{ header_code() }}
+      <title>{{ shop_config('company_name') }} | {{ document_title(seo_title) }}</title>
+    
+      <!-- CSS -->
+      <link href='http://fonts.googleapis.com/css?family=Ubuntu:300,500' rel='stylesheet' type='text/css'>
+      {{ theme_css('bootstrap.min.css', true) }}
+      {{ theme_css('animate.min.css', true) }}
+      {{ theme_css('animate.delay.css', true) }}
+      {{ theme_css('application.css', true) }}
+     
+      <!-- JS -->
+      <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+      <script type="text/javascript" src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+      {{ theme_js('bootstrap.min.js', true) }}
+      {{ theme_js('jquery.maskedinput.js', true) }}
+      {{ theme_js('application.js', true) }}
+   </head>
+   <body itemscope itemtype="http://schema.org/Organization">
+      {% if design_mode %}
+         {{ template_navigator() }}
+      {% endif %}
+      <div id="modal-container" class="modal fade"></div>
+      <header>
+         <div class="container">
+            <div class="row pos-relative">
+               <div class="col-xs-12">
+                  <h1 id="site-logo" itemprop="name">
+                     <a href="{{ base_url() }}">
+                       {{ theme_img('logo.png', 'Logo') }}
+                     </a>
+                  </h1>
+               </div>
+               <div id="top-navigation">
+                  <ul class="list-inline">
+                    <li>
+                       <a href="{{ site_url('contact') }}">
+                        Fale conosco
+                       </a>
+                    </li>
+                    <li>|</li>
+                    {% if logged_in %}
+                     <li>
+                        <a href="{{ site_url('secure/my_account') }}">
+                         <i class="glyphicon glyphicon-user"></i> Minha conta
+                        </a>
+                     </li>
+                     <li>|</li>
+                     <li>
+                       <a href="{{ site_url('secure/logout') }}">
+                        <i class="glyphicon glyphicon-off"></i> Sair
+                       </a>
+                     </li>
+                    {% else %}
+                     <li>
+                        <a href="{{ site_url('secure/login') }}">
+                        Acessar sua conta
+                        </a>
+                     </li>
+                    {% endif %}
+                     <li>|</li>
+                     <li>
+                        <a href="{{ site_url('cart/view_cart') }}">
+                        ({{ items_in_cart() }}) Carrinho
+                        &nbsp;
+                        <i class="glyphicon glyphicon-shopping-cart"></i>
+                        </a>
+                     </li>
+                  </ul>
+               </div>
+               <div id="top-search">
+                  <div class="pos-relative">
+                     <!-- Pesquisa -->
+                      {{ form_open('cart/search', 'id="form-search"') }}
+                        <div class="input-group">
+                           <input type="text" name="term" id="search-engine" class="form-control" placeholder="O que você procura?" autocomplete="off" />
+                           <span class="input-group-btn">
+                           <button class="btn btn-default" type="button">
+                           <i class="glyphicon glyphicon-search"></i>
+                           </button>
+                           </span>
+                        </div>
+                        <!-- Carregando -->
+                        <div id="search-loader">{{ theme_img('ajax-loader.gif', 'Carregando') }}</div>
+                        <!-- Resultados da pesquisa -->
+                        <div id="search-results">
+                           <div class="text-center">
+                              <i class="glyphicon glyphicon-eject"></i>
+                           </div>
+                           <div id="search-results-in"></div>
+                        </div>
+                     {{ form_close() }}
+                  </div>
+               </div>
+            </div>
+         </div>
+      </header>
+      <!-- Menu Top -->
+      <section id="main-menu">
+         <div class="container">
+            <div class="row">
+               <div class="col-xs-12">
+                  <nav class="navbar navbar-default" role="navigation">
+                     <ul class="nav navbar-nav">
+                      {% for cat in categories %}
+                        {% if cat.children|count > 0 %}
+                          <li class="dropdown" onmouseover="$(this).addClass('open');" onmouseout="$(this).removeClass('open');">
+                            <a href="{{ site_url(cat.category.slug) }}">
+                              {{ cat.category.name }}
+                            </a>
+                            <ul class="dropdown-menu">
+                              {% for subcat in cat.children %}
+                                  <li>
+                                    <a href="{{ site_url(cat.category.slug) ~ '/' ~ site_url(subcat.category.slug) }}">
+                                      {{ subcat.category.name }}
+                                    </a>
+                                  </li>
+                              {% endfor %}
+                            </ul>
+                          </li>
+                        {% else %}
+                          <li class="{{ cat.category.slug != 'promocoes' ? 'sale' : '' }}">
+                            <a href="{{ site_url(cat.category.slug) }}">
+                              {{ cat.category.name }}
+                            </a>
+                          </li>
+                        {% endif %}
+                      {% endfor %}
+                     </ul>
+                  </nav>
+               </div>
+            </div>
+         </div>
+      </section>
+
+      <section id="tarja-banner">
+        <div class="container">
+          <div class="row">
+            <div class="col-xs-12">
+              {{ theme_img('tarja-banner.jpg', 'Frete Gratis', {'width': '960px'}) }}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {% if homepage %}
+      <!-- Banner Principal -->
+      <section id="main-banner">
+         <div class="container">
+            <div id="carousel" class="carousel slide" data-ride="carousel">
+               <!-- Wrapper for slides -->
+               <div class="carousel-inner">
+                  {% for banner in banners %}
+                  <div class="item{{ loop.first ? ' active' : '' }}">
+                     {{ linked_banner(banner) }}
+                  </div>
+                  {% endfor %}
+               </div>
+               <!-- Controls -->
+               {% if banners|count > 1 %}
+                <ol class="carousel-indicators">
+                  {% for i in 0..1 %}
+                    <li data-target="#carousel" data-slide-to="{{ i }}" class="{{ i == 0 ? 'active' : '' }}"></li>
+                  {% endfor %}
+                </ol>
+               {% endif %}
+            </div>
+         </div>
+      </section>
+      {% endif %}
+      <section id="store-content">
+         <div class="container">
+            <div class="row">
+               <div class="col-xs-12">
+                  {% if flashdata.error %}
+                  <div class="alert alert-danger">{{ flashdata.error }}</div>
+                  {% endif %}
+                  {% if flashdata.message %}
+                  <div class="alert alert-info">{{ flashdata.message }}</div>
+                  {% endif %}
+
+                  {% block content %}
+
+                  {% endblock %}
+               </div>
+            </div>
+         </div>
+      </section>
+
+      <section id="sec-social">
+        <div class="container">
+          <div class="row">
+            <div class="col-xs-6">
+              <h3>
+                FIQUE POR DENTRO!
+              </h3>
+              <p>
+                SIGA-NOS NAS REDES SOCIAIS
+              </p>
+              <br />
+              <ul class="list-inline">
+                <li>
+                  <a href="https://www.facebook.com/iCaseShopBR" target="_blank">
+                    {{ theme_img('icon-facebook.png', 'Curta nossa página no Facebook') }}
+                  </a>
+                </li>
+                <li>
+                  <a href="http://instagram.com/icaseshopbr" target="_blank">
+                    {{ theme_img('icon-instagram.png', 'Siga-nos no Instagram') }}
+                  </a>
+                </li>
+                <li>
+                  <a href="https://twitter.com/iCaseShopBR" target="_blank">
+                    {{ theme_img('icon-twitter.png', 'Siga-nos no Twitter') }}
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="col-xs-6">
+              <div class="like-box">
+                <div class="fb-like-box" data-href="http://www.facebook.com/icaseshopbr" data-width="445" data-colorscheme="light" data-show-faces="true" data-header="false" data-stream="false" data-show-border="false"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+         <div class="container content">
+            <div class="row">
+               <div class="col-xs-3">
+                  <h4>Institucional</h4>
+                  <ul>
+                    {% for page in get_children_of_page('institucional') %}
+                     <li>
+                       <a href="{{ site_url(page.slug) }}">{{ page.title }}</a>
+                     </li>
+                    {% endfor %}
+                  </ul>
+               </div>
+               <div class="col-xs-3">
+                  <h4>Ajuda</h4>
+                  <ul>
+                    {% for page in get_children_of_page('ajuda-e-suporte') %}
+                     <li>
+                       <a href="{{ site_url(page.slug) }}">{{ page.title }}</a>
+                     </li>
+                    {% endfor %}
+                  </ul>
+               </div>
+               <div class="col-xs-6">
+                  <div class="row">
+                     <div class="col-xs-8">
+                        <h4>Forma de Pagamento</h4>
+                        <ul class="list-inline">
+                           <li>
+                              {{ theme_img('f-boleto.png', 'Boleto') }}
+                           </li>
+                           <li>
+                              {{ theme_img('f-mastercard.png', 'Mastercard') }}
+                           </li>
+                           <li>
+                              {{ theme_img('f-visa.png', 'Visa') }}
+                           </li>
+                           <li>
+                              {{ theme_img('f-pagseguro.png', 'Pagseguro') }}
+                           </li>
+                        </ul>
+                     </div>
+                     <div class="col-xs-4">
+                        <h4>Forma de Entrega</h4>
+                        <ul class="list-inline">
+                          <li>
+                            {{ theme_img('f-correios.png', 'Correios', {'height': '25'}) }}
+                          </li>
+                        </ul>
+                     </div>
+                  </div>
+                  <div class="row margin-top">
+                     <div class="col-xs-12 margin-top">
+                        {{ form_open('contact/newsletter_signup') }}
+                           <table class="tbl-newsletter pull-right">
+                              <tr>
+                                 <td>
+                                    <label for="newsletter">Assine nossa newsletter</label>
+                                 </td>
+                                 <td>
+                                    <div class="input-group">
+                                       <input type="text" name="email" id="newsletter" placeholder="Insira seu e-mail" class="form-control" />
+                                       <span class="input-group-btn">
+                                       <button type="submit" class="btn btn-bck">
+                                       Enviar
+                                       </button>
+                                       </span>
+                                    </div>
+                                 </td>
+                              </tr>
+                           </table>
+                        {{ form_close() }}
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="row margin-top">
+               <div class="col-xs-12 margin-top">
+                  
+               </div>
+            </div>
+         </div>
+         <div class="bottom">
+            <div class="container">
+               <div class="row">
+                  <div class="col-xs-4">
+                     <small>
+                     &copy; {{ shop_config('company_name') }} 2013 | Todos os direitos Reservados.
+                     </small>
+                  </div>
+                  <div class="col-xs-6 text-center">
+                     <small>
+                     Designed by 
+                     <a href="http://marketingshop.com.br" target="_blank">{{ theme_img('marketingshop.png', 'Marketingshop') }}</a>
+                     |
+                     Powered by
+                     <a href="#">{{ theme_img('xtech.png', 'Xtech') }}</a>
+                     </small>
+                  </div>
+                  <div class="col-xs-2">
+                     <small class="pull-right">
+                       {{ theme_img('f_site_seguro.png', 'Site seguro') }}            
+                     </small>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </footer>
+   </body>
+</html>

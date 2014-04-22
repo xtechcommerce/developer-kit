@@ -1,0 +1,53 @@
+{% extends _layout %}
+
+{% block content %}
+
+<h2 class="page-title">
+   Produtos em destaque
+</h2>
+<div class="row prod-list">
+	{% for product in products %}
+		<div class="col-xs-4">
+		   <div class="prod-wrapper">
+		      <!-- Overlay com o link do produto -->
+		      <a class="prod-overlay" title="Web" href="{{ product.slug }}"></a>
+		      <!-- Imagem principal do produto -->
+		      <div class="prod-image">
+		         <div class="prod-image-overflow">
+		            {{ product_img(product, 'small') }}
+		         </div>
+		      </div>
+		      <div class="prod-info">
+		         <h3>{{ product.name }}</h3>
+		         <span class="price">
+		         <strong class="buy-price">
+		         <span class="sale">{{ product.price|format_currency }}</span>
+		         </strong>
+		         {% if product.installments > 1 %}
+		         	<span class="installments-price">
+		         		Em até <strong class="color">{{ product.installments }} x</strong>
+		         		de <strong class="color">{{ (product.price/product.installments)|format_currency }}</strong>
+		         		<span>sem juros</span>
+		         	</span>
+		         {% endif %}
+		         </span>
+		      </div>
+		   </div>
+		</div>
+	{% else %}
+		<div class="col-md-12">
+			Não há produtos na categoria home.
+		</div>
+	{% endfor %}
+</div>
+
+{{ theme_js('jquery.equalheights.js', true) }}
+<script type="text/javascript">
+$(window).load(function(){
+	$('.prod-wrapper').equalHeights();
+	$('.prod-image').equalHeights();
+});
+</script>
+
+
+{% endblock %}

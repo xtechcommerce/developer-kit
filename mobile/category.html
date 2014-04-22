@@ -1,0 +1,65 @@
+{% extends _layout %}
+
+{% block content %}
+
+
+<div class="body">
+	<div id="collection" class="clearfix">
+	
+		<div class="side-pad btm-margin">
+			
+			<h1 class="title">{{ category.name }}</h1>
+			<div class="description">{{ category.description }}</div>
+			
+		</div>
+	
+		{% if categories[category.root_category].children|count > 0 %}
+		<div class="side-pad btm-margin">
+	    <select class="tag-filter" name="tag-filter">
+	    	{% for category_group in categories[category.root_category].children %}
+	      	<option data-url="{{ site_url(categories[category.root_category].category.slug ~ '/' ~ category_group.category.slug) }}" value="">{{ category_group.category.name }}</option>
+	      	{% for subcategory_group in category_group.children %}
+	      		<option data-url="{{ site_url(categories[category.root_category].category.slug ~ '/' ~ category_group.category.slug ~ '/' ~ subcategory_group.category.slug) }}" value="">{{ subcategory_group.category.name }}</option>
+	      	{% endfor %}
+	      {% endfor %}
+	    </select>
+	  </div>
+	  {% endif %}
+	    
+		<div id="products" class="products clearfix">
+			
+			{% for product in products %}
+
+				<div class="product clearfix">
+				  <a href="{{ site_url(product.slug) }}" class="rel bl">
+				  	{% if product.saleprice > 0 %}
+				  		<span class="abs sale">Sale</span>
+				  	{% endif %}
+				    {{ product_img(product, 'small') }}
+				  </a>
+				  <div class="product-info full-margin btm-border clearfix">
+				    <p class="pull-left"><a href="{{ site_url(product.slug) }}"><strong>{{ product.name }}</strong></a></p>
+				    <p class="price pull-right">
+				    	<em>
+				    	{% if product.saleprice > 0 %}
+				    		{{ product.saleprice|format_currency }} <del>{{ product.price|format_currency }}</del>
+				    	{% else %}
+				    		{{ product.price|format_currency }}
+				    	{% endif %}
+				    	</em>
+				    </p>
+				  </div>
+				</div>
+
+			{% else %}
+			<div class="product clearfix">
+				Não há produtos nesta categoria.
+			</div>
+			{% endfor %}
+
+		</div>
+			
+	</div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,255 @@
+{% extends _layout %}
+
+{% block content %}
+
+<div id="product" itemscope="" itemtype="http://schema.org/Product">
+	{{ breadcrumbs_widget() }}
+	<div class="row showcase">
+		<div class="col-xs-6">
+			<div class="prod-image text-center">
+				{{ product_img(product, 'medium', {'jqzoom': true, 'width': 465}) }}
+			</div>
+			<div class="prod-image-thumbs">
+				<ul class="list-inline">
+					{% for image in product.images %}
+						<li>
+							{% if design_mode %}
+							   <a href='javascript: void(0);' rel="{gallery: 'gal1', smallimage: 'http://placehold.it/350x350', largeimage: 'http://placehold.it/1000x1000'}">
+							   	<img src='http://placehold.it/350x350' style="max-width: 140px;" alt="{{ product.name }}" />
+							   </a>
+							{% else %}
+								<a href='javascript: void(0);' rel="{gallery: 'gal1', smallimage: '{{ theme_upload_url('images/medium/' ~ image.filename) }}', largeimage: '{{ theme_upload_url('images/medium/' ~ image.filename) }}'}">
+									<img src='{{ theme_upload_url('images/thumbnails/' ~ image.filename) }}' style="max-width: 140px;" alt="{{ product.name }}" />
+								</a>
+							{% endif %}
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<h1 class="prod-title color2" itemprop="name">
+				{{ product.name }}
+			</h1>
+			<div class="prod-sub clearfix">
+				{% if product.sku %}
+					<span class="prod-ref color3 pull-left">
+						Ref.:
+						<span itemprop="sku">
+							{{ product.sku }}
+						</span>
+					</span>
+				{% endif %}
+				<span class="pull-right">
+					{{ theme_img('shield.png', 'Compra Segura') }}
+					Compra Segura
+				</span>
+			</div>
+			{{ form_open('cart/add_to_cart', 'class="form-horizontal"') }}
+
+          		<div class="hide">{{ variation_select(product, {button_selects: 'true'}) }}</div>
+				<div class="prod-variants">
+					<ul>		
+						{% for option in product.options %}
+						<li class="prod-variant-li">
+							<div class="prod-variant">
+								<span class="prod-variant-title">
+									Selecione a opção para
+									<span class="color">{{option.name}}:</span>
+								</span>
+								<ul class="list-inline">
+									{% for value in option.values %}
+									<li>
+										<button class="btn btn-default prod-variant-btn" data-id="{{value.id}}">{{value.name}}</button>
+									</li>
+									{% endfor %}
+								</ul>
+							</div>
+						</li>
+						{% endfor %}
+					</ul>
+				</div>
+
+				<div class="prod-action">
+					<div class="row">
+
+						<div class="col-xs-7">
+							<div class="price" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer">
+								<span class="price">
+									<strong class="buy-price">
+										{% if product.saleprice > 0 %}
+											<span class="slash">{{ product.price|format_currency }}</span>
+											<span class="sale color" itemprop="price">{{ product.saleprice|format_currency }}</span>
+										{% else %}
+											<span class="sale color" itemprop="price">{{ product.price|format_currency }}</span>
+										{% endif %}
+									</strong>
+									{% if product.installments > 1 %}
+										<span class="installments-price">
+											Em até <strong class="color">{{ product.installments }} x</strong>
+											de <strong class="color">{{ (product.price/product.installments)|format_currency }}</strong>
+											<span>sem juros</span>
+										</span>
+									{% endif %}
+								</span>
+							</div>
+						</div>
+
+						<div class="col-xs-5">
+							<div class="buy-btn pull-right">
+								{{ buy_button('Comprar', product) }}
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</form>
+
+			<div class="prod-secure text-center">
+				{{ theme_img('secure-process.png', 'Compre de forma segura, seu pedido é enviado e você recebe em sua casa.') }}
+			</div>
+
+			<div class="prod-share margin-top">
+
+				
+
+			</div>
+		</div>
+	</div>
+
+	{% if product.description or product.properties|count > 0 %}
+
+		<!-- Descricao e Caracteristicas do produto -->
+		<div class="prod-description">
+			<ul class="nav nav-tabs">
+				<li class="active">
+					<a href="#tab-description" data-toggle="tab">Descrição</a>
+				</li>
+				{% if product.properties|count > 0 %}
+				<li>
+					<a href="#tab-properties" data-toggle="tab">Características</a>
+				</li>
+				{% endif %}
+			</ul>
+
+			<div class="tab-content">
+
+				<div class="tab-pane active" id="tab-description">
+					{{ product.description|raw }}
+				</div>
+				{% if product.properties|count > 0 %}
+				<div class="tab-pane clearfix" id="tab-properties">
+					{{ format_properties(properties, product.properties) }}
+				</div>
+				{% endif %}
+			</div>
+
+		</div>
+
+	{% endif %}
+
+
+	<!-- Comentarios Facebook -->
+	<div class="prod-comments">
+		<div class="fb-comments" data-href="{{ site_url(uri_string()) }}" data-width="960" data-num-posts="5"></div>
+	</div>
+
+</div>
+
+
+<!-- Produtos relacionados -->
+
+{% if related|count > 0 %}
+
+<div id="prod-relateds">
+	
+	<h2 class="title">Aproveite também</h2>
+
+	<div class="row prod-list">
+
+	{% for related_product in related|slice(0, 3) %}
+	
+		<div class="col-md-4">
+		    <div class="thumbnail">
+		      {{ product_img(related_product, 'thumbnails') }}
+		      <div class="caption text-center">
+		        <h5>{{ related_product.name }}</h5>
+		        <a href="{{ related_product.slug }}" class="btn btn-default">Mostrar</a>
+		      </div>
+		    </div>
+		</div>
+
+		<div class="col-xs-3">
+			<div class="prod-wrapper">
+				<!-- Overlay com o link do produto -->
+				<a class="prod-overlay" title="{{ related_product.name }}" href="{{ site_url(related_product.slug) }}"></a>
+				
+				<!-- Imagem principal do produto -->
+				<div class="prod-image">
+
+					{% if related_product.quantity <= 0 %}
+						<span class="icon icon-esgotado"></span>
+						<div class="opacity-overlay"></div>
+					{% endif %}
+					
+					<div class="prod-image-overflow">
+						{{ product_img(related_product, 'small', {'witdh': '194'}) }}
+					</div>
+
+				</div>
+
+				<div class="prod-info">
+					
+					<h3>{{ related_product.name }}</h3>
+
+					<span class="price">
+						
+						{% if related_product.quantity <= 0 %}
+							<span>
+								<br />
+								{{ lang('out_of_stock') }}
+							</span>
+						{% endif %}
+
+						<strong class="buy-price">
+							
+							{% if related_product.saleprice > 0 %}
+								<span class="slash">{{ related_product.price|format_currency }}</span>
+								<span class="sale color" itemprop="price">{{ related_product.saleprice|format_currency }}</span>
+							{% else %}
+								<span class="sale color" itemprop="price">{{ related_product.price|format_currency }}</span>
+							{% endif %}
+
+						</strong>
+
+						{% if related_product.installments > 1 %}
+							<span class="installments-price">
+								Em até <strong class="color">{{ related_product.installments }} x</strong>
+								de <strong class="color">{{ (related_product.price/related_product.installments)|format_currency }}</strong>
+								<span>sem juros</span>
+							</span>
+						{% endif %}
+
+					</span>
+
+				</div>
+
+			</div>
+
+		</div>
+	
+	{% endfor %}
+
+	</div>
+
+</div>
+
+{% endif %}
+
+
+{{ theme_js('jquery.equalheights.js', true) }}
+{{ theme_js('jquery.jqzoom-core.js', true) }}
+{{ theme_css('jquery.jqzoom.css', true) }}
+
+
+{% endblock %}

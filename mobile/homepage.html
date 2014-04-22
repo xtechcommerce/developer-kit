@@ -1,0 +1,78 @@
+{% extends _layout %}
+
+{% block content %}
+
+<div class="body index">
+
+  <div id="index" class="clearfix">
+
+    <section class="slider">
+      <div id="slider" class="flexslider">
+        <ul class="slides">
+          {% for banner in banners %}
+            <li>
+              {{ linked_banner(banner) }}
+            </li> 
+          {% endfor %}
+        </ul>
+      </div>
+    </section>
+
+    <h2>Produtos em destaque</h2> 
+    <div id="products" class="products clearfix">
+        
+    	{% for product in products %}
+	
+    		<div class="product clearfix ">
+    		  <a href="{{ site_url(product.slug) }}" class="rel bl">
+    		  	{% if product.saleprice > 0 %}
+    		  		<span class="abs sale">Sale</span>
+    		  	{% endif %}
+    		    {{ product_img(product, 'small') }}
+    		  </a>
+    		  <div class="product-info full-margin btm-border clearfix">
+    		    <p class="pull-left"><a href="{{ site_url(product.slug) }}"><strong>{{ product.name }}</strong></a></p>
+    		    <p class="price pull-right">
+    		    	<em>
+    		    	{% if product.saleprice > 0 %}
+    		    		{{ product.saleprice|format_currency }} <del>{{ product.price|format_currency }}</del>
+    		    	{% else %}
+    		    		{{ product.price|format_currency }}
+    		    	{% endif %}
+    		    	</em>
+    		    </p>
+    		  </div>
+    		</div>
+	
+    	{% else %}
+	
+    		<div class="product clearfix ">
+    		  Não há produtos na categoria home.
+    		</div>
+	
+    	{% endfor %}
+
+    </div>
+    
+  </div>
+
+</div>
+
+<script type="text/javascript">
+$(window).load(function(){
+  $('#slider').flexslider({
+    animation: "fade",
+    slideshow: true,           
+    slideshowSpeed: 5000,
+    controlNav: true,      
+    directionNav: false,
+    start: function(slider){
+      $('body').removeClass('loading');
+    }
+  });
+});
+</script>
+
+
+
+{% endblock %}

@@ -1,0 +1,102 @@
+<h1 class="page-title">Compra realizada com successo!</h1>
+
+<div class="row">
+    <div class="col-xs-12">
+    
+        <div class="row">
+
+            <div class="col-md-6">
+                <h4>O número do seu pedido é #{{ order.order_number }}</h4>
+                {% if boletourl %}
+                <!-- Boleto begin -->
+            
+                  <p>Agora, resta imprimir o boleto. Ele pode ser pago em qualquer agência ou pelo site do seu banco.</p>
+                  <p>Como o banco leva um dia para processar o boleto, o prazo de entrega começa a valer um dia após o seu pagamento.</p>
+                  <p><a class="btn btn-primary" target="_blank" href="{{ boletourl }}">Imprimir boleto</a></p>
+            
+                <!-- Boleto end -->
+                {% else %}
+                <!-- CC begin -->
+            
+                  <p>Enviamos os detalhes do seu pedido para {{ order.email }}.</p>
+                  <p><a class="btn btn-default" href="{{ site_url('/') }}">Voltar para pagina inicial</a></p>
+            
+                <!-- CC end -->
+                {% endif %}
+            </div>
+
+            <div class="col-md-6">
+                {{ global_js('sharer.js', true) }}
+                {{ global_css('sharer.css', true) }}
+
+                <div class="panel panel-default">
+                      <div class="panel-heading">
+                            <h3 class="panel-title">Compartile sua compra!</h3>
+                      </div>
+                      <div class="panel-body">
+                            <p>Instruções: Selecione um produto e escolhe Facebook ou Twitter.</p>
+                            <div class="share-product-list row">
+                            {% for product in order.contents %}
+                                <div class="col-md-4">
+                                    <a class="thumbnail share-product{{ loop.first ? ' active' : '' }}" href="#" data-description="{{ product.excerpt }}" data-caption="{{ product.name }}" data-link="{{ site_url('p/' ~ product.id) }}" data-picture="{{ product_img(product, 'thumbnails', {'only_link': true}) }}" data-name="Em breve dono de uma linda {{ product.name }} da {{ shop_config('company_name') }}!">
+                                        {{ product_img(product, 'thumbnails') }}
+                                    </a>
+                                </div>
+                            {% endfor %}
+                            </div>
+                      </div>
+                      <div class="panel-footer text-center">
+                        <a class="facebookbtn-link btn btn-default" href="#">
+                          Facebook
+                        </a> ou 
+                        <a class="twitterbtn-link btn btn-default" href="#">
+                          Twitter
+                        </a>
+                      </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        {% if shop_config('google_analytics') %}
+
+        <script>
+            
+              var _gaq = _gaq || [];
+              _gaq.push(['_setAccount', '{{ shop_config('google_analytics') }}']);
+              _gaq.push(['_trackPageview']);
+              _gaq.push(['_setDomainName', '{{ shop_config('domain') }}']);
+              _gaq.push(['_addTrans',
+                '{{ order.order_number }}',                         // order ID - required
+                '{{ shop_config('company_name') }}',                // affiliation or store name
+                '{{ order.total|number_format(2, ".", "") }}',      // total - required
+                '0',                                                // tax
+                '{{ order.shipping|number_format(2, ".", "") }}',   // shipping
+                '{{ order.ship_city }}',                            // city
+                '{{ order.ship_zone }}',                            // state or province
+                '{{ order.ship_country }}'                          // country
+              ]);
+
+              {% for product in order.contents %}
+                  
+              _gaq.push(['_addItem',
+                '{{ order.order_number }}',                         // order ID - required
+                '{{ product.sku }}',                                // SKU/code - required
+                '{{ product.sku }} - {{ product.name }}',           // product name
+                '{{ get_product_category(product.id) }}',           // category or variation
+                '{{ product.price|number_format(2, ".", "") }}',    // unit price - required
+                '{{ product.quantity }}'                            // quantity - required
+              ]);
+
+              {% endfor %}
+
+              _gaq.push(['_trackTrans']);                            // submits transaction to the Analytics servers
+
+        </script>
+
+        {% endif %}
+
+    
+    </div>
+</div>

@@ -1,0 +1,15 @@
+.table .cart-product-img{
+    padding: 0;
+}
+
+.cart-bottom-buffer{
+    margin-bottom: 10px;
+}
+
+.cart-bottom-buffer-md{
+    margin-bottom: 20px;
+}
+
+textarea.cart-shipping-notes{
+    height: 115px;
+}

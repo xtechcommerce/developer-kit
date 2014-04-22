@@ -1,0 +1,30 @@
+{% extends _layout %}
+
+{% block content %}
+
+<h1>{{ page.title }}</h1>
+
+<div class="row">
+    <div class="col-md-12">
+        {{ page.content|raw }}
+
+
+        {% if page.slug == 'contato' %}
+
+            {{ form_open('contact/emailsender') }}
+
+                <label for="name">Nome</label>
+                <input type="text" name="name" id="name" value="" class="form-control" />
+
+                <label for="message">Mensagem</label>
+                <textarea name="message" id="message" cols="80" rows="10" class="form-control"></textarea>
+
+                <input type="submit" class="btn btn-bck" value="ENVIAR" />
+
+            {{ form_close() }}
+
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

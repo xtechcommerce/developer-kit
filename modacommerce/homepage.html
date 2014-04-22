@@ -1,0 +1,168 @@
+{% extends _layout %}
+
+{% block banner %}
+
+<section id="main-banners">
+
+	{% if template_settings('layout:banners') == 'banner4' %}
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-8">
+	{% endif %}
+			{% if template_settings('layout:banners') != 'banner4' %}
+				<div class="container">
+			{% endif %}
+					<div id="carousel" class="carousel slide" data-ride="carousel">
+						<div class="carousel-inner">
+							{% for banner in banners %}
+							<div class="item{{ loop.first ? ' active' : '' }}">
+							  {{ linked_banner(banner) }}
+							</div>
+							{% endfor %}
+						</div>
+						{% if banners|count > 1 %}
+							<ol class="carousel-indicators">
+							  {% for banner in banners %}
+								<li data-target="#carousel" data-slide-to="{{ loop.index - 1 }}" class="{{ loop.first ? 'active' : 'passive' }}"></li>
+							  {% endfor %}
+							</ol>
+						{% endif %}
+					</div>
+			{% if template_settings('layout:banners') != 'banner4' %}
+				</div>
+			{% endif %}
+		{% if template_settings('layout:banners') == 'banner4' %}
+			</div>
+			<div class="col-xs-4">
+				<div class="mini-banner">
+					{% if template_settings('image:banner_one') %}
+						{% if template_settings('text:banner_one_link') %}
+							<a href="{{ template_settings('text:banner_one_link') }}">
+						{% endif %}
+								<img src="{{ host_url('uploads/images/medium/' ~ template_settings('image:banner_one')) }}">
+						{% if template_settings('text:banner_one_link') %}
+							</a>
+						{% endif %}
+					{% endif %}
+				</div>
+				<div class="mini-banner margin-top">
+					{% if template_settings('image:banner_two') %}
+						{% if template_settings('text:banner_two_link') %}
+							<a href="{{ template_settings('text:banner_two_link') }}">
+						{% endif %}
+								<img src="{{ host_url('uploads/images/medium/' ~ template_settings('image:banner_two')) }}">
+						{% if template_settings('text:banner_two_link') %}
+							</a>
+						{% endif %}
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endif %}
+
+	{% if template_settings('layout:banners') == 'banner2' %}
+	<div class="container">
+		<div class="row">
+			<div class="banner-col-bl col-xs-4">
+				<div class="mini-banner">
+					{% if template_settings('image:banner_one') %}
+						{% if template_settings('text:banner_one_link') %}
+							<a href="{{ template_settings('text:banner_one_link') }}">
+						{% endif %}
+								<img src="{{ host_url('uploads/images/medium/' ~ template_settings('image:banner_one')) }}">
+						{% if template_settings('text:banner_one_link') %}
+							</a>
+						{% endif %}
+					{% endif %}
+				</div>
+			</div>
+			<div class="banner-col-bm col-xs-4">
+				<div class="mini-banner">
+					{% if template_settings('image:banner_two') %}
+						{% if template_settings('text:banner_two_link') %}
+							<a href="{{ template_settings('text:banner_two_link') }}">
+						{% endif %}
+								<img src="{{ host_url('uploads/images/medium/' ~ template_settings('image:banner_two')) }}">
+						{% if template_settings('text:banner_two_link') %}
+							</a>
+						{% endif %}
+					{% endif %}
+				</div>
+			</div>
+			<div class="banner-col-br col-xs-4">
+				<div class="mini-banner">
+					{% if template_settings('image:banner_three') %}
+						{% if template_settings('text:banner_three_link') %}
+							<a href="{{ template_settings('text:banner_three_link') }}">
+						{% endif %}
+								<img src="{{ host_url('uploads/images/medium/' ~ template_settings('image:banner_three')) }}">
+						{% if template_settings('text:banner_three_link') %}
+							</a>
+						{% endif %}
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endif %}
+
+	{% if template_settings('layout:banners') == 'banner3' %}
+	<div class="container">
+		<div class="row">
+			<div class="banner-col-bl col-xs-6">
+				<div class="mini-banner">
+					{% if template_settings('image:banner_one') %}
+						{% if template_settings('text:banner_one_link') %}
+							<a href="{{ template_settings('text:banner_one_link') }}">
+						{% endif %}
+								<img src="{{ host_url('uploads/images/medium/' ~ template_settings('image:banner_one')) }}">
+						{% if template_settings('text:banner_one_link') %}
+							</a>
+						{% endif %}
+					{% endif %}
+				</div>
+			</div>
+			<div class="banner-col-br col-xs-6">
+				<div class="mini-banner">
+					{% if template_settings('image:banner_two') %}
+						{% if template_settings('text:banner_two_link') %}
+							<a href="{{ template_settings('text:banner_two_link') }}">
+						{% endif %}
+								<img src="{{ host_url('uploads/images/medium/' ~ template_settings('image:banner_two')) }}">
+						{% if template_settings('text:banner_two_link') %}
+							</a>
+						{% endif %}
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endif %}
+
+</section>
+
+{% endblock %}
+
+{% block content %}
+
+{# Produtos por linha #}
+{% if template_settings('select:list_prod_cols') == '2' %}
+	{% set col_width = '6' %}
+{% elseif template_settings('select:list_prod_cols') == '3' %}
+	{% set col_width = '4' %}
+{% elseif template_settings('select:list_prod_cols') == '4' %}
+	{% set col_width = '3' %}
+{% elseif template_settings('select:list_prod_cols') == '6' %}
+	{% set col_width = '2' %}
+{% endif %}
+
+{% import 'product_listing.html' as product_listing %}
+
+<div class="row prod-list">
+	{% for product in products %}
+		{{ product_listing.item(product, category, col_width|default(3)) }}
+	{% endfor %}
+</div>
+
+{% endblock %}

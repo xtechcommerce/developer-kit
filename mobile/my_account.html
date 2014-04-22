@@ -1,0 +1,43 @@
+{% extends _layout %}
+
+{% block content %}
+
+<div class="body">
+        
+  <div id="customer-accounts" class="clearfix">
+       
+    <h1 class="side-margin">Meus pedidos</h1>
+    <table class="table">
+
+      <tr>
+        <th>{{ lang('order_number') }}</th>
+        <th>{{ lang('order_status') }}</th>
+      </tr>
+
+      {% for order in orders %}
+      
+      <tr>
+        <td>
+          <a href="{{ site_url('secure/order/' ~ order.order_number) }}">
+            {{ order.order_number }}<br>
+            <small>{{ order.ordered_on|to_formated_date }}</small>
+          </a>
+        </td>
+        <td><span class="label {{ order.status|get_status_label }}">{{ order.status|translate_order_status }}</span></td>
+      </tr>
+          
+      {% else %}
+
+      <tr>
+        <td colspan="3">{{ lang('no_order_history') }}</td>
+      </tr>
+
+      {% endfor %}
+      
+    </table>
+
+  </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,182 @@
+{% extends _layout %}
+
+{% block content %}
+
+{% import 'inputgroup.html' as inputgroup %}
+
+<div class="body">
+        
+    <div id="cart">
+
+    {% if cart.total_items == 0 %}
+
+      <div class="alert alert-info">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        {{ lang('empty_view_cart') }}
+      </div>
+
+    {% else %}
+
+      {% if validation_errors() %}
+        <div class="alert alert-danger">
+          <a class="close" data-dismiss="alert">×</a>
+          {{ validation_errors() }}
+        </div>
+      {% endif %}
+
+      <h1 class="side-margin">{{ lang('your_cart') }}</h1>
+
+      {{ form_open('cart/update_cart', {'id': 'update_cart_form'}) }}
+          <table class="table">
+            <thead>
+              <tr>
+                  <th>{{ lang('name') }}</th>
+                  <th>{{ lang('price') }}</th>
+                  <th>{{ lang('quantity') }}</th>
+                  <th>&nbsp;</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for cartkey, product in cart('contents') %}
+                <tr>
+                    <td class="description">
+                        <p>
+                          <strong>{{ product.name }}{{ product.sku ? ' (' ~ product.sku ~ ')' : '' }}</strong>
+                          {% for name, value in product.options %}
+                            <div>
+                              <small>{{ name }}: {{ value }}</small>
+                            </div>
+                          {% endfor %}
+                        </p>
+                    </td>
+                    <td class="price">{{ product.price|format_currency }}</td>
+                    <td class="quantity">
+                      <input type="number" class="span1" onchange="$(this).parents('form:first').submit(); return false;" name="cartkey[{{ cartkey }}]" value="{{ product.quantity }}" style="width: 50%;" type="text"{{ product.fixed_quantity ? ' readonly="true"' : '' }} />
+                    </td>
+                    <td class="delete"><a href="{{ site_url('cart/remove_item/' ~ cartkey) }}" class="close">&times;</a></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+              
+          </table>
+          <table class="table">
+              <tr>
+                  <td><h3 class="center">{{ lang('subtotal') }} {{ cart('subtotal')|format_currency }}</h3></td>
+              </tr>
+          </table>
+      {{ form_close() }}
+
+      {{ form_open('checkout/create', 'id="onepage_checkoutform" data-validate-on-load="true"') }}
+          <div class="form-actions">
+              <div class="note-wrap">
+
+                  {{ inputgroup.input('a_firstname', 'firstname', set_value('firstname', customer.firstname), lang('account_firstname'), 2) }}
+                  {{ inputgroup.input('a_lastname', 'lastname', set_value('lastname', customer.lastname), lang('account_lastname'), 2) }}
+                  {{ inputgroup.input('a_birthday', 'birthday', set_value('birthday', customer.birthday)|to_formated_date, lang('account_birthday'), 2) }}
+                  {{ inputgroup.dropdown('a_sex', 'sex', {0: 'Masculino', 1: 'Feminino'}, set_value('sex', customer.sex), lang('account_sex'), 2) }}
+                  {{ inputgroup.input('a_cpf', 'cpf', set_value('cpf', customer.cpf), lang('account_cpf'), 2) }}
+                  {{ inputgroup.input('phone', 'phone', set_value('phone', customer.phone), lang('address_phone'), 2) }}
+                  {% if not logged_in %}
+                    <div>
+                      {{ inputgroup.input('a_email', 'email', set_value('email', customer.email), lang('address_email'), 4) }}
+                      {{ inputgroup.input('a_password', 'password', '', lang('account_password'), 4, 'password') }}
+                      {{ inputgroup.input('a_confirm', 'confirm', '', lang('account_confirm'), 4, 'password') }}
+                    </div>
+                    <div>
+                      <label class="checkbox">
+                        <input type="checkbox" name="email_subscribe" value="1" checked="checked" />
+                        {{ lang('account_newsletter_subscribe') }}
+                      </label>
+                    </div>
+                  {% else %}
+
+                    {{ form_hidden('email', customer.email) }}
+
+                  {% endif %}
+
+                  {{ inputgroup.input('zip_code', 'zip', set_value('zip', customer.ship_address.zip), lang('address_postcode'), 2) }}
+                  {{ inputgroup.dropdown('zone_id', 'zone_id', zones_menu, set_value('zone_id', customer.ship_address.zone_id), lang('address_state'), 3) }}
+                  {{ inputgroup.input('a_city', 'city', set_value('city', customer.ship_address.city), lang('address_city'), 2) }}
+                  {{ inputgroup.input('a_district', 'district', set_value('district', customer.ship_address.district), lang('district'), 3) }}
+                  {{ inputgroup.input('a_address1', 'address1', set_value('address1', customer.ship_address.address1), lang('address1'), 7) }}
+                  {{ inputgroup.input('a_anumber', 'anumber', set_value('anumber', customer.ship_address.anumber), lang('anumber'), 2) }}
+                  {{ inputgroup.input('a_address2', 'address2', set_value('address2', customer.ship_address.address2), lang('address2'), 3, 'text', 'noValidate', true) }}
+
+                  {{ form_hidden('country_id', country_id) }}
+                  {{ form_hidden('address_id', address_id) }}
+
+              </div>
+              <hr>
+              <div>
+                <h3>{{ lang('shipping_method') }}</h3>
+                <table id="shipping_table" class="table">
+                  <tr>
+                    <td>
+                      <i class="glyphicon glyphicon-refresh hide"></i>
+                      Por favor informe seu CEP primeiro.
+                    </td>
+                  </tr>
+                </table>
+              </div>
+
+              <hr>
+
+              <div>
+                <h3>{{ lang('payment_method') }}</h3>
+                {% if payment_method.module %}
+                  <input type="hidden" name="module" value="{{ payment_method.module }}" />
+                {% else %}
+                  <input type="hidden" name="module" value="{{ payment_methods|key }}" />
+                {% endif %}
+              </div>
+
+              <ul class="nav nav-tabs">
+                {% for method, info in payment_methods %}
+                  <li class="{{ loop.first ? 'active' : 'inactive' }}">
+                    <a class="payment-method-nav" data-toggle="data" href="#payment-{{ method }}">
+                      {{ info.name }}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+
+              <div class="tab-content">
+                {% for method, info in payment_methods %}
+                  <div id="payment-{{ method }}" class="tab-pane payment-method{{ loop.first ? ' active' : '' }}">
+                    {{ info.form|raw }}
+                  </div>
+                {% endfor %}
+              </div>
+
+              <hr>
+
+              <h3 class="center shipping_cost">
+                <span class="total">
+                  {{ lang('grand_total') }}: {{ cart('total')|format_currency }}
+                </span>
+                <span class="shipping">
+                  {% if cart('shipping_cost') > 0 %}
+                    (
+                      {{ cart('subtotal')|format_currency }} + {{ lang('shipping') }}: 
+                      {{ cart('shipping_cost')|format_currency }}
+                    )
+                  {% endif %}
+                </span>
+              </h3>
+
+              <hr>
+
+              <button type="submit" class="btn">
+                <i class="glyphicon glyphicon-ok"></i> Finalizar compra
+              </button>
+          </div>
+      {{ form_close() }}
+
+    {% endif %}
+    
+    </div>
+        
+</div>
+
+
+{% endblock %}

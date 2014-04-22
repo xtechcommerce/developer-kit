@@ -1,0 +1,19 @@
+{% extends _layout %}
+
+{% block content %}
+
+{% import 'product_listing.html' as product_listing %}
+
+<div class="jumbotron">
+  <h1 class="text-center" style="margin-bottom:25px">
+    {{ campaign.mission }}
+  </h1>
+</div>
+
+<div class="row prod-list">
+  {% for product in products %}
+    {{ product_listing.item(product, category, 3) }}
+  {% endfor %}
+</div>
+
+{% endblock %}

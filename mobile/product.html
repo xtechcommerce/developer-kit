@@ -1,0 +1,171 @@
+{% extends _layout %}
+
+{% block content %}
+
+<div class="body">
+		
+	<div id="product">
+
+	{% if product.images|count > 1 %}
+	
+	<section class="slider">
+		<div id="slider" class="product-flexslider">
+			<ul class="slides">
+				{% for image in product.images %}
+				   <li>
+				   	{{ product_img(product, 'small') }}
+				   </li> 
+				{% endfor %}				
+			</ul>
+		</div>
+		<div id="carousel" class="product-flexslider">
+			<ul class="slides">
+				{% for image in product.images %}
+				   <li>
+				   	{{ product_img(product, 'thumbnails') }}
+				   </li> 
+				{% endfor %}
+			</ul>
+		</div>
+	</section>
+
+	{% else %}
+
+	<section class="single-img btm-margin center">
+		{{ product_img(product, 'small') }}
+	</section>
+
+	{% endif %}
+
+	<div class="details side-pad btm-margin">
+			
+			<h1>{{ product.name }}</h1>
+			
+			{% if product.quantity <= 0 %}
+				<div class="alert-unavailable alert alert-danger">Produto indisponível</div>
+			{% else %}
+				{{ form_open('cart/add_to_cart', 'class="variants" id="product-actions"', {'cartkey': cart('cartkey'), 'id': product.id, 'variant_id': ''}) }}
+					<div class="options clearfix">  
+	
+						<div class="variants-wrapper clearfix"> 
+							{{ variation_select(product) }}
+						</div>            
+	
+						<div id="purchase">
+							<p class="price">
+								{% if product.saleprice > 0 %}
+									{{ product.saleprice|format_currency }} <del>{{ product.price|format_currency }}</del>
+								{% else %}
+									{{ product.price|format_currency }}
+								{% endif %}
+							</p>
+							<input class="btn" type="submit" name="add" value="Comprar" />
+							<p class="buy-message hide"></p>
+						</div>
+	
+					</div>
+				{{ form_close() }}
+			{% endif %}
+
+			<div class="description">
+			<p>{{ product.description|raw }}</p>
+			</div>			
+			
+			
+		</div>
+
+		{% if product.properties|count > 0 %}
+		<aside class="more-info side-pad">
+			<dl>
+				<div class="tab-pane clearfix" id="tab-properties">
+					{{ product_properties(product.properties, '<dt class="detail">{key}:</dt><dd>{value}</dd>') }}
+				</div>
+			</dl>
+		</aside>
+		{% endif %}
+	
+	<div id="product-social-media" class="side-pad clearfix">
+
+		<!-- AddThis Button BEGIN -->
+		<div class="addthis_toolbox addthis_default_style ">
+			<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+			<a class="addthis_button_tweet"></a>
+			<a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+		</div>
+		<script type="text/javascript">var addthis_config = {"data_track_addressbar":true, ui_language: "pt"};</script>
+		<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51343c292a608814"></script>
+		<!-- AddThis Button END -->
+
+	</div>
+
+	<hr>
+	
+	{% if related|count > 0 %}
+
+	<div class="products">
+		<h3 class="title top-border side-pad"><a href="/collections/beds">Aproveite também</a></h3>
+		
+		{% for product in related|slice(0, 3) %}
+
+			<div class="product clearfix ">
+			  <a href="{{ site_url(product.slug) }}" class="rel bl">
+			  	{% if product.saleprice > 0 %}
+			  		<span class="abs sale">Sale</span>
+			  	{% endif %}
+			    {{ product_img(product, 'small') }}
+			  </a>
+			  <div class="product-info full-margin btm-border clearfix">
+			    <p class="pull-left"><a href="{{ site_url(product.slug) }}"><strong>{{ product.name }}</strong></a></p>
+			    <p class="price pull-right">
+			    	<em>
+			    	{% if product.saleprice > 0 %}
+			    		{{ product.saleprice|format_currency }} <del>{{ product.price|format_currency }}</del>
+			    	{% else %}
+			    		{{ product.price|format_currency }}
+			    	{% endif %}
+			    	</em>
+			    </p>
+			  </div>
+			</div>
+
+		{% endfor %}
+		
+	</div>
+
+	{% endif %}
+	
+
+</div> <!-- /#product -->
+
+
+<script type="text/javascript">
+$(window).load(function() {
+	// The slider being synced must be initialized first
+	$('#carousel').flexslider({
+		animation: "slide",
+		controlNav: false,
+		directionNav: true, 
+		animationLoop: false,
+		slideshow: false,
+		itemWidth: 100,
+		itemMargin: 10,
+		asNavFor: '#slider'
+	});
+
+	$('#slider').flexslider({
+		animation: "slide",
+		controlNav: false,
+		directionNav: false, 
+		smoothHeight: true,   
+		animationLoop: false,
+		slideshow: false,
+		sync: "#carousel",
+		start: function(slider){
+			$('body').removeClass('loading');
+		}
+	});
+});
+</script>
+
+
+{% endblock %}

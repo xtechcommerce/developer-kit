@@ -1,0 +1,57 @@
+<h1 class="page-title">Identificação</h1>
+<div class="row">
+    <div class="col-xs-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Já sou cadastrado</h3>
+            </div>
+            <div class="panel-body">
+                {{ form_open('secure/login', '', {'redirect': redirect, 'submitted': 'submitted'}) }}
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="glyphicon glyphicon-user"></i>
+                        </span>
+                        <input type="text" name="email" class="form-control" placeholder="Entre com seu e-mail" autocomplete="off" />
+                    </div>
+                    <div class="input-group margin-top">
+                        <span class="input-group-addon">
+                            <i class="glyphicon glyphicon-lock"></i>
+                        </span>
+                        <input type="password" name="password" class="form-control" placeholder="Sua senha" autocomplete="off" />
+                    </div>
+                    <div class="clearfix">
+                        <label class="checkbox pull-right">
+                            <input name="remember" value="true" type="checkbox" />
+                            Continuar conectado
+                        </label>
+                        <span class="margin-top10 pull-left">
+                            <a href="{{ site_url('secure/forgot_password') }}">
+                                Esqueceu sua senha?
+                            </a>
+                        </span>
+                    </div>
+                    <input type="submit" value="ENTRAR" name="submit" class="btn btn-primary margin-top pull-right" />
+                {{ form_close() }}
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Criar uma nova conta</h3>
+            </div>
+            <div class="panel-body">
+                {{ form_open('secure/register', '', {'only_email': true, 'redirect': redirect, 'new': 'new', 'submitted': 'submitted'}) }}
+                    <p>Digite o e-mail que deseja cadastrar</p>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="glyphicon glyphicon-plus"></i>
+                        </span>
+                        <input type="text" name="email" class="form-control" placeholder="Seu e-mail" autocomplete="off" />
+                    </div>
+                    <input type="submit" value="CONTINUAR" name="submit" class="btn btn-primary margin-top pull-right"/>
+                {{ form_close() }}
+            </div>
+        </div>
+    </div>
+</div>

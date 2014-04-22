@@ -1,4 +1,10 @@
-developer-kit
-=============
+## Bem-vindo a Xtech
 
-Kit de desenvolvimento de templates para Xtech Commerce.
+### Functions
+https://github.com/ricardoon/developer-kit/wiki/Functions
+
+### Objetos
+https://github.com/ricardoon/developer-kit/wiki/Objects
+
+### Howto's
+* Como integrar depoimentos na pagina do produto https://github.com/ricardoon/developer-kit/wiki/How-to-integrate-testimonials
