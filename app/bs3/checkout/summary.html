@@ -1,3 +1,4 @@
+<div class="table-responsive">
 <table class="table table-striped">
   <thead>
     <tr>
@@ -15,8 +16,6 @@
       </th>
     </tr>
   </thead>
-
-    
   <tbody>
     {% for cartkey, product in cart('contents') %}
       <tr>
@@ -30,7 +29,12 @@
           {% endfor %}
         </td>
         <td>
-          {{ product.price|format_currency }}
+          {% if product.base_price > product.price %}
+            <div class="strike"><strike>{{ product.base_price|format_currency }}</strike></div>
+            <span class="sale">{{ product.price|format_currency }}</span>
+          {% else %}
+            <span class="normal">{{ product.price|format_currency }}</span>
+          {% endif %}
         </td>
         <td>
           <div class="control-group">
@@ -43,7 +47,6 @@
               </div>
             </div>
           </div>
-  
           {% if not product.fixed_quantity %}
             <a class="alter_qty" href="#" onclick="$(this).parents('form:first').submit(); return false;">
               Alterar
@@ -56,9 +59,7 @@
       </tr>
     {% endfor %}
   </tbody>
-
   <tfoot>
-
     {% if cart('group_discount') > 0 %}
       <tr>
         <td colspan="4">
@@ -71,7 +72,6 @@
         </td>
       </tr>
     {% endif %}
-
     <tr>
       <td colspan="4">
         <strong>
@@ -82,7 +82,6 @@
         {{ cart('subtotal')|format_currency }}
       </td>
     </tr>
-
     {% if cart('shipping_cost') > 0 %}
       <tr>
         <td colspan="4">
@@ -95,7 +94,6 @@
         </td>
       </tr>
     {% endif %}
-
     {% if cart('coupon_discount') > 0 %}
       <tr>
         <td colspan="4">
@@ -108,7 +106,6 @@
         </td>
       </tr>
     {% endif %}
-
     {% if cart('get_custom_charges')|count > 0 %}
       {% for name, price in cart('get_custom_charges') %}
         <tr>
@@ -123,7 +120,6 @@
         </tr>
       {% endfor %}
     {% endif %}
-
     <tr>
       <td colspan="4">
         <strong>
@@ -134,7 +130,6 @@
         {{ cart('total')|format_currency }}
       </td>
     </tr>
-
   </tfoot>
-
 </table>
+</div>

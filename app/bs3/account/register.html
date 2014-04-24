@@ -1,242 +1,143 @@
 <h1 class="page-title">Criar conta</h1>
-
 <div class="row">
-    <div class="col-xs-12">
-
+    <div class="col-lg-12">
         {% if validation_errors() and set_value('new') != 'new' %}
           <div class="alert alert-danger">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             {{ validation_errors() }}
           </div>
         {% endif %}
-
-        {{ form_open('secure/register', 'class="form-horizontal"') }}
-
-            <!-- Controles -->
-            <input type="hidden" value="{{ redirect }}" name="redirect"/>
-            <input type="hidden" value="submitted" name="submitted"/>
-
-            <!-- Dados para acesso -->
+        {{ form_open('secure/register', 'class="form-horizontal"', {'redirect': redirect, 'submitted': 'submitted'}) }}
             <div class="panel panel-default">
-
                 <div class="panel-heading">
-
                     <h3 class="panel-title">
-
                         <i class="glyphicon glyphicon-asterisk"></i>
                         Dados para acesso
-
                     </h3>
-
                 </div>
-
                 <div class="panel-body">
-
                     <div class="form-group">
-
-                        <label for="email" class="col-xs-3 control-label">
+                        <label for="email" class="col-md-3 control-label">
                             E-mail
                             <sup>*</sup>
                         </label>
-
-                        <div class="col-xs-5">
+                        <div class="col-md-5">
                             {{ form_input({'name': 'email', 'placeholder': 'Email', 'class': 'form-control', 'value': set_value('email'), 'autocomplete': 'off'}) }}
                         </div>
-
                     </div>
-
                     <div class="form-group">
-
-                        <label for="password" class="col-xs-3 control-label">
+                        <label for="password" class="col-md-3 control-label">
                             Senha
                             <sup>*</sup>
                         </label>
-
-                        <div class="col-xs-5">
+                        <div class="col-md-5">
                             {{ form_input({'name': 'password', 'placeholder': 'Sua senha', 'class': 'form-control', 'value': '', 'autocomplete': 'off', 'type': 'password'}) }}
                         </div>
-
                     </div>
-
                     <div class="form-group">
-
-                        <label for="confirm" class="col-xs-3 control-label">
+                        <label for="confirm" class="col-md-3 control-label">
                             Confirme
                             <sup>*</sup>
                         </label>
-
-                        <div class="col-xs-5">
+                        <div class="col-md-5">
                             {{ form_input({'name': 'confirm', 'placeholder': 'Confirmar senha', 'class': 'form-control', 'value': '', 'autocomplete': 'off', 'type': 'password'}) }}
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
-
-
-
-            <!-- Dados Pessoais -->
             <div class="panel panel-default">
-
                 <div class="panel-heading">
-
                     <h3 class="panel-title">
-
                         <i class="glyphicon glyphicon-bookmark"></i>
                         Dados pessoais
-
                     </h3>
-
                 </div>
-
                 <div class="panel-body">
-
                     <div class="form-group">
-
-                        <label for="name" class="col-xs-3 control-label">
+                        <label for="name" class="col-md-3 control-label">
                             Nome
                             <sup>*</sup>
                         </label>
-
-                        <div class="col-xs-5">
+                        <div class="col-md-5">
                             {{ form_input({'name': 'firstname', 'placeholder': 'Nome', 'class': 'form-control', 'value': set_value('firstname')}) }}
                         </div>
-
                     </div>
-
                     <div class="form-group">
-
-                        <label for="name" class="col-xs-3 control-label">
+                        <label for="name" class="col-md-3 control-label">
                             Sobrenome
                             <sup>*</sup>
                         </label>
-
-                        <div class="col-xs-5">
+                        <div class="col-md-5">
                             {{ form_input({'name': 'lastname', 'placeholder': 'Sobrenome', 'class': 'form-control', 'value': set_value('lastname')}) }}
                         </div>
-
                     </div>
-
                     <div class="form-group">
-
-                        <label for="phone" class="col-xs-3 control-label">
+                        <label for="phone" class="col-md-3 control-label">
                             Telefone
                             <sup>*</sup>
                         </label>
-
-                        <div class="col-xs-5">
+                        <div class="col-md-5">
                             {{ form_input({'name': 'phone', 'placeholder': '(21) 12345-1234', 'class': 'form-control', 'value': set_value('phone')}) }}
                         </div>
-
                     </div>
-
                     <div class="form-group">
-
-                        <label for="cpf" class="col-xs-3 control-label">
+                        <label for="cpf" class="col-md-3 control-label">
                             CPF
                             <sup>*</sup>
                         </label>
-
-                        <div class="col-xs-5">
+                        <div class="col-md-5">
                             {{ form_input({'name': 'cpf', 'placeholder': '000.000.000-00', 'class': 'form-control', 'value': set_value('cpf')}) }}
                         </div>
-
                     </div>
-
                     <div class="form-group">
-
-                        <label for="sex" class="col-xs-3 control-label">
+                        <label for="sex" class="col-md-3 control-label">
                             Sexo
                         </label>
-
-                        <div class="col-xs-5">
+                        <div class="col-md-5">
                             {{ form_dropdown('sex', {0: 'Masculino', 1: 'Feminino'}, set_value('sex'), 'class="form-control"') }}
                         </div>
-
                     </div>
-
                     <div class="form-group">
-
-                        <label for="birthday" class="col-xs-3 control-label">
+                        <label for="birthday" class="col-md-3 control-label">
                             Data de Nascimento
                         </label>
-
-                        <div class="col-xs-5">
+                        <div class="col-md-5">
                             {{ form_input({'name': 'birthday', 'placeholder': '00/00/0000', 'class': 'form-control', 'value': set_value('birthday')}) }}
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
-
-
-            <!-- Checkbox Newsletter -->
             <div class="panel panel-default">
-
-                <div class="panel-heading">
-
+                <div class="panel-heading clearfix">
                     <div class="pull-left">
-
                         <label>
-                            
-                            <input type="checkbox" name="email_subscribe" value="1" {{ set_radio('email_subscribe', '1', true) }} />
+                            <input type="checkbox" name="email_subscribe" value="1" checked="checked" />
                             Deseja receber nossa newsletter?
-
                         </label>
                         <br />
                         <small>(Não compartilhamos seu email com terceiros)</small>
-
                     </div>
-
-                    
                     <div class="pull-right">
-                        
                         * Campos obrigatórios
-
                     </div>
-
-
-                    <div class="clearfix"></div>
-                
                 </div>
-            
             </div>
-
-
-
-            <!-- Cadastrar -->
             <div class="pull-right">
-                
                 <a href="{{ site_url('secure/login') }}" class="btn btn-default">
-
                     <i class="glyphicon glyphicon-chevron-left"></i>
                     VOLTAR
-
                 </a>
-
-                <input type="submit" value="CADASTRAR" class="btn btn-primary btn-bck" />
-                
+                <input type="submit" value="CADASTRAR" class="btn btn-primary btn-bck" />                
             </div>
-
-
         {{ form_close() }}
-
         <script type="text/javascript">
         <!--
-
             $(document).ready(function(){
                 $('input[name=phone]').mask_brazilian_phone();
                 $('input[name=cpf]').mask('999.999.999-99');
                 $('input[name=birthday]').mask('99/99/9999');
             });
-
         //-->
         </script>
-    
     </div>
 </div>
-

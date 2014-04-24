@@ -1,7 +1,3 @@
-{{ global_css('view_cart.css', true) }}
-{{ global_js('tinyvalidation.js', true) }}
-{{ global_js('shop.js', true) }}
-
 <div id="cartview">
   {% if cart.total_items == 0 %}
 
@@ -11,6 +7,10 @@
     </div>
 
   {% else %}
+
+  {{ global_css('view_cart.css', true) }}
+  {{ global_js('tinyvalidation.js', true) }}
+  {{ global_js('shop-v2.js', true) }}
 
     <div class="summary">
 
@@ -24,9 +24,9 @@
           {% include 'bs3/checkout/summary.html' %}
         </div>
 
-        <div class="row">
+        <div class="row cart-summary-bottom">
 
-            <div class="col-xs-6">
+            <div class="cart-coupon col-md-6">
               <label>
                 {{ lang('coupon_label') }}
               </label>
@@ -36,10 +36,11 @@
               </div>
             </div>
             
-            <div class="col-xs-6">
-              <span class="pull-right">
-                {{ theme_img('compra-segura.png', 'Compra segura') }}
-              </span>
+            <div class="cart-secure col-md-6">
+              <ul class="list-inline pull-right">
+                <li><span class="glyphicon glyphicon-lock"></span> Compra segura</li>
+                <li><span class="glyphicon glyphicon-home"></span> Entrega garantida</li>
+              </ul>
             </div>
 
         </div>
@@ -52,10 +53,8 @@
     <div class="checkout">
       <div class="row">
 
-        <!-- Onepage Checkout Form -->
-
         {% if validation_errors() %}
-          <div class="col-xs-12">
+          <div class="col-md-12">
             <div class="alert alert-danger">
               <a class="close" data-dismiss="alert">×</a>
               {{ validation_errors() }}
@@ -63,7 +62,7 @@
           </div>
         {% endif %}
 
-        {{ form_open('checkout/create', 'id="onepage_checkoutform" data-validate-on-load="true"') }}
+        {{ form_open('checkout/create', 'id="onepage_checkoutform" data-validate-on-load="true" autocomplete="off"') }}
 
           {% include 'bs3/checkout/form.html' %}
 

@@ -21,7 +21,7 @@ function template_navigator()
     foreach ($templates as $template) {
         $nav .= '<li class="template-designer-close"><a style="color:#898989" href="index.php?p=' . $template . '">' . $template . '.html</a></li>';
         if ($template == 'page') {
-            $nav .= '<li class="template-designer-close"><a style="color:#898989" href="index.php?p=page&slug=contato">page.html (with contact as slug)</a></li>';
+            $nav .= '<li class="template-designer-close"><a style="color:#898989" href="index.php?p=page&slug=contact">page.html (with contact as slug)</a></li>';
         }
     }
     $nav .= '<li class="template-designer-close" style="text-align:right;"><a style="color:#898989;" href="#" onclick="$(\'.template-designer-close\').hide(); $(\'.template-designer-open\').show();">(-) Fechar</a></li>';
@@ -141,8 +141,8 @@ function form_close(){
     return '</form>';
 }
 
-function base_url(){
-    return '#';
+function base_url($path = ''){
+    return $GLOBALS['template'] . '/' . $path;
 }
 
 function uri_string(){
@@ -248,17 +248,11 @@ function url(){
 }
 
 function buy_button(){
-    return '<div class="buy-btn pull-right buy-btn-disabled">
-                                <div style="display:none">
+    return '<form action="http://demo.securelocalhost.com/cart/add_to_cart" class="form-horizontal buy-btn-form" method="post" accept-charset="utf-8"><div style="display:none">
 <input type="hidden" name="cartkey" value="">
-<input type="hidden" name="id" value="6913">
+<input type="hidden" name="id" value="6905">
 <input type="hidden" name="variant_id" value="">
-</div><button id="buy-btn" class="btn btn-primary btn-lg buy-btn buy-btn-disabled" type="submit" value="submit"><i class="glyphicon glyphicon-shopping-cart"></i> Comprar</button><p id="buy-message" class="buy-message">Escolha uma opção.</p><div id="alert-unavailable" class="alert-unavailable alert alert-danger hide">Produto indisponível</div>
-                                <p id="buy-message" class="hide"></p>
-                                <div id="alert-unavailable" class="alert alert-danger hide">
-                                    Produto indisponível
-                                </div>
-                            </div>';
+</div><button id="buy-btn" class="btn btn-primary btn-lg buy-btn buy-btn-disabled" type="submit" value="submit"><i class="glyphicon glyphicon-shopping-cart"></i> Comprar</button><p class="buy-message">Escolha uma opção.</p><div class="alert-unavailable alert alert-danger hide">Produto indisponível</div></form>';
 }
 
 function variation_select(){
@@ -279,7 +273,8 @@ function onepage_checkout(){
 }
 
 function testimonials_widget(){
-    return '';
+    global $twig, $data;
+    return $twig->render('bs3/product/testimonials.html', $data);
 }
 
 function breadcrumbs_widget(){
@@ -326,7 +321,8 @@ function product_properties()
 }
 
 function header_code(){
-    $host = $_SERVER['HTTP_HOST'] . '\/index.php?ajax=';
+    $url = parse_url('http://' . $_SERVER['SERVER_NAME'] . $_SERVER['SCRIPT_NAME']);
+    $host = json_encode($_SERVER['HTTP_HOST'] . $url['path'] . '?ajax=');
     return <<<EOF
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -395,7 +391,7 @@ function get_product_category()
 
 function current_url()
 {
-    return '';
+    return 'http://modacommerce.ecommerce.pro.br';
 }
 
 function template_settings($array)
@@ -409,6 +405,11 @@ function template_settings($array)
         $template_settings = $array;
     }
     return '';
+}
+
+function ts($setting)
+{
+    return template_settings($setting);
 }
 
 function wishlist_button($label, $product, $variant_id = '')

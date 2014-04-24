@@ -1,0 +1,56 @@
+{% extends _layout %}
+
+{% block banner %}
+
+
+<div id="carousel" class="carousel slide" data-ride="carousel">
+  <div class="carousel-inner">
+     {% for banner in banners %}
+     <div class="item{{ loop.first ? ' active' : '' }}">
+        {{ linked_banner(banner) }}
+     </div>
+     {% endfor %}
+  </div>
+  {% if banners|count > 1 %}
+  <a class="left carousel-control" href="#carousel" data-slide="prev">
+      <span class="glyphicon glyphicon-chevron-left"></span>
+  </a>
+  <a class="right carousel-control" href="#carousel" data-slide="next">
+    <span class="glyphicon glyphicon-chevron-right"></span>
+  </a>
+  <ol class="carousel-indicators">
+    {% for banner in banners %}
+      <li data-target="#carousel" data-slide-to="{{ loop.index - 1 }}" class="{{ loop.first ? 'active' : 'passive' }}"></li>
+    {% endfor %}
+  </ol>
+  {% endif %}
+</div>
+
+
+{% endblock %}
+
+{% block content %}
+
+{% import 'product_listing.html' as product_listing %}
+
+<div class="row products centered mt prod-list">
+    <h3>Featured</h3>
+    <div class="mt"></div>
+    {% for product in products %}
+        {{ product_listing.item(product, category) }}
+        
+        {% if loop.index % 4 == 0 %}
+        <div class="break"></div>
+        {% endif %}
+
+        {% if loop.index % 2 == 0 %}
+        <div class="break visible-xs"></div>
+        {% endif %}
+    {% else %}
+        <div class="col-md-12">
+            Não há produtos na categoria home.
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,187 @@
+{% extends _layout %}
+
+{% block content %}
+
+{% import 'product_listing.html' as product_listing %}
+
+{% if categories[category.root_category].children|count > 0 %}
+
+{% set cols = 4 %}
+
+<div class="row">
+	<div class="col-md-3 sidebar">
+		<div class="sidebar-column">
+			<div class="sidebar-column-in">
+				<h3 class="buffer-top-no buffer-bottom-sm">
+					{{ categories[category.root_category].category.name }}
+				</h3>
+				<ul class="nav nav-pills nav-stacked buffer-bottom-lg">
+					{% for category_group in categories[category.root_category].children %}
+					    <li class="{{ category_group.category.id == category.id ? 'active' : 'inactive' }}">
+					    	<a href="{{ site_url(categories[category.root_category].category.slug ~ '/' ~ category_group.category.slug) }}"><span class="glyphicon glyphicon-plus"></span> {{ category_group.category.name }}</a>
+					    	<ul class="children-subcategory nav nav-pills nav-stacked">
+					    	{% for subcategory_group in category_group.children %}
+					    		<li>
+					    			<a href="{{ site_url(categories[category.root_category].category.slug ~ '/' ~ category_group.category.slug ~ '/' ~ subcategory_group.category.slug) }}">
+					    				{{ subcategory_group.category.name }}
+					    			</a>
+					    		</li>
+					    	{% endfor %}
+					    	</ul>
+					    </li>
+					{% endfor %}
+				</ul>
+
+				{% if selected_properties|length > 0 or selected_options|length > 0 or price_max > 0 %}
+					<h4>Selectionados</h4>
+					<ul class="active-filters list-unstyled buffer-bottom-md" style="display:none;">
+						{% for property in selected_properties %}
+						<li><a class="sub" href="#filter_{{ property }}"></a></li>
+						{% endfor %}
+						{% for option in selected_options %}
+						<li><a class="sub" href="#filter_{{ option }}"></a></li>
+						{% endfor %}
+						{% if price_max %}
+						<li><a class="price-max" href="#">{{ price_max }}</a></li>
+						{% endif %}
+					</ul>
+					<script type="text/javascript">
+						$(document).ready(function(){
+							$('.active-filters .price-max').html('<i class="glyphicon glyphicon-remove"></i> ' + $('.price-filters .active').text());
+							$('.active-filters .price-max').click(function(e){
+								e.preventDefault();
+								$('.price-filters .all').trigger('click');
+							});
+							$('.active-filters .sub').each(function(){
+								$filter = $($(this).attr('href'));
+								$(this).html('<i class="glyphicon glyphicon-remove"></i> ' + $filter.text());
+								$(this).click(function(e){
+									e.preventDefault();
+									$filter.trigger('click');
+								});
+							});
+							$('.active-filters').show();
+						});
+					</script>
+				{% endif %}
+				
+
+				{% for property in properties %}
+				    {% if property.children|count > 0 %}
+				        <div class="filters-side filters">
+				        	<h4>Filtrar por {{ property.category.name }}</h4>
+				          	<ul class="list-unstyled list-inline clearfix buffer-bottom-md">
+				          	  	{% for child in property.children %}
+				          	    	<li><a id="filter_{{ child.category.id }}" class="sub" href="#filter_property{{ child.category.id }}">{{ child.category.name }}</a></li>
+				          	  	{% endfor %}
+				          	</ul>
+				        </div>
+				    {% endif %}
+				{% endfor %}
+
+				{% for option in global_options %}
+				    {% if option.values|count > 0 %}
+				        <div class="filters-side filters">
+				        	<h4>Filtrar por {{ option.name }}</h4>
+				          	<ul class="list-unstyled list-inline clearfix buffer-bottom-md">
+				          	  	{% for value in option.values %}
+				          	    	<li><a id="filter_{{ value.id }}" class="sub" href="#filter_option{{ value.id }}">{{ value.name }}</a></li>
+				          	  	{% endfor %}
+				          	</ul>
+				        </div>
+				    {% endif %}
+				{% endfor %}
+
+				{% set range = pricerange.max - pricerange.min %}
+				{% set first_range = pricerange.min + (range / 3) %}
+				{% set second_range = pricerange.min + (range / 2) %}
+
+				{% if range > 0 %}
+				<div class="filters-side price-filters">
+					<h4>Filtrar por Preço</h4>
+				  	<ul class="list-unstyled clearfix buffer-bottom-md">
+				  		<li><a class="sub{{ price_max ? '' : ' active' }} all" href="#" data-min="" data-max="">Todos</a></li>
+				  	    <li><a class="sub{{ price_max == first_range|round ? ' active' : '' }}" href="#" data-min="{{ pricerange.min }}" data-max="{{ first_range|round }}">{{ pricerange.min|format_currency }} - {{ first_range|round|format_currency }}</a></li>
+				  	    <li><a class="sub{{ price_max == second_range|round ? ' active' : '' }}" href="#" data-min="{{ first_range|round }}" data-max="{{ second_range|round }}">{{ first_range|round|format_currency }} - {{ second_range|round|format_currency }}</a></li>
+				  	    <li><a class="sub{{ price_max == pricerange.max ? ' active' : '' }}" href="#" data-min="{{ second_range|round }}" data-max="{{ pricerange.max }}">{{ second_range|round|format_currency }} - {{ pricerange.max|format_currency }}</a></li>
+				  	</ul>
+				</div>
+				{% endif %}
+
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-9">
+
+{% endif %}
+
+<div id="filter-widget" class="pull-right">
+	{{ global_js('filters.js', true) }}
+
+	<!-- The visible part in the template: -->
+	<div class="filters order">
+	    <a class="main" href="#"><span class="glyphicon glyphicon-chevron-down"></span> Organizar por</a>
+	    <ul>
+	        <li><a class="sub" href="#order_price">Menor preço</a></li>
+	        <li><a class="sub" href="#order_bestseller">Mais vendidas</a></li>
+	        <li><a class="sub" href="#order_rating">Melhor nota</a></li>
+	    </ul>
+	</div>
+	<!-- End -->
+
+	<!-- The unvisible form for submitting -->
+	{{ form_open(current_url(), {'id': 'filter_form', 'style': 'display:none;', 'method': 'get'}) }}
+	    {% for prop in properties %}
+	        {% for child in prop.children %}
+	            <input type="checkbox" name="properties[]" value="{{ child.category.id }}" id="filter_property{{ child.category.id }}" {{ selected_properties and child.category.id in selected_properties ? ' checked' : '' }}/>
+	        {% endfor %}
+	    {% endfor %}
+	    {% for option in global_options %}
+	        {% for value in option.values %}
+	            <input type="checkbox" name="options[]" value="{{ value.id }}" id="filter_option{{ value.id }}" {{ selected_options and value.id in selected_options ? ' checked' : '' }}/>
+	        {% endfor %}
+	    {% endfor %}
+	    <input type="checkbox" name="price_max" value="{{ price_max ? price_max : '' }}"{{ price_max ? ' checked' : '' }} />
+	    <input type="checkbox" name="price_min" value="{{ price_min ? price_min : '' }}"{{ price_min ? ' checked' : '' }} />
+	    <input class="order_by_hidden" type="checkbox" name="by" value="price/asc" id="order_price" {{ sort_by == 'sort_price' ? 'checked' : '' }}/>
+	    <input class="order_by_hidden" type="checkbox" name="by" value="bestsellers/asc" id="order_bestseller" {{ sort_by == 'quantity_order' ? 'checked' : '' }}/>
+	    <input class="order_by_hidden" type="checkbox" name="by" value="rating/desc" id="order_rating" {{ sort_by == 'rating' ? 'checked' : '' }}/>
+	{{ form_close() }}
+	<!-- End -->
+</div>
+
+{% include 'breadcrumbs.html' %}
+
+<div class="row prod-list">
+	{% for product in products %}
+		{{ product_listing.item(product, category, cols|default(3)) }}
+		
+		{% if loop.index % (cols == 4 ? 3 : 4) == 0 %}
+		<div class="break"></div>
+		{% endif %}
+		
+		{% if loop.index % 2 == 0 %}
+		<div class="break visible-xs"></div>
+		{% endif %}
+	{% else %}
+		<div class="col-lg-12">
+			Não há produtos nesta categoria.
+		</div>
+	{% endfor %}
+
+	{# Paginacao #}
+	<div class="col-lg-12 text-center">
+		{{ pagination() }}
+	</div>
+</div>
+
+{% if categories[category.root_category].children|count > 0 %}
+
+	</div>
+</div>
+
+{% endif %}
+
+
+{% endblock %}

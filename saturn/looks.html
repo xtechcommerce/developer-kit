@@ -1,0 +1,37 @@
+{% extends _layout %}
+
+{% block content %}
+
+<h1 class="text-center buffer-bottom-lg">
+  Looks
+</h1>
+
+<div class="row prod-list">
+  {% set cols = 3 %}
+  {% for look in looks %}
+    <div class="col-sm-{{ cols }}">
+        <a href="{{ site_url('look/' ~ look.slug) }}" class="product-pic">
+            {{ product_img(look, 'small', {'class': 'img-responsive'}) }}
+        </a>
+        <div class="product-info clearfix">
+          <p class="pull-left"><a href="{{ site_url('look/' ~ look.slug) }}"><strong>{{ look.name }}</strong></a></p>
+          <p class="price pull-right">
+            {% if look.saleprice > 0 %}
+                {{ look.saleprice|format_currency }} <del>{{ look.price|format_currency }}</del>
+            {% else %}
+                {{ look.price|format_currency }}
+            {% endif %}
+          </p>
+        </div>
+    </div>
+    {% if loop.index % (cols == 4 ? 3 : 4) == 0 %}
+    <div class="break"></div>
+    {% endif %}
+
+    {% if loop.index % 2 == 0 %}
+    <div class="break visible-xs"></div>
+    {% endif %}
+  {% endfor %}
+</div>
+
+{% endblock %}

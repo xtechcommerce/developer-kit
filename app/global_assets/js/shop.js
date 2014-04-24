@@ -1,17 +1,61 @@
-// Shipping Form
+var Checkout = {};
+
+(function ($) {
+
+    Checkout = function (options) {
+        this.$email = $('#a_email');
+        this.$btnSearchAddress = $('.btn-search-address');
+        this.$zip = $('#zip_code');
+
+        if (this.$email.length > 0) {
+            this.$loginModal = $('#login_modal');
+            this.$email.focusout(this.checkEmail);
+            if (this.$email.val().length === 0) {
+                this.$email.val(' ');
+                this.$email.click(function(){ $(this).val(''); });
+            }
+        }
+
+        that = this;
+
+        mask_fields();
+        this.$btnSearchAddress.click(function(e){ e.preventDefault(); searchAddress(true, true); });
+        this.$zip.delayKeyup(function(){ searchAddress(true, true); }, 1000);
+        searchAddress(false, true);
+    };
+
+    Checkout.prototype = {
+        constructor: Checkout,
+        checkEmail: function() {
+            var email = that.$email.val();
+            if (email.length > 5) {
+                $.ajax({
+                    url: site_url.base + 'cart/check_email',
+                    type: 'GET',
+                    data: {'email': email},
+                    dataType: 'json',
+                    success: function(data){
+                        if (data.result) {
+                            that.$loginModal.modal('show');
+                            that.$loginModal.find('.alert-account-exists').removeClass('hide');
+                            that.$loginModal.find('input[name=email]').val(email);
+                        }
+                    }
+                });
+            }
+        },
+    };
+
+}(jQuery));
+
 $(document).ready(function(){
 
-    mask_fields();
+    var Cart = new Checkout();
 
-    $('#zip_code').delayKeyup(function(el){
-        populate_frete(el.val(), true, true);
-    }, 1000);
-    
-    $('#zip_code_submit').click(function(){
-        populate_frete($('#zip_code_val').val(), false, true);
+    $('.btn-open-login').click(function(e){
+        e.preventDefault();
+        $('#login_modal').modal('show');
     });
-
-    populate_frete($('#zip_code').val(), false, true);
 
     $('.shippingwrap input').change(function(){
         update_cart($(this).val());
@@ -20,26 +64,18 @@ $(document).ready(function(){
     $('#person_fields_btn, #company_fields_btn').click(function(){
 
         if($('#company_fields').hasClass('hide')){
-
-            $('#person_fields_btn').removeClass('hide');
-            $('#company_fields_btn').addClass('hide');
-            $('#person_fields').addClass('hide');
-            $('#company_fields').removeClass('hide');
-
+            $('#person_fields_btn, #company_fields').removeClass('hide');
+            $('#company_fields_btn, #person_fields').addClass('hide');
         } else{
-
-            $('#person_fields_btn').addClass('hide');
-            $('#company_fields_btn').removeClass('hide');
-            $('#person_fields').removeClass('hide');
-            $('#company_fields').addClass('hide');
-
+            $('#person_fields_btn, #company_fields').addClass('hide');
+            $('#company_fields_btn, #person_fields').removeClass('hide');
         }
 
     });
 
     var has_errors = false;
 
-    var options = {
+    var validationOptions = {
       onError: function(errors){
         has_errors = true;
       },
@@ -60,12 +96,16 @@ $(document).ready(function(){
     });
 
     $('#onepage_checkoutform').submit(function(e){
-        $('#onepage_checkoutform').tinyValidation(options);
+        $('#onepage_checkoutform').tinyValidation(validationOptions);
         if(has_errors){
             e.preventDefault();
             alert('Por favor, preencha todos os campos com * antes de prosseguir.');
             return false;
         }else{
+            $button = $(this).find('button[type=submit]');
+            $button.blur();
+            $button.addClass('disabled');
+            $button.html('Carregando...');
             return true;
         }
     });
@@ -75,14 +115,15 @@ $(document).ready(function(){
 $.fn.delayKeyup = function(callback, ms){
     var timer = 0;
     var el = $(this);
-    $(this).keyup(function(){                   
+    $(this).keyup(function(){
     clearTimeout (timer);
     timer = setTimeout(function(){
-        callback(el)
+        callback(el);
         }, ms);
     });
     return $(this);
 };
+
 
 function toggle_shipping(key)
 {
@@ -100,13 +141,22 @@ function update_cart(val, zip){
     });
 }
 
-function populate_frete(value, focus, update_address)
-{
+
+function searchAddress(focus, update_address) {
+    value = that.$zip.val();
     if (value.length==9 && value.indexOf('_') == -1) {
         $('#shipping_table').html('<tr><td><div class="loading"><i class="icon-refresh"></i> Calculando o frete</div></td></tr>');
         var zip = value.replace("-", "");
+
+        $('.btn-search-address').addClass('disabled');
+        $('.btn-search-address').text('Buscando...');
+
         $.getJSON(busca_cep_url,{zip: zip}, function(data) {
+            $('.btn-search-address').removeClass('disabled');
+            $('.btn-search-address').text('Buscar endereço');
+
             if(data["resultado"] == "1" && update_address){
+
                 $("input[name=district]").val(unescape(data["bairro"]));
                 $("input[name=city]").val(unescape(data["cidade"]));
                 $("select[name=zone_id]").val(unescape( eval("zone_map."+data["uf"]) ));
@@ -126,8 +176,7 @@ function populate_frete(value, focus, update_address)
     }
 }
 
-
-function mask_fields () {
+function mask_fields() {
     $('#phone').mask_brazilian_phone();
     $('#zip_code').mask("99999-999");
     $('#zip_code_val').mask("99999-999");
@@ -136,17 +185,17 @@ function mask_fields () {
     $('#a_birthday').mask('99/99/9999');
 }
 
-
-// Address Form
-function populate_address(address_id)
-{
-    if(address_id == '' || addresses.length==0 || typeof addresses[address_id] == 'undefined')
+function populate_address(address_id) {
+    if(address_id === '' || addresses.length === 0 || typeof addresses[address_id] == 'undefined')
     {
         return;
     }
+    $('input[name=address_id]').val(address_id);
+
     $.each(addresses[address_id], function(key, value){
-        $('#address_id').val(address_id);
-        $('.address[name='+key+']').val(value);
+        if (key != 'cnpj') {
+            $('.address[name='+key+']').val(value);
+        }
         if(key=='zone_id')
         {
             zone_id = value;
@@ -154,6 +203,7 @@ function populate_address(address_id)
             
         }
     });
+
     mask_fields();
-    populate_frete($('#zip_code').val(), false, false);
+    searchAddress(false, false);
 }

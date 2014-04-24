@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-BR" dir="ltr">
+<head>
+    {{ header_code() }}
+    <title>{{ shop_config('company_name') }} | {{ document_title(seo_title|default(page_title)) }}</title>
+  
+    {# CSS #}
+    {{ theme_css('bootstrap.css', true) }}
+    {{ theme_css('main.css', true) }}
+    {{ global_css('jquery.jqzoom.css', true) }}
+    
+    {# Global JS #}
+    {{ global_js('jquery.js', true) }}
+    {{ global_js('jquery-migrate.min.js', true) }}
+    {{ global_js('bootstrap.min.js', true) }}
+    {{ global_js('jquery.maskedinput.js', true) }}
+
+    {# Local JS #}
+    {{ theme_js('application.js', true) }}
+
+    {% include 'settings.html' %}
+</head>
+<body itemscope itemtype="http://schema.org/Organization">
+    {% if design_mode %}
+       {{ template_navigator() }}
+    {% endif %}
+    
+    <div id="search" style="display:none;">
+      <div class="container">
+        {{ form_open('cart/search') }}
+          <div class="clearfix">
+            <a href="#" class="close-search">Fechar</a>
+          </div>
+          <input type="text" name="term" class="form-control input-lg" placeholder="O que você procura?" autocomplete="off" />
+          <button class="btn btn-link">Buscar</button>
+        {{ form_close() }}
+      </div>
+    </div>
+
+    <div id="modal-container" class="modal fade"></div>
+
+    <!-- Fixed navbar -->
+    <div class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand {{ template_settings('image:logo') ? 'withlogo' : 'text' }}" href="{{ base_url() }}">
+            {% if template_settings('image:logo') %}
+              <img src="{{ host_url('uploads/images/medium/' ~ template_settings('image:logo')) }}" alt="{{ shop_config('company_name') }}" class="img-responsive" />
+            {% else %}
+              {{ shop_config('company_name') }}
+            {% endif %}
+          </a>
+        </div>
+        <div class="navbar-icons">
+          <ul class="list-inline">
+            <li class="has-icon">
+              <a href="#" class="show-search"><span class="glyphicon glyphicon-search" data-toggle="tooltip" data-placement="bottom" title="Busca"></span></a>
+            </li>
+            <li class="has-icon">
+              <a href="{{ site_url('contact') }}"><span class="glyphicon glyphicon-envelope" data-toggle="tooltip" data-placement="bottom" title="Contato"></span></a>
+            </li>
+            {% if logged_in %}
+              <li class="has-icon">
+                <a href="{{ site_url('secure/my_account') }}"><span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" title="Minha conta"></span></a>
+              </li>
+              <li class="has-icon">
+                <a href="{{ site_url('secure/logout') }}"><span class="glyphicon glyphicon-off" data-toggle="tooltip" data-placement="bottom" title="Sair"></span></a>
+              </li>
+            {% else %}
+              <li class="has-icon">
+                <a href="{{ site_url('secure/login') }}"><span class="glyphicon glyphicon-user" data-toggle="tooltip" data-placement="bottom" title="Cadastro/Login"></span></a>
+              </li>
+            {% endif %}
+            <li class="cart">
+              <a href="{{ site_url('cart/view_cart') }}" class="btn-theme">
+                <span>Carrinho {{ cart('total_items') > 0 ? '(' ~ cart('total_items') ~ ')' : '' }}
+                &nbsp;</span>
+                <i class="glyphicon glyphicon-shopping-cart"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            {% for cat in categories %}
+                {% if cat.category.slug != 'home' %}
+                  {% if cat.children|count > 0 %}
+                    <li class="dropdown">
+                      <a href="{{ site_url(cat.category.slug) }}">
+                        {{ cat.category.name }}
+                        <b class="caret"></b>
+                      </a>
+                      <ul class="dropdown-menu">
+                        {% for child in cat.children %}
+                            <li>
+                              <a href="{{ site_url(cat.category.slug ~ '/' ~ child.category.slug) }}">
+                                {{ child.category.name }}
+                              </a>
+                            </li>
+                        {% endfor %}
+                      </ul>
+                    </li>
+                  {% else %}
+                    <li>
+                      <a href="{{ site_url(cat.category.slug) }}">{{ cat.category.name }}</a>
+                    </li>
+                  {% endif %}
+                {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+        
+      </div>
+    </div>
+
+    {% block banner %}
+    
+    {% endblock %}
+  
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12">
+          {% if flashdata.error %}
+          <div class="buffer-top-md alert alert-danger">{{ flashdata.error }}</div>
+          {% endif %}
+          {% if flashdata.message %}
+          <div class="buffer-top-md alert alert-info">{{ flashdata.message }}</div>
+          {% endif %}
+          {% if error %}
+          <div class="buffer-top-md alert alert-danger">{{ error }}</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  
+    <section id="store-content">
+      <div class="container">
+        {% block content %}
+
+        {% endblock %}  
+      </div>
+    </section>
+
+    <section id="boxes">
+      <ul class="list-inline">
+        {% 
+          set boxes = [
+            {active: ts('if:box_1'), title: ts('text:box_1_title'), icon: "glyphicon glyphicon-send", link: ts('text:box_1_link')},
+            {active: ts('if:box_2'), title: ts('text:box_2_title'), icon: "glyphicon glyphicon-transfer", link: ts('text:box_2_link')},
+            {active: ts('if:box_3'), title: ts('text:box_3_title'), icon: "glyphicon glyphicon-credit-card", link: ts('text:box_3_link')},
+            {active: ts('if:box_4'), title: ts('text:box_4_title'), icon: "glyphicon glyphicon-phone", link: ts('text:box_4_link')}
+          ]
+        %}
+        {% for box in boxes %}
+          {% if box.active %}
+            <li>
+
+              {% if box.link %}
+              <a href="{{ box.link }}">
+              {% endif %}
+
+                <i class="{{ box.icon }}"></i>
+                <span>{{ box.title }}</span>
+
+              {% if box.link %}
+              </a>
+              {% endif %}
+
+            </li>
+          {% endif %}
+        {% endfor %}          
+      </ul>
+    </section>
+
+    <div id="social">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-7">
+            {% 
+              set socials = {
+                b: {link: social_link('facebook'), alt: "Curta nossa página no Facebook"},
+                a: {link: social_link('twitter'), alt: "Siga-nos no Twitter"},
+                x: {link: social_link('instagram'), alt: "Siga-nos no Instagram"},
+                c: {link: social_link('google'), alt: "Siga-nos no Google"},
+                d: {link: social_link('pinterest'), alt: "Siga-nos no Pinterest"}
+              }
+            %}
+            {% for social, attr in socials %}
+              {% if attr.link %}
+                <a href="{{ attr.link }}"><span class="socicon">{{ social }}</span></a>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <div class="col-md-5">
+              {{ form_open('contact/newsletter_signup', 'class="contact-form"') }}
+                <h4 class="text-center">Assine nossa newsletter</h4>
+                <div class="input-group input-group-lg">
+                  <input type="email" value="" name="email" class="form-control" id="contact_email" placeholder="Email address">
+                  <span class="input-group-btn">
+                    <button type="submit" name="subscribe" class="submit btn btn-primary">Cadastrar!</button>
+                  </span>
+                </div>
+              {{ form_close() }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hide">
+      CNPJ: {{ shop_config('cnpj') }}
+      Razão Social: {{ shop_config('company_registration') }}
+      Endereço:
+      {{ shop_config('address1') }}
+      {{ shop_config('address2') }}
+      {{ shop_config('district') }}
+      {{ shop_config('city') }}
+      {{ shop_config('state') }}
+    </div>
+
+    <footer>
+      <div class="container">
+        <div class="row text-center">
+          <div class="pull-right">Powered by <a href="http://xtechcommerce.com.br" target="_blank">Xtech</a></div>
+          <ul class="list-inline pull-left">
+            {% for page in get_children_of_page('institucional') %}
+              <li>
+                <a href="{{ site_url(page.slug) }}">{{ page.title }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+
+          <ul id="payment-options" class="list-unstyled">
+            <li class="visa"></li>
+            <li class="amex"></li>
+            <li class="mastercard"></li>
+            <li class="maestro"></li>
+            <li class="paypal"></li>
+            <li class="pagseguro"></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+  </body>
+</html>

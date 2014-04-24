@@ -11,11 +11,9 @@ var ProductVariants = {};
             variant_map: [],
             variant_map_keyed: [],
             allow_os_purchase: true,
-            overall_quantity: 0,
             button_selects: false,
             validationSuccess: function() {},
             validationOutofstock: function() {},
-            validationAlloutofstock: function() {},
             validationNotAvailable: function() {},
             validationRequiredOption: function() {}
         };
@@ -24,10 +22,6 @@ var ProductVariants = {};
         this.$wrapper = $(element);
         this.$container = $(this.options.container);
         this.$reminderForm = this.$container.find('.remindme-form');
-        this.$alertUnavailable = this.$container.find('.alert-unavailable');
-        this.$buyBtn = this.$container.find('.buy-btn');
-        this.$buyMessage = this.$container.find('.buy-message');
-        this.$variantInput = this.$container.find(this.options.customInput);
 
         if (this.$reminderForm.length > 0) {
             this.options.disableClass = 'variant-unavailable';
@@ -35,7 +29,7 @@ var ProductVariants = {};
 
         $selects = this.$wrapper.find('.product_option');
         $selects.on('change', $.proxy(this.toggle_variant_form, this));
-        this.$buyBtn.on('click', $.proxy(this.buy, this));
+        $('.buy-btn').on('click', $.proxy(this.buy, this));
         this.toggle_variant_form();
 
         if (this.options.button_selects) {
@@ -45,16 +39,6 @@ var ProductVariants = {};
 
     ProductVariants.prototype = {
         constructor: ProductVariants,
-        allUnavailable: function() {
-            this.$buyBtn.addClass('hide');
-            this.$reminderForm.removeClass('hide');
-            this.$alertUnavailable.removeClass('hide');
-        },
-        someAvailable: function() {
-            this.$buyBtn.removeClass('hide');
-            this.$reminderForm.addClass('hide');
-            this.$alertUnavailable.addClass('hide');
-        },
         buy: function(e) {
             e.stopImmediatePropagation();
             $(e.target).blur();
@@ -100,6 +84,7 @@ var ProductVariants = {};
             $('.prod-variant-btn[data-id='+$('.product_option option:selected').val()+']').addClass('active');
         },
         toggle_variant_form: function () {
+
             var selected = new Array(); var qty_sel = 0;
             var qty = this.$wrapper.find('.product_option').length;
             this.$wrapper.find('.product_option option:selected').each(function(){
@@ -128,14 +113,11 @@ var ProductVariants = {};
                     this.validation_success(selected_key);
                     this.options.validationSuccess.call(this);
                 }else{
-                    this.validation_fail('Outofstock', 'Esgotado.', 'Esta opção esta esgotado, por favor selecione outra.', selected_key);
+                    this.validation_fail('Outofstock', 'Indisponível.', 'Esta opção esta indisponível, por favor selecione outra.', selected_key);
                     this.options.validationOutofstock.call(this);
                 }
             } else {
-                if (this.options.overall_quantity <= 0 && this.options.allow_os_purchase === false) {
-                    this.validation_fail('Alloutofstock', 'Indisponível.', 'Este produto esta indisponível.');
-                    this.options.validationAlloutofstock.call(this);
-                }else if(qty == qty_sel){
+                if(qty == qty_sel){
                     this.validation_fail('NotAvailable', 'Indisponível.', 'Esta opção esta indisponível, por favor selecione outra.');
                     this.options.validationNotAvailable.call(this);
                 } else{
@@ -146,40 +128,31 @@ var ProductVariants = {};
         },
         validation_success: function (selected_key) {
             if ($('#not_available').length > 0) {
-                $('#buy_btn').hide();
-                $('#not_available').show();
+                $('#buy_btn').show();
+                $('#not_available').hide();
             }
-            
-            this.someAvailable();
-
-            this.$variantInput.val(this.options.variant_map[selected_key].id);
-
-            this.$buyBtn.removeClass('buy-btn-disabled');
-            this.$buyMessage.addClass('buy-message-disabled').html('&nbsp;');
+            this.$reminderForm.addClass('hide');
+            this.$container.find('.buy-btn').removeClass('buy-btn-disabled');
+            this.$container.find(this.options.customInput).val(this.options.variant_map[selected_key].id);
+            this.$container.find('.buy-message').addClass('hide');
         },
         validation_fail: function (errorcode, error, error_description, selected_key) {
-            if ($('#not_available').length > 0) {
+            if (errorcode === 'Outofstock' && $('#not_available').length > 0) {
                 $('#buy_btn').hide();
                 $('#not_available').show();
-            }
-
-            variant_validation_msg = error + ': ' + error_description;
-
-            if (errorcode === 'Alloutofstock') {
-                this.allUnavailable();
-            }else if(errorcode === 'Outofstock') {
-                this.$variantInput.val(this.options.variant_map[selected_key].id);
-
-                this.$buyBtn.addClass('buy-btn-disabled');
-                this.$buyMessage.removeClass('buy-message-disabled').html(error);
-                this.$reminderForm.removeClass('hide');
             }else{
-                this.someAvailable();
-                this.$variantInput.val('');
-                
-                this.$buyBtn.addClass('buy-btn-disabled');
-                this.$buyMessage.removeClass('buy-message-disabled').html(error);
+                $('#buy_btn').show();
+                $('#not_available').hide();
             }
+            if(errorcode === 'Outofstock'){
+                this.$reminderForm.removeClass('hide');
+                this.$container.find(this.options.customInput).val(this.options.variant_map[selected_key].id);
+            }else{
+                this.$container.find(this.options.customInput).val('');
+            }
+            variant_validation_msg = error + ': ' + error_description;
+            this.$container.find('.buy-btn').addClass('buy-btn-disabled');
+            this.$container.find('.buy-message').removeClass('hide').html(error);
         }
     };
 

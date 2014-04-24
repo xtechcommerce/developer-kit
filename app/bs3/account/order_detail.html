@@ -8,9 +8,8 @@
   </div>
   Pedido #{{ order_id }}
 </h1>
-
 <div class="row">
-    <div class="col-xs-12">    
+    <div class="col-lg-12">    
         <div class="order-detail-wrap">
             <div class="row">
                 <div class="col-md-4">
@@ -21,13 +20,11 @@
                     <h3>{{ lang('shipping_method') }}</h3>
                     {{ shipping.method }}
                 </div>
-
                 <div class="col-md-4">
                     <h3>Forma de pagamento</h3>
-                    {{ format_payment_desc(payment.description) }}
+                    {{ format_payment_desc(payment) }}
                 </div>
             </div>
-
             <table class="table table-light" style="margin-top:20px;">
                 <thead>
                     <tr>
@@ -45,7 +42,6 @@
                         </th>
                     </tr>
                 </thead>
-
                 <tfoot>
                     {% if loja.group_discount > 0 %}
                       <tr>
@@ -59,7 +55,6 @@
                         </td>
                       </tr>
                     {% endif %}
-
                     <tr>
                       <td colspan="4">
                         <strong>
@@ -70,7 +65,6 @@
                         {{ loja.subtotal|format_currency }}
                       </td>
                     </tr>
-
                     {% if loja.shipping_cost > 0 %}
                       <tr>
                         <td colspan="4">
@@ -83,7 +77,6 @@
                         </td>
                       </tr>
                     {% endif %}
-
                     {% if loja.coupon_discount > 0 %}
                       <tr>
                         <td colspan="4">
@@ -96,7 +89,6 @@
                         </td>
                       </tr>
                     {% endif %}
-
                     <tr>
                       <td colspan="4">
                         <strong>
@@ -108,7 +100,6 @@
                       </td>
                     </tr>
                 </tfoot>
-
                 <tbody>
                     {% for cartkey, product in loja.contents %}
                       <tr>
@@ -134,7 +125,6 @@
                     {% endfor %}
                 </tbody>
             </table>
-
             {% if loja.history %}
             <table class="table table-light" style="margin-top:20px;">
                 <thead>

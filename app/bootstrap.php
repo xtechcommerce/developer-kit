@@ -38,17 +38,22 @@ $data['categories'] = array(
                     array('category'=>array('id'=>3, 'name'=>'Sandalias verão', 'slug'=>'#'), 'children'=>array()),
                     array('category'=>array('id'=>4, 'name'=>'Sandalias inverno', 'slug'=>'#'), 'children'=>array()),
                     )),
-        array('category'=>array('id'=>5, 'name'=>'Anabela', 'slug'=>'#')),
         array('category'=>array('id'=>6, 'name'=>'Coleções', 'slug'=>'#')),
         array('category'=>array('id'=>7, 'name'=>'Acessorios', 'slug'=>'#')),
         array('category'=>array('id'=>8, 'name'=>'Sale', 'slug'=>'sale')),
     );
 
 $data['categories_flatten'] = array(
-        8 => $data['categories'][5]['category'],
-        7 => $data['categories'][4]['category']
+        8 => $data['categories'][4]['category'],
+        7 => $data['categories'][3]['category']
 );
 $twig->addGlobal('categories_flatten',  $data['categories_flatten']);
+
+$data['testimonials'] = array(
+        array('firstname' => 'Max', 'created_at' => '05/05/2014', 'message' => 'Superbom', 'total' => 4, 'rating_look' => 3, 'rating_usability' => 2, 'rating_support' => 1),
+    );
+
+$data['testimonial_totals'] = array('total' => 4, 'rating_look' => 3, 'rating_usability' => 2, 'rating_support' => 1);
 
 $data['products'] = array(
         array('quantity' => 0, 'name' => 'Python Dourado', 'price' => 2.20, 'installments' => 6, 'saleprice' => 1.00),

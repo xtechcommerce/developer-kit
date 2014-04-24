@@ -1,0 +1,242 @@
+{% extends _layout %}
+
+{% block content %}
+
+{% import 'product_listing.html' as product_listing %}
+
+<div id="product" itemscope="" itemtype="http://schema.org/Product">
+
+	{% include 'breadcrumbs.html' %}
+	<div class="row">
+		<div class="col-md-7">
+			<div class="row buffer-bottom-md">
+				<div class="col-xs-2">
+					<div class="carousel-thumbs">
+					{% for image in product.images %}
+						<a href="#" class="thumbnail" data-target="#product-carousel" data-slide-to="{{ loop.index - 1 }}">{{ product_img(image, 'thumbnails') }}</a>
+					{% endfor %}
+					</div>
+				</div>
+				<div class="col-xs-10">
+					<div id="product-carousel" class="carousel slide" data-ride="carousel">
+
+					  <div class="carousel-inner">
+					  	{% for image in product.images %}
+					  	  <div class="item {{ loop.first ? 'active' : 'passive' }}">
+					  	    {{ product_img(image, 'medium') }}
+					  	  </div>
+					  	{% endfor %}
+					  </div>
+					  <ul class="share-this buffer-top-sm list-unstyled">
+					  	<li class="pinterest">
+					  	    <a href="http://pinterest.com/pin/create/button/?url={{ current_url() }}&media={{ product_img(product, 'medium', {'only_link': true}) }}&description={{ product.name }}" class="pin-it-button" count-layout="none">Pin It</a>
+					  		<script type="text/javascript" src="//assets.pinterest.com/js/pinit.js"></script>
+					  	</li>
+					  	<li class="twitter">
+					  		<a href="http://twitter.com/share" class="twitter-share-button" data-url="{{ current_url() }}" data-count="none" data-via="">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+					  	</li>
+					  	<li class="facebook">
+					  		<iframe src="//www.facebook.com/plugins/like.php?href={{ current_url() }}&amp;send=false&amp;layout=button_count&amp;width=100&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font&amp;height=21&amp;appId=295078817182075" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:100px; height:21px;" allowTransparency="true"></iframe>
+					  	</li>
+					  </ul>
+
+					  <a class="left carousel-control" href="#product-carousel" data-slide="prev">
+					    <span class="glyphicon glyphicon-chevron-left"></span>
+					  </a>
+					  <a class="right carousel-control" href="#product-carousel" data-slide="next">
+					    <span class="glyphicon glyphicon-chevron-right"></span>
+					  </a>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<div class="col-md-5">
+			<div class="buffer-left-md">
+				<h1 class="buffer-top-no" itemprop="name">{{ product.name }}</h1>
+
+				{% if product.sku %}
+				  <div class="buffer-bottom-sm">
+				      REF: 
+				      <span itemprop="sku">
+				          {{ product.sku }}
+				      </span>
+				  </div>
+				{% endif %}
+
+				{% if product.excerpt %}
+					<p itemprop="description">
+					    {{ product.excerpt }}
+					</p>
+				{% endif %}
+
+				<div class="hide">{{ variation_select(product, {button_selects: 'true'}) }}</div>
+
+				{% if product.options|count > 0 %}
+				    <div class="prod-variants">
+				        <ul>        
+				            {% for option in product.options %}
+				            <li class="prod-variant-li">
+				                <div class="prod-variant">
+				                    <div class="prod-variant-title">
+				                        Selecione a opção para
+				                        <span class="color">{{option.name}}:</span>
+				                    </div>
+				                    <ul class="list-inline">
+				                        {% for value in option.values %}
+				                        <li>
+				                            <button class="btn btn-default prod-variant-btn" data-id="{{value.id}}">{{value.name}}</button>
+				                        </li>
+				                        {% endfor %}
+				                    </ul>
+				                </div>
+				            </li>
+				            {% endfor %}
+				        </ul>
+				    </div>
+				{% endif %}
+
+				<div class="price" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer">
+				  <div class="buy-price">
+				      {% if product.saleprice > 0 %}
+				          <strike>{{ product.price|format_currency }}</strike>
+				          <span class="onsale product_price" itemprop="price">{{ product.saleprice|format_currency }}</span>
+				          <span class="onsale variant_price" style="display:none;"></span>
+				      {% else %}
+				          <span class="onsale product_price" itemprop="price">{{ product.price|format_currency }}</span>
+				          <span class="onsale variant_price" style="display:none;"></span>
+				      {% endif %}
+				      {% if product.installments > 1 %}
+				          <small class="installments">
+				              (em até <strong class="color">{{ product.installments }} x</strong> <span class="installment-price">{{ ((product.saleprice > 0 ? product.saleprice : product.price)/product.installments)|format_currency }}</span> sem juros)
+				          </small>
+				      {% endif %}
+				  </div>
+				  
+				</div>
+
+				<div class="buffer-top-sm buffer-bottom-sm">
+					{{ form_open('cart/add_to_cart', {'class': 'addwish-btn-form'}, {'id': product.id, 'variant_id': '', 'cartkey': cart('cartkey')}) }}
+						<button class="addwish-btn hide" type="submit" name="action" value="addwish"></button>
+						<button class="btn btn-primary btn-lg buy-btn-lg alert-unavailable disabled hide" type="submit" value="submit">Indisponível</button>
+						<button class="btn btn-primary btn-lg buy-btn buy-btn-lg" type="submit" value="submit">Comprar</button>
+						ou <a href="#" onclick="$('.addwish-btn').trigger('click')"><span class="glyphicon glyphicon-heart"></span> para lista de desejos</a>
+						<p class="buy-message hide"></p>
+					{{ form_close() }}
+				</div>
+				
+				{{ form_open('contact/remind_me', 'class="remindme-form hide form-horizontal"', {'redirect': site_url(uri_string()), 'variant_id': '', 'product_id': product.id}) }}
+				<fieldset>
+				    Avisa-me quando chegar: 
+				    <div class="input-group">
+				      <input type="text" name="email" class="form-control" placeholder="Email" />
+				      <span class="input-group-btn">
+				        <input type="submit" value="Enviar" name="submit" class="btn btn-primary"/>
+				      </span>
+				    </div>
+				</fieldset>
+				{{ form_close() }}
+
+			</div>
+		</div>
+	</div>
+	<hr>
+	<div class="row">
+	{% if product.description %}
+		<div class="col-md-7">
+			{{ product.description|raw }}
+		</div>
+	{% endif %}
+	{% if product.properties|count > 0 %}
+		<div class="col-md-5">
+			<div class="buffer-left-md">
+				<h3 class="buffer-top-xs">Características</h3>
+				<dl class="buffer-top-no">
+				{{ product_properties(product.properties, '<dt>{key}</dt><dd>{value}</dd>') }}
+				</dl>
+			</div>
+		</div>
+	{% endif %}
+	</div>
+
+
+	{% if testimonials|count > 0 %}
+	<hr>
+	<script type="text/javascript">
+	$(document).ready(function(){
+	    $.getScript('{{ global_js('jquery.raty.js') }}', function( data, textStatus, jqxhr ) {
+
+	      $('.rating-stars-view').each(function(){
+	          var name = $(this).data('name');
+	          $(this).raty({
+	              path: '/assets/img', 
+	              score: function() {
+	                  return $(this).attr('data-score');
+	              },
+	              readOnly: true
+	          });
+	      });
+
+	    });
+	});
+	</script>
+	<div class="testimonials row">
+	  <div class="col-md-4">
+	    <h2>Notas totais</h2>
+	    <ul class="testimonials-rating-totals list-unstyled" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+	         <li style="display:none">
+	           <span itemprop="reviewCount">{{ testimonials|count }}</span>
+	           <span itemprop="ratingValue">{{ testimonial_totals.total }}</span>
+	         </li>
+	         <li><div class="rating-stars-view pull-left" data-score="{{ testimonial_totals.total }}"></div>Média geral </li>
+	         <li><div class="rating-stars-view pull-left" data-score="{{ testimonial_totals.rating_look }}"></div>Beleza do produto </li>
+	         <li><div class="rating-stars-view pull-left" data-score="{{ testimonial_totals.rating_usability }}"></div>Usabilidade do produto </li>
+	         <li><div class="rating-stars-view pull-left" data-score="{{ testimonial_totals.rating_support }}"></div>Atendimento e segurança </li>
+	    </ul>
+	  </div>
+	  <div class="col-md-8">
+	    <h2>O que clientes dizem</h2>
+	    <div class="testimonials-listing">
+	       {% for testimonial in testimonials %}
+	          <div class="testimonial" itemprop="review" itemscope itemtype="http://schema.org/Review">
+	            <div itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating" class="pull-right">
+	            	<div class="rating-stars-view" data-score="{{ testimonial.total }}" itemprop="ratingValue" content="{{ testimonial.total }}"></div>
+	            	<meta itemprop="worstRating" content="1">
+	            	<meta itemprop="bestRating" content="5">
+	            </div>
+	            <strong class="testimonial-author" itemprop="author">{{ testimonial.firstname }}</strong> escreveu na data  
+	            <strong class="testimonial-date" itemprop="datePublished">{{ testimonial.created_at|to_formated_date }}</strong>:
+	            <div class="well testimonial-message" itemprop="description">{{ testimonial.message }}</div>
+	          </div>
+	       {% endfor %}
+	    </div>
+	  </div>
+	</div>
+
+	{% endif %}
+
+
+	{% if related|count > 0 %}
+
+	<div id="prod-related">
+	    <h2 class="text-center buffer-bottom-lg buffer-top-lg">Aproveite também</h2>
+	    <div class="row prod-list">
+	        {% for related_product in related|slice(0, 8) %}
+	            {{ product_listing.item(related_product) }}
+	            {% if loop.index % (cols == 4 ? 3 : 4) == 0 %}
+	            <div class="break"></div>
+	            {% endif %}
+
+	            {% if loop.index % 2 == 0 %}
+	            <div class="break visible-xs"></div>
+	            {% endif %}
+	        {% endfor %}
+	    </div>
+	</div>
+
+	{% endif %}
+
+</div>
+
+{% endblock %}
+

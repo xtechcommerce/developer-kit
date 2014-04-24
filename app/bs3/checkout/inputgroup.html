@@ -1,5 +1,5 @@
 {% macro input(id, name, value, label, cols, type, validate, hide_asterix) %}
-  <div class="col-xs-{{ cols }}">
+  <div class="col-md-{{ cols }}">
     <label>
       {{ label }}
       {% if not hide_asterix %}
@@ -14,7 +14,7 @@
   </div>
 {% endmacro %}
 {% macro dropdown(id, name, options, value, label, cols) %}
-  <div class="col-xs-{{ cols }}">
+  <div class="col-md-{{ cols }}">
     <label>
       {{ label }}
       <sup>*</sup>
