@@ -13,7 +13,7 @@ function format_metrics($val){
 }
 
 function format_currency($val){
-    return '$R ' . number_format((float)$val, 2, ',', '.');
+    return 'R$ ' . number_format((float)$val, 2, ',', '.');
 }
 
 function get_status_label($val){
