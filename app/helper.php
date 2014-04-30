@@ -77,6 +77,11 @@ function global_css($uri, $tag=false)
         return 'app/global_assets/css/'.$uri;
     }
 }
+
+function global_asset($uri)
+{
+    return 'app/global_assets/'.$uri;
+}
 function cart($key){
     global $data;
     switch ($key) {

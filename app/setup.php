@@ -78,6 +78,7 @@ $functions = array(
   'template_settings',
   'filters_widget',
   'ts',
+  'global_asset',
 );
 
 foreach ($functions as $function) {

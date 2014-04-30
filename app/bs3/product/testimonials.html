@@ -2,12 +2,12 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
-    $.getScript('{{ base_url('assets/js/jquery.raty.js') }}', function( data, textStatus, jqxhr ) {
+    $.getScript('{{ global_js('jquery.raty.js') }}', function( data, textStatus, jqxhr ) {
 
       $('.rating-stars-view').each(function(){
           var name = $(this).data('name');
           $(this).raty({
-              path: '/assets/img', 
+              path: '{{ global_asset('img/') }}', 
               score: function() {
                   return $(this).attr('data-score');
               },
