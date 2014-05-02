@@ -21,7 +21,7 @@ function template_navigator()
     foreach ($templates as $template) {
         $nav .= '<li class="template-designer-close"><a style="color:#898989" href="index.php?p=' . $template . '">' . $template . '.html</a></li>';
         if ($template == 'page') {
-            $nav .= '<li class="template-designer-close"><a style="color:#898989" href="index.php?p=page&slug=contact">page.html (with contact as slug)</a></li>';
+            $nav .= '<li class="template-designer-close"><a style="color:#898989" href="index.php?p=page&slug=contato">page.html (with contato as slug)</a></li>';
         }
     }
     $nav .= '<li class="template-designer-close" style="text-align:right;"><a style="color:#898989;" href="#" onclick="$(\'.template-designer-close\').hide(); $(\'.template-designer-open\').show();">(-) Fechar</a></li>';
