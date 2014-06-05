@@ -2,18 +2,6 @@
 
 // Functions only for template-designer
 
-function humanize($str) {
- 
-    $str = trim(strtolower($str));
-    $str = preg_replace('/[^a-z0-9\s+]/', ' ', $str);
-    $str = preg_replace('/\s+/', ' ', $str);
-    $str = explode(' ', $str);
- 
-    $str = array_map('ucwords', $str);
- 
-    return implode(' ', $str);
-}
-
 function template_navigator()
 {
     $templates = array('category', 'forgot_password', 'homepage', 'login', 'my_account', 'order_detail', 'order_placed', 'page', 'product', 'register', 'view_cart', 'looks', 'look', 'landingpage');
@@ -44,6 +32,73 @@ function _parse_options($options)
 }
 
 // Functions of shop
+
+function host_img($file, $size = 'full', $options = array())
+{
+    if (empty($file)) {
+        return '';
+    }
+    
+    $options = array_merge(array('src' => host_url('uploads/images/' . $size . '/' . $file)), $options);
+    return '<img' . _parse_options($options) . '>';
+}
+
+function get_collection($slug, $options = array())
+{
+    global $data;
+
+    if (isset($options['group_by']) && $options['group_by'] == 'month') {
+        return array(
+            array('cmonth' => 5, 'cyear' => 2014, 'count' => 5),
+            array('cmonth' => 4, 'cyear' => 2014, 'count' => 5),
+            array('cmonth' => 12, 'cyear' => 2013, 'count' => 1),
+            );
+    }
+
+    if (isset($data['collections'][$slug])) {
+        $elements = array();
+
+        if (isset($options['key'])) {
+            foreach ($data['collections'][$slug] as $element) {
+                $elements[$element[$options['key']]][] = $element;
+            }
+        }else{
+            return $data['collections'][$slug];
+        }
+
+        return $elements;
+    }else{
+        return array();
+    }
+}
+
+function get_element($slug)
+{
+    global $data;
+
+    if (isset($data['elements'][$slug])) {
+        return $data['elements'][$slug];
+    }
+
+    return array();
+}
+
+function get_collection_pagination()
+{
+    return '<div class="pagination-centered"><ul class="pagination"><li class="active"><a href="#">1</a></li><li><a href="#15">2</a></li><li><a href="#30">3</a></li><li><a href="#15">›</a></li></ul></div>';
+}
+
+function humanize($str) {
+ 
+    $str = trim(strtolower($str));
+    $str = preg_replace('/[^a-z0-9\s+]/', ' ', $str);
+    $str = preg_replace('/\s+/', ' ', $str);
+    $str = explode(' ', $str);
+ 
+    $str = array_map('ucwords', $str);
+ 
+    return implode(' ', $str);
+}
 
 function social_link(){
     return 'http://www.facebook.com/test';

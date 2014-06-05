@@ -18,7 +18,7 @@
     {# Local JS #}
     {{ theme_js('application.js', true) }}
 
-    {% include 'settings.html' %}
+    {% include 'custom_styles.html' %}
 </head>
 <body itemscope itemtype="http://schema.org/Organization">
     {% if design_mode %}
@@ -29,10 +29,10 @@
       <div class="container">
         {{ form_open('cart/search') }}
           <div class="clearfix">
-            <a href="#" class="close-search">Fechar</a>
+            <a href="#" class="close-search">{{ lang('close') }}</a>
           </div>
           <input type="text" name="term" class="form-control input-lg" placeholder="O que você procura?" autocomplete="off" />
-          <button class="btn btn-link">Buscar</button>
+          <button class="btn btn-link">{{ lang('do_search') }}</button>
         {{ form_close() }}
       </div>
     </div>
@@ -78,7 +78,7 @@
             {% endif %}
             <li class="cart">
               <a href="{{ site_url('cart/view_cart') }}" class="btn-theme">
-                <span>Carrinho {{ cart('total_items') > 0 ? '(' ~ cart('total_items') ~ ')' : '' }}
+                <span>{{ lang('view_cart') }} {{ cart('total_items') > 0 ? '(' ~ cart('total_items') ~ ')' : '' }}
                 &nbsp;</span>
                 <i class="glyphicon glyphicon-shopping-cart"></i>
               </a>

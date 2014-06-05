@@ -1,0 +1,42 @@
+{
+    "template_settings": {
+        "group:general":          {"label": "Gerais"},        
+        "image:logo":             {"label": "Logotipo", "default": ""},
+        "font:body":              {"label": "Fonte padrão", "default": "Lato"},
+        "color:body":             {"label": "Fundo padrão", "default": "#f2f2f2"},
+        "color:text":             {"label": "Cor do texto padrão", "default": "#555555"},
+        "color:link":             {"label": "Link", "default": "#f85c37"},
+        "color:link_hover":       {"label": "Link Over", "default": "#7b7b7b"},
+        "color:btn_bg":           {"label": "Botão", "default": "#74cfae"},
+        "color:btn_font":         {"label": "Fonte Botão", "default": "#ffffff"},
+        "color:sale":             {"label": "Caixa de promoção", "default": "#f85c37"},
+    
+        "group:titles":           {"label": "Títulos"},        
+        "font:title":             {"label": "Fonte de títulos", "default": "Raleway"},
+        "color:title":            {"label": "Cor de títulos", "default": "#333333"},
+        
+        "group:navbar":           {"label": "Navegação"},        
+        "color:navbar":           {"label": "Barra de navegação", "default": "#FFFFFF"},
+        "color:text_navbar":      {"label": "Texto barra de navegação", "default": "#777777"},
+        "color:navbar_border":    {"label": "Linha barra de navegação", "default": "#e7e7e7"},
+    
+        "group:footer":           {"label": "Rodapé"},
+        "color:footer":           {"label": "Rodapé", "default": "#74cfae"},
+        "color:social":           {"label": "Ícones de redes sociais", "default": "#74cfae"},
+        
+        "group:boxes":            {"label": "Caixas"},
+        "color:boxes":            {"label": "Área das caixas", "default": "#4e4e4e"},
+        "if:box_1":               {"label": "Exibir caixa frete", "default": "1"},
+        "text:box_1_title":       {"label": "Caixa frete titulo", "default": "Frete Grátis"},
+        "text:box_1_link":        {"label": "Caixa frete link", "default": ""},
+        "if:box_2":               {"label": "Exibir caixa troca", "default": "1"},
+        "text:box_2_title":       {"label": "Caixa troca titulo", "default": "1ª Troca Grátis"},
+        "text:box_2_link":        {"label": "Caixa troca link", "default": ""},
+        "if:box_3":               {"label": "Exibir caixa parcelas", "default": "1"},
+        "text:box_3_title":       {"label": "Caixa parcelas titulo", "default": "Até 3x sem juros"},
+        "text:box_3_link":        {"label": "Caixa parcelas link", "default": ""},
+        "if:box_4":               {"label": "Exibir caixa telefone", "default": "1"},
+        "text:box_4_title":       {"label": "Caixa telefone titulo", "default": "0800 999 9999"},
+        "text:box_4_link":        {"label": "Caixa telefone link", "default": ""}
+    }
+}

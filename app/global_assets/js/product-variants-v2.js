@@ -117,10 +117,10 @@ var ProductVariants = {};
             if(this.options.variant_map[selected_key]) {
                 this.selected_variant = this.options.variant_map[selected_key];
                 
-                var variant_price = parseFloat(this.options.variant_map[selected_key].price_num);
+                var variant_price = parseFloat(this.selected_variant.price_num);
                 if ($('.variant_price').length > 0) {
                     if (variant_price > 0) {
-                        $('.variant_price').text(this.options.variant_map[selected_key].price);
+                        $('.variant_price').text(this.selected_variant.price);
                         $('.variant_price').show();
                         $('.product_price').hide();
                     }else{
@@ -132,7 +132,7 @@ var ProductVariants = {};
                     }
                 }
 
-                if (parseInt(this.options.variant_map[selected_key].quantity) > 0 || this.options.allow_os_purchase > 0) {
+                if (parseInt(this.selected_variant.quantity) > 0 || this.options.allow_os_purchase > 0) {
                     this.validation_success(selected_key);
                     this.options.validationSuccess.call(this);
                 }else{

@@ -1,0 +1,69 @@
+<script src="//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js"></script>
+<script>WebFont.load({google: {families: ['{{ template_settings('font:body') }}:300,400,700', '{{ template_settings('font:title') }}:300,400']}});</script>
+
+<style type="text/css">
+
+    body{
+        font-family: "{{ template_settings('font:body')|replace('+', ' ') }}", sans-serif;
+        background-color: {{ template_settings('color:body') }};
+        color: {{ template_settings('color:text') }};
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: "{{ template_settings('font:title')|replace('+', ' ') }}", sans-serif;
+        color: {{ template_settings('color:title') }};
+    }
+
+    .navbar-default{
+        border-color: {{ template_settings('color:navbar_border') }};
+    }
+
+    .navbar-default .navbar-nav > li > a,
+    .navbar-icons .has-icon a,
+    .navbar-default .navbar-brand{
+        color: {{ template_settings('color:text_navbar') }};
+    }
+    .navbar-default .navbar-nav > .dropdown > a .caret{
+        border-top-color: {{ template_settings('color:text_navbar') }};
+        border-bottom-color: {{ template_settings('color:text_navbar') }};
+    }
+
+    .navbar{
+        background-color: {{ template_settings('color:navbar') }};
+    }
+
+    a, .btn-theme, .btn-primary, #social a, .btn-link{
+        color: {{ template_settings('color:link') }};
+    }
+
+    a:hover,
+    a:focus{
+        color: {{ template_settings('color:link_hover') }};
+    }
+
+    .navbar-default .navbar-nav > .active > a, 
+    .navbar-default .navbar-nav > .active > a:hover, 
+    .navbar-default .navbar-nav > .active > a:focus,
+    .btn-theme, .btn-primary {
+        color: {{ template_settings('color:btn_font') }};
+        background-color: {{ template_settings('color:btn_bg') }};
+    }
+
+    footer {
+        background-color: {{ template_settings('color:footer') }};
+    }
+
+    .sale{
+        background-color: {{ template_settings('color:sale') }};
+    }
+
+    #social a {
+        color: {{ template_settings('color:social') }};
+    }
+
+    #boxes {
+        background-color: {{ template_settings('color:boxes') }};
+    }
+
+</style>
+

@@ -30,7 +30,7 @@
 			
 			{% for product in products %}
 
-				<div class="product clearfix">
+				<div class="product">
 				  <a href="{{ site_url(product.slug) }}" class="rel bl">
 				  	{% if product.saleprice > 0 %}
 				  		<span class="abs sale">Sale</span>
@@ -38,8 +38,8 @@
 				    {{ product_img(product, 'small') }}
 				  </a>
 				  <div class="product-info full-margin btm-border clearfix">
-				    <p class="pull-left"><a href="{{ site_url(product.slug) }}"><strong>{{ product.name }}</strong></a></p>
-				    <p class="price pull-right">
+				    <p class="description"><a href="{{ site_url(product.slug) }}"><strong>{{ product.name }}</strong></a></p>
+				    <p class="price">
 				    	<em>
 				    	{% if product.saleprice > 0 %}
 				    		{{ product.saleprice|format_currency }} <del>{{ product.price|format_currency }}</del>

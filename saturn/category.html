@@ -33,7 +33,7 @@
 				</ul>
 
 				{% if selected_properties|length > 0 or selected_options|length > 0 or price_max > 0 %}
-					<h4>Selectionados</h4>
+					<h4>{{ lang('selected_filters') }}</h4>
 					<ul class="active-filters list-unstyled buffer-bottom-md" style="display:none;">
 						{% for property in selected_properties %}
 						<li><a class="sub" href="#filter_{{ property }}"></a></li>
@@ -57,6 +57,7 @@
 								$(this).html('<i class="glyphicon glyphicon-remove"></i> ' + $filter.text());
 								$(this).click(function(e){
 									e.preventDefault();
+									$filter = $($(this).attr('href'));
 									$filter.trigger('click');
 								});
 							});
@@ -69,7 +70,7 @@
 				{% for property in properties %}
 				    {% if property.children|count > 0 %}
 				        <div class="filters-side filters">
-				        	<h4>Filtrar por {{ property.category.name }}</h4>
+				        	<h4>{{ lang('filter_by', {'v': property.category.name}) }}</h4>
 				          	<ul class="list-unstyled list-inline clearfix buffer-bottom-md">
 				          	  	{% for child in property.children %}
 				          	    	<li><a id="filter_{{ child.category.id }}" class="sub" href="#filter_property{{ child.category.id }}">{{ child.category.name }}</a></li>
@@ -82,7 +83,7 @@
 				{% for option in global_options %}
 				    {% if option.values|count > 0 %}
 				        <div class="filters-side filters">
-				        	<h4>Filtrar por {{ option.name }}</h4>
+				        	<h4>{{ lang('filter_by', {'v': option.name}) }}</h4>
 				          	<ul class="list-unstyled list-inline clearfix buffer-bottom-md">
 				          	  	{% for value in option.values %}
 				          	    	<li><a id="filter_{{ value.id }}" class="sub" href="#filter_option{{ value.id }}">{{ value.name }}</a></li>
@@ -98,9 +99,9 @@
 
 				{% if range > 0 %}
 				<div class="filters-side price-filters">
-					<h4>Filtrar por Preço</h4>
+					<h4>{{ lang('filter_by', {'v': lang('price')}) }}</h4>
 				  	<ul class="list-unstyled clearfix buffer-bottom-md">
-				  		<li><a class="sub{{ price_max ? '' : ' active' }} all" href="#" data-min="" data-max="">Todos</a></li>
+				  		<li><a class="sub{{ price_max ? '' : ' active' }} all" href="#" data-min="" data-max="">{{ lang('all') }}</a></li>
 				  	    <li><a class="sub{{ price_max == first_range|round ? ' active' : '' }}" href="#" data-min="{{ pricerange.min }}" data-max="{{ first_range|round }}">{{ pricerange.min|format_currency }} - {{ first_range|round|format_currency }}</a></li>
 				  	    <li><a class="sub{{ price_max == second_range|round ? ' active' : '' }}" href="#" data-min="{{ first_range|round }}" data-max="{{ second_range|round }}">{{ first_range|round|format_currency }} - {{ second_range|round|format_currency }}</a></li>
 				  	    <li><a class="sub{{ price_max == pricerange.max ? ' active' : '' }}" href="#" data-min="{{ second_range|round }}" data-max="{{ pricerange.max }}">{{ second_range|round|format_currency }} - {{ pricerange.max|format_currency }}</a></li>
@@ -121,11 +122,11 @@
 
 	<!-- The visible part in the template: -->
 	<div class="filters order">
-	    <a class="main" href="#"><span class="glyphicon glyphicon-chevron-down"></span> Organizar por</a>
+	    <a class="main" href="#"><span class="glyphicon glyphicon-chevron-down"></span> {{ lang('organize_by') }}</a>
 	    <ul>
-	        <li><a class="sub" href="#order_price">Menor preço</a></li>
-	        <li><a class="sub" href="#order_bestseller">Mais vendidas</a></li>
-	        <li><a class="sub" href="#order_rating">Melhor nota</a></li>
+	        <li><a class="sub" href="#order_price">{{ lang('smallest_price') }}</a></li>
+	        <li><a class="sub" href="#order_bestseller">{{ lang('most_selled') }}</a></li>
+	        <li><a class="sub" href="#order_rating">{{ lang('best_note') }}</a></li>
 	    </ul>
 	</div>
 	<!-- End -->
@@ -166,7 +167,7 @@
 		{% endif %}
 	{% else %}
 		<div class="col-lg-12">
-			Não há produtos nesta categoria.
+			{{ lang('no_products') }}
 		</div>
 	{% endfor %}
 

@@ -1,5 +1,7 @@
 <?php 
 
+$data['request'] = array('get' => $_GET);
+
 $address = array(
         'id' => '27832',
         'customer_id' => '34146',
@@ -75,8 +77,8 @@ $data['banners'] = array(
     );
 
 $data['pages'] = array(
-        array('title' => 'Page 1'),
-        array('title' => 'Page 2'),
+        array('title' => 'About', 'slug' => 'index.php?p=page&slug=about'),
+        array('title' => 'Contact', 'slug' => 'index.php?p=page&slug=contact')
     );
 
 if ($page == 'homepage') {
@@ -402,5 +404,11 @@ if ($page == 'order_placed') {
     );
 }
 
+$data['collections'] = array();
+$data['elements'] = array();
+
+if (file_exists($bootstrap_file)) {
+    include $bootstrap_file;
+}
 
 ?>

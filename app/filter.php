@@ -29,6 +29,11 @@ function to_formated_date($val)
     return '01/10/2014';
 }
 
+function to_formatted_date($val)
+{
+    return '01/10/2014';
+}
+
 function form_select()
 {
     return '';
