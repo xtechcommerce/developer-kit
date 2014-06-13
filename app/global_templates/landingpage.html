@@ -4,11 +4,17 @@
 
 {% import 'product_listing.html' as product_listing %}
 
-<div class="jumbotron">
-  <h1 class="text-center" style="margin-bottom:25px">
-    {{ campaign.mission }}
-  </h1>
-</div>
+{% if campaign.landing_config['image:banner'] %}
+    <div class="campaign-banner">
+      {{ host_img(campaign.landing_config['image:banner'], 'full', {'class': 'img-responsive'}) }}
+    </div>
+{% else %}
+    <div class="campaign-jumbotron jumbotron">
+      <h1 class="text-center" style="margin-bottom:25px">
+        {{ campaign.mission }}
+      </h1>
+    </div>
+{% endif %}
 
 <div class="row prod-list">
   {% for product in products %}
