@@ -1,7 +1,7 @@
 <?php 
 
 // Config
-$GLOBALS['template'] = 'modacommerce';
+$GLOBALS['template'] = 'xtech';
 
 
 require_once './app/twig/lib/Twig/Autoloader.php';
