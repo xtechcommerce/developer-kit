@@ -1,9 +1,9 @@
-<h1 class="page-title">Identificação</h1>
+<h1 class="page-title">{{ lang('identify_header') }}</h1>
 <div class="row">
     <div class="col-md-6">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Já sou cadastrado</h3>
+                <h3 class="panel-title">{{ lang('iam_already_registered') }}</h3>
             </div>
             <div class="panel-body">
                 {{ form_open('secure/login', '', {'redirect': redirect, 'submitted': 'submitted'}) }}
@@ -11,26 +11,26 @@
                         <span class="input-group-addon">
                             <i class="glyphicon glyphicon-user"></i>
                         </span>
-                        <input type="text" name="email" class="form-control" placeholder="Entre com seu e-mail" autocomplete="off" />
+                        <input type="text" name="email" class="form-control" placeholder="{{ lang('enter_with_your_email') }}" autocomplete="off" />
                     </div>
                     <div class="input-group margin-top">
                         <span class="input-group-addon">
                             <i class="glyphicon glyphicon-lock"></i>
                         </span>
-                        <input type="password" name="password" class="form-control" placeholder="Sua senha" autocomplete="off" />
+                        <input type="password" name="password" class="form-control" placeholder="{{ lang('your_password') }}" autocomplete="off" />
                     </div>
                     <div class="clearfix">
                         <label class="checkbox pull-right">
                             <input name="remember" value="true" type="checkbox" />
-                            Continuar conectado
+                            {{ lang('remember_me') }}
                         </label>
                         <span class="margin-top10 pull-left">
                             <a href="{{ site_url('secure/forgot_password') }}">
-                                Esqueceu sua senha?
+                                {{ lang('forgot_password') }}
                             </a>
                         </span>
                     </div>
-                    <input type="submit" value="ENTRAR" name="submit" class="btn btn-primary margin-top pull-right" />
+                    <input type="submit" value="{{ lang('form_login') }}" name="submit" class="btn btn-primary margin-top pull-right" />
                 {{ form_close() }}
             </div>
         </div>
@@ -38,18 +38,18 @@
     <div class="col-md-6">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Criar uma nova conta</h3>
+                <h3 class="panel-title">{{ lang('create_new_account') }}</h3>
             </div>
             <div class="panel-body">
                 {{ form_open('secure/register', '', {'only_email': true, 'redirect': redirect, 'new': 'new', 'submitted': 'submitted'}) }}
-                    <p>Digite o e-mail que deseja cadastrar</p>
+                    <p>{{ lang('inform_your_email') }}</p>
                     <div class="input-group">
                         <span class="input-group-addon">
                             <i class="glyphicon glyphicon-plus"></i>
                         </span>
                         <input type="text" name="email" class="form-control" placeholder="Seu e-mail" autocomplete="off" />
                     </div>
-                    <input type="submit" value="CONTINUAR" name="submit" class="btn btn-primary margin-top pull-right"/>
+                    <input type="submit" value="{{ lang('form_continue') }}" name="submit" class="btn btn-primary margin-top pull-right"/>
                 {{ form_close() }}
             </div>
         </div>

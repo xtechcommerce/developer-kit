@@ -12,12 +12,11 @@
         <div class="modal-body">
             <div class="alert alert-danger form-error hide">
             </div>
-            <div class="row margin-bottom">
+            <div class="row margin-bottom buffer-bottom-sm">
                 {% if company %}
                 <div class="col-md-12">
                     <label>
                         {{ lang('address_company') }}
-                        <sup>*</sup>
                     </label>
                     {{ form_input({'name': 'company', 'placeholder': lang('address_company'), 'class': 'form-control', 'value': set_value('company', company)}) }}
                 </div>
@@ -25,62 +24,55 @@
                 <div class="col-md-6">
                     <label>
                         {{ lang('address_firstname') }}
-                        <sup>*</sup>
                     </label>
                     {{ form_input({'name': 'firstname', 'placeholder': lang('address_firstname'), 'class': 'form-control', 'value': set_value('firstname', firstname)}) }}
                 </div>
                 <div class="col-md-6">
                     <label>
                         {{ lang('address_lastname') }}
-                        <sup>*</sup>
                     </label>
                     {{ form_input({'name': 'lastname', 'placeholder': lang('address_lastname'), 'class': 'form-control', 'value': set_value('lastname', lastname)}) }}
                 </div>
                 {% endif %}
             </div>
-            <div class="row margin-bottom">
+            <div class="row margin-bottom buffer-bottom-sm">
                 <div class="col-md-6">
                     <label>
                         {{ lang('address_email') }}
-                        <sup>*</sup>
                     </label>
                     {{ form_input({'name': 'email', 'placeholder': lang('address_email'), 'class': 'form-control', 'value': set_value('email', email)}) }}
                 </div>
                 <div class="col-md-6">
                     <label>
                         {{ lang('address_phone') }}
-                        <sup>*</sup>
                     </label>
                     {{ form_input({'name': 'phone', 'placeholder': lang('address_phone'), 'class': 'form-control', 'value': set_value('phone', phone)}) }}
                 </div>
             </div>
-            <div class="row margin-bottom">
+            <div class="row margin-bottom buffer-bottom-sm">
                 <div class="col-md-6">
                     <label>
                         {{ lang('address_postcode') }}
-                        <sup>*</sup>
                     </label>
                     {{ form_input({'name': 'zip', 'placeholder': lang('address_zip'), 'class': 'form-control', 'value': set_value('zip', zip)}) }}
                 </div>
                 <div class="col-md-6">
                     <label>&nbsp;</label>
                     <a href="http://www.buscacep.correios.com.br/servicos/dnec/menuAction.do?Metodo=menuEndereco" target="_blank" class="btn btn-default" style="display: block;">
-                        Não sabe seu CEP? Consulte aqui.
+                        {{ lang('consulting_zip') }}
                     </a>
                 </div>
             </div>
-            <div class="row margin-bottom">
+            <div class="row margin-bottom buffer-bottom-sm">
                 <div class="col-md-5">
                     <label>
                         {{ lang('address1') }}
-                        <sup>*</sup>
                     </label>
                     {{ form_input({'name': 'address1', 'placeholder': lang('address1'), 'class': 'form-control', 'value': set_value('address1', address1)}) }}
                 </div>
                 <div class="col-md-3">
                     <label>
                         {{ lang('anumber') }}
-                        <sup>*</sup>
                     </label>
                     {{ form_input({'name': 'anumber', 'placeholder': lang('anumber'), 'class': 'form-control', 'value': set_value('anumber', anumber)}) }}
                 </div>
@@ -91,25 +83,22 @@
                     {{ form_input({'name': 'address2', 'placeholder': lang('address2'), 'class': 'form-control', 'value': set_value('address2', address2)}) }}
                 </div>
             </div>
-            <div class="row margin-bottom">
+            <div class="row margin-bottom buffer-bottom-sm">
                 <div class="col-md-4">
                     <label>
                         {{ lang('address_city') }}
-                        <sup>*</sup>
                     </label>
                     {{ form_input({'name': 'city', 'placeholder': lang('city'), 'class': 'form-control', 'value': set_value('city', city)}) }}
                 </div>
                 <div class="col-md-4">
                     <label>
                         {{ lang('address_state') }}
-                        <sup>*</sup>
                     </label>
                     {{ form_dropdown('zone_id', zones_menu, set_value('zone_id', zone_id), 'class="form-control"') }}
                 </div>
                 <div class="col-md-4">
                     <label>
                         {{ lang('district') }}
-                        <sup>*</sup>
                     </label>
                     {{ form_input({'name': 'district', 'placeholder': lang('district'), 'class': 'form-control', 'value': set_value('district', district)}) }}
                 </div>
@@ -127,7 +116,7 @@
             <a href="#" class="btn btn-default" data-dismiss="modal">
                 {{ lang('close') }}
             </a>
-            <a href="#" class="btn btn-bck" type="button" onclick="save_address(); return false;">
+            <a href="#" class="btn btn-primary" type="button" onclick="save_address(); return false;">
                 {{ lang('form_submit') }}
             </a>
         </div>

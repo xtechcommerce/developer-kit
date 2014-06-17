@@ -16,7 +16,7 @@
                                     {{ address.field_data|format_address_nl2br }}
                                 </td>
                                 <td>
-                                    <input type="button" class="btn btn-default choose_address pull-right" onclick="populate_address({{ address.id }});" data-dismiss="modal" value="{{ lang('form_choose') }}" />
+                                    <input type="button" class="btn btn-default choose_address pull-right" data-address="{{ address.id }}" onclick="populate_address({{ address.id }});" data-dismiss="modal" value="{{ lang('form_choose') }}" />
                                 </td>
                             </tr>
                         {% endfor %}
@@ -25,7 +25,7 @@
             </div>
             <div class="modal-footer no-margin">
                 <a href="#" class="btn btn-default" data-dismiss="modal">
-                    Fechar
+                    {{ lang('close') }}
                 </a>
             </div>
         </div>

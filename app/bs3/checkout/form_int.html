@@ -5,10 +5,10 @@
 var CartSettings = {
   zonesMap: {{ zones_map|json_encode }},
   addresses: {{ logged_in ? customer_addresses_keyed|json_encode : '[]' }},
-  defaultAddress: {{ logged_in ? customer.default_shipping_address|default('false') : 'false' }},
-  installments: {{ shop_config('max_installments')|default('0') }},
+  defaultAddress: {{ logged_in ? customer.default_shipping_address : 'false' }},
+  installments: {{ shop_config('max_installments') }},
   currency_symbol: '{{ shop_config('currency_symbol') }}',
-  total: {{ cart('total')|default('0.00') }},
+  total: {{ cart('total') }},
 }
 var Cart;
 
@@ -78,16 +78,14 @@ $(document).ready(function(){
       {{ inputgroup.input('a_firstname', 'firstname', set_value('firstname', customer.firstname), lang('account_firstname'), 2) }}
       {{ inputgroup.input('a_lastname', 'lastname', set_value('lastname', customer.lastname), lang('account_lastname'), 2) }}
       {{ inputgroup.input('a_birthday', 'birthday', set_value('birthday', customer.birthday)|to_formated_date, lang('account_birthday'), 2, 'text', 'notEmpty', true) }}
-      {{ inputgroup.dropdown('a_sex', 'sex', {0: 'Masculino', 1: 'Feminino'}, set_value('sex', customer.sex), lang('account_sex'), 2) }}
-      {{ inputgroup.input('a_cpf', 'cpf', set_value('cpf', customer.cpf), lang('account_cpf'), '2 brasil-only', 'text', 'notEmpty') }}
+      {{ inputgroup.dropdown('a_sex', 'sex', {0: lang('account_sex_m'), 1: lang('account_sex_w')}, set_value('sex', customer.sex), lang('account_sex'), 2, true) }}
     </div>
 
     <div id="company_fields"{{ customer.cnpj ? '' : ' class="hide"' }}>
-      {{ inputgroup.input('a_company', 'company', set_value('company', customer.company), lang('account_company'), 2) }}
-      {{ inputgroup.input('a_cnpj', 'cnpj', set_value('cnpj', customer.cnpj), lang('account_cnpj'), '2 brasil-only') }}
+      {{ inputgroup.input('a_company', 'company', set_value('company', customer.company), lang('account_company'), 8) }}
     </div>
 
-    {{ inputgroup.input('phone', 'phone', set_value('phone', customer.phone), lang('address_phone'), 2) }}
+    {{ inputgroup.input('phone', 'phone', set_value('phone', customer.phone), lang('address_phone'), 4, 'text', 'notEmpty', true) }}
   </div>
 
   {% if not logged_in %}
@@ -119,34 +117,33 @@ $(document).ready(function(){
   </div>
 
   <div class="row cart-bottom-buffer cart-address-fields">
-    <div class="col-md-4 brasil-only{{ country_id != 30 ? ' hide' : '' }}">
-        <a href="http://www.buscacep.correios.com.br/servicos/dnec/menuAction.do?Metodo=menuEndereco" class="pull-right link-consult-cep" target="_blank">
-            {{ lang('consulting_zip') }}
-        </a>
-        <label>
-            {{ lang('address_postcode') }}
-            <sup>*</sup>
-        </label>
-        <div class="input-group">
-            {{ form_input({'data-validate': 'notEmpty', 'autocomplete': 'off', 'id': 'zip_code', 'class': 'address form-control', 'value': set_value('zip', zipvalue)}) }}
-            <span class="input-group-btn input-group-search-address">
-                <a href="#" class="btn btn-default btn-search-address">{{ lang('search_address') }}</a>
-            </span>
-        </div>
-    </div>
-    
-    <div class="other-countries{{ country_id == 30 ? ' hide' : '' }}">
-      {{ inputgroup.input('a_zip', 'zip', set_value('zip', zipvalue), lang('address_zip'), 4) }}
-    </div>
-    {{ inputgroup.dropdown('zone_id', 'zone_id', zones_menu, set_value('zone_id', customer.ship_address.zone_id), lang('address_state'), 3) }}
+    {{ inputgroup.input('a_zip', 'zip', set_value('zip', zipvalue), lang('address_zip'), 2) }}
+    {{ inputgroup.dropdown('zone_id', 'zone_id', zones_menu, set_value('zone_id', customer.ship_address.zone_id), lang('address_state'), 2) }}
     {{ inputgroup.input('a_city', 'city', set_value('city', customer.ship_address.city), lang('address_city'), 2) }}
-    {{ inputgroup.input('a_district', 'district', set_value('district', customer.ship_address.district), lang('district'), 3) }}
+    {{ inputgroup.input('a_address1', 'address1', set_value('address1', customer.ship_address.address1), lang('address1'), 3) }}
+    {{ inputgroup.input('a_anumber', 'anumber', set_value('anumber', customer.ship_address.anumber), lang('anumber'), 1) }}
+    {{ inputgroup.input('a_address2', 'address2', set_value('address2', customer.ship_address.address2), lang('address2'), 2, 'text', 'noValidate', true) }}
   </div>
 
-  <div class="row cart-bottom-buffer cart-address-fields-two">
-    {{ inputgroup.input('a_address1', 'address1', set_value('address1', customer.ship_address.address1), lang('address1'), 7) }}
-    {{ inputgroup.input('a_anumber', 'anumber', set_value('anumber', customer.ship_address.anumber), lang('anumber'), 2) }}
-    {{ inputgroup.input('a_address2', 'address2', set_value('address2', customer.ship_address.address2), lang('address2'), 3, 'text', 'noValidate', true) }}
+  <div class="cart-bill-address">
+    <h3 class="cart-bill-fields" style="display:none">2.1. {{ lang('billing_address') }}</h3>
+    <div class="cart-bill-fields row cart-bottom-buffer" style="display:none">
+      {{ inputgroup.input('bill_firstname', 'bill[firstname]', set_value('firstname', customer.bill_address.firstname), lang('address_firstname'), 4, 'text', 'noValidate', true) }}
+      {{ inputgroup.input('bill_lastname', 'bill[lastname]', set_value('lastname', customer.bill_address.lastname), lang('address_lastname'), 4, 'text', 'noValidate', true) }}
+      {{ inputgroup.input('bill_company', 'bill[company]', set_value('company', customer.bill_address.company), lang('address_company'), 4, 'text', 'noValidate', true) }}
+    </div>
+    <div class="cart-bill-fields row" style="display:none">
+      {{ inputgroup.input('bill_zip', 'bill[zip]', set_value('zip', customer.bill_address.zip), lang('address_zip'), 2, 'text', 'noValidate', true) }}
+      {{ inputgroup.dropdown('bill_zone_id', 'bill[zone_id]', zones_menu, set_value('zone_id', customer.bill_address.zone_id), lang('address_state'), 2, 'text', 'noValidate', true) }}
+      {{ inputgroup.input('bill_city', 'bill[city]', set_value('city', customer.bill_address.city), lang('address_city'), 2, 'text', 'noValidate', true) }}
+      {{ inputgroup.input('bill_address1', 'bill[address1]', set_value('address1', customer.bill_address.address1), lang('address1'), 3, 'text', 'noValidate', true) }}
+      {{ inputgroup.input('bill_anumber', 'bill[anumber]', set_value('anumber', customer.bill_address.anumber), lang('anumber'), 1, 'text', 'noValidate', true) }}
+      {{ inputgroup.input('bill_address2', 'bill[address2]', set_value('address2', customer.bill_address.address2), lang('address2'), 2, 'text', 'noValidate', true) }}
+    </div>
+    <label class="checkbox">
+      <input type="checkbox" name="ship_as_bill" value="1" checked="checked" />
+      {{ lang('use_ship_as_bill') }}
+    </label>
   </div>
 
   {{ form_hidden('address_id', address_id) }}
@@ -210,7 +207,7 @@ $(document).ready(function(){
   
           <ul class="nav nav-tabs">
             {% for method, info in payment_methods %}
-              <li class="{{ current_module == method ? 'active' : 'inactive' }} {{ method != 'paypal_express' and method != 'cod' ? 'brasil-only' : '' }}">
+              <li class="{{ current_module == method ? 'active' : 'inactive' }}">
                 <a class="payment-method-nav" data-toggle="data" href="#payment-{{ method }}">
                   {{ info.name }}
                 </a>
@@ -220,7 +217,7 @@ $(document).ready(function(){
   
           <div class="tab-content">
             {% for method, info in payment_methods %}
-              <div id="payment-{{ method }}" class="tab-pane payment-method{{ current_module == method ? ' active' : ' inactive' }} {{ method != 'paypal_express' ? 'brasil-only' : '' }}">
+              <div id="payment-{{ method }}" class="tab-pane payment-method{{ current_module == method ? ' active' : ' inactive' }}">
                 {{ info.form|raw }}
               </div>
             {% endfor %}
@@ -251,7 +248,7 @@ $(document).ready(function(){
 
   <div class="row cart-bottom-buffer-md text-center cart-actions">
     <button type="submit" class="btn btn-lg btn-primary">
-      <i class="glyphicon glyphicon-ok"></i> {{ lang('submit_order') }}
+      <i class="glyphicon glyphicon-arrow-right"></i> {{ lang('submit_order') }}
     </button>
   </div>
 

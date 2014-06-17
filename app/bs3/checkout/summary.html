@@ -49,7 +49,7 @@
           </div>
           {% if not product.fixed_quantity %}
             <a class="alter_qty" href="#" onclick="$(this).parents('form:first').submit(); return false;">
-              Alterar
+              {{ lang('form_change') }}
             </a>
           {% endif %}
         </td>
@@ -62,7 +62,7 @@
   <tfoot>
     {% if cart('group_discount') > 0 %}
       <tr>
-        <td colspan="4">
+        <td colspan="4" class="text-right">
           <strong>
             {{ lang('group_discount') }}
           </strong>
@@ -73,7 +73,7 @@
       </tr>
     {% endif %}
     <tr>
-      <td colspan="4">
+      <td colspan="4" class="text-right">
         <strong>
           {{ lang('subtotal') }}
         </strong>
@@ -82,21 +82,10 @@
         {{ cart('subtotal')|format_currency }}
       </td>
     </tr>
-    {% if cart('shipping_cost') > 0 %}
-      <tr>
-        <td colspan="4">
-          <strong>
-            {{ lang('shipping') }}
-          </strong>
-        </td>
-        <td>
-          {{ cart('shipping_cost')|format_currency }}
-        </td>
-      </tr>
-    {% endif %}
+
     {% if cart('coupon_discount') > 0 %}
       <tr>
-        <td colspan="4">
+        <td colspan="4" class="text-right">
           <strong>
             {{ lang('coupon_discount') }}
           </strong>
@@ -105,11 +94,26 @@
           -{{ cart('coupon_discount')|format_currency }}
         </td>
       </tr>
+
+      {% if cart('order_tax') > 0 %}
+        <tr>
+          <td colspan="4" class="text-right">
+            <strong>
+              {{ lang('discounted_subtotal') }}
+            </strong>
+          </td>
+          <td>
+            {{ cart('discounted_subtotal')|format_currency }}
+          </td>
+        </tr>
+      {% endif %}
+
     {% endif %}
+
     {% if cart('get_custom_charges')|count > 0 %}
       {% for name, price in cart('get_custom_charges') %}
         <tr>
-          <td colspan="4">
+          <td colspan="4" class="text-right">
             <strong>
               {{ name }}
             </strong>
@@ -120,8 +124,74 @@
         </tr>
       {% endfor %}
     {% endif %}
+
+    {% if shop_config('tax_shipping') and cart('shipping_cost') > 0 %}
+      <tr>
+        <td colspan="4" class="text-right">
+          <strong>
+            {{ lang('shipping') }}
+          </strong>
+        </td>
+        <td>
+          {{ cart('shipping_cost')|format_currency }}
+        </td>
+      </tr>
+    {% endif %}
+
+    {% if cart('order_tax') > 0 %}
+      <tr>
+        <td colspan="4" class="text-right">
+          <strong>
+            {{ lang('total_before_tax') }}
+          </strong>
+        </td>
+        <td>
+          {{ cart('total_before_tax')|format_currency }}
+        </td>
+      </tr>
+    {% endif %}
+
+    {% if cart('order_tax') > 0 %}
+      <tr>
+        <td colspan="4" class="text-right">
+          <strong>
+            {{ lang('tax') }} ({{ shop_config('default_tax') }} %)
+          </strong>
+        </td>
+        <td>
+          {{ cart('order_tax')|format_currency }}
+        </td>
+      </tr>
+    {% endif %}
+
+    {% if not shop_config('tax_shipping') and cart('shipping_cost') > 0 %}
+      <tr>
+        <td colspan="4" class="text-right">
+          <strong>
+            {{ lang('shipping') }}
+          </strong>
+        </td>
+        <td>
+          {{ cart('shipping_cost')|format_currency }}
+        </td>
+      </tr>
+    {% endif %}
+
+    {% if cart('gift_card_discount') > 0 %}
+      <tr>
+        <td colspan="4" class="text-right">
+          <strong>
+            {{ lang('gift_card_discount') }}
+          </strong>
+        </td>
+        <td>
+          -{{ cart('gift_card_discount')|format_currency }}
+        </td>
+      </tr>
+    {% endif %}
+
     <tr>
-      <td colspan="4">
+      <td colspan="4" class="text-right">
         <strong>
           {{ lang('grand_total') }}
         </strong>

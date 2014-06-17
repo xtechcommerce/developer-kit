@@ -12,37 +12,37 @@
             <li class="active">
                 <a href="#dashboard" data-toggle="tab">
                     <i class="glyphicon glyphicon-home"></i>
-                    {{ 'Painel Principal'|trans({'en': 'Dashboard'}) }}
+                    {{ lang('dashboard') }}
                 </a>
             </li>
             <li>
                 <a href="#myaccount" data-toggle="tab">
                     <i class="glyphicon glyphicon-user"></i>
-                    {{ 'Dados Pessoais'|trans({'en': 'Account'}) }}
+                    {{ lang('personal_info') }}
                 </a>
             </li>
             <li>
                 <a href="#addresses" data-toggle="tab">
                     <i class="glyphicon glyphicon-map-marker"></i>
-                    {{ 'Endereços'|trans({'en': 'Addresses'}) }}
+                    {{ lang('addresses') }}
                 </a>
             </li>
             <li>
                 <a href="#myorders" data-toggle="tab">
                     <i class="glyphicon glyphicon-shopping-cart"></i>
-                    {{ 'Histórico de Pedidos'|trans({'en': 'Orders'}) }}
+                    {{ lang('order_history') }}
                 </a>
             </li>
             <li>
                 <a href="#mytestimonials" data-toggle="tab">
                     <i class="glyphicon glyphicon-thumbs-up"></i>
-                    {{ 'Depoimentos'|trans({'en': 'Testimonials'}) }}
+                    {{ lang('my_testimonials') }}
                 </a>
             </li>
             <li>
                 <a href="#mywishlist" data-toggle="tab">
                     <i class="glyphicon glyphicon-heart"></i>
-                    {{ 'Lista de desejos'|trans({'en': 'Wishlist'}) }}
+                    {{ lang('my_wishlist') }}
                 </a>
             </li>
         </ul>
@@ -50,19 +50,18 @@
     <div class="col-md-9">
         <div class="tab-content">
             <div class="tab-pane active" id="dashboard">
-                <h1 class="page-title">{{ 'Painel Principal'|trans({'en': 'Dashboard'}) }}</h1>
+                <h1 class="page-title">{{ lang('dashboard') }}</h1>
                 <p>
-                    {{ 'No Painel Principal você pode visualizar um resumo das atividades da sua conta mais recentes e atualizar 
-                    suas informações de conta. Selecione um link abaixo para visualizar ou editar informações.'|trans({'en': 'Dashboard'}) }}
+                    {{ lang('dashboard_help') }}
                 </p>
                 <hr />
                 <div class="row">
                     <div class="col-sm-6">
                         <h4>
                             <a href="#" id="edit_account" class="btn pull-right">
-                                {{ 'Editar'|trans({'en': 'Edit'}) }}
+                                {{ lang('form_edit') }}
                             </a>
-                            {{ 'Informações da Conta'|trans({'en': 'Account information'}) }}
+                            {{ lang('account_information') }}
                         </h4>
                         <div class="panel panel-default">
                             <div class="panel-body">
@@ -81,17 +80,17 @@
                         <h4>
                             <span class="btn-group pull-right">
                                 <a href="#" id="list_all" class="btn">
-                                    {{ 'Listar Todos'|trans({'en': 'List all'}) }}
+                                    {{ lang('list_all') }}
                                 </a>
                             </span>
-                            {{ 'Endereço Principal'|trans({'en': 'Default address'}) }}
+                            {{ lang('default_address') }}
                         </h4>
                         <div class="panel panel-default">
                             <div class="panel-body">
                                 {% if default_address %}
                                     {{ default_address.field_data|format_address_nl2br }}
                                 {% else %}
-                                    {{ 'Não há endereço ainda.'|trans({'en': 'No address.'}) }}
+                                    {{ lang('no_addresses') }}
                                 {% endif %}
                             </div>
                         </div>
@@ -99,41 +98,40 @@
                 </div>
             </div>
             <div class="tab-pane" id="myaccount">
-                <h1 class="page-title">{{ 'Dados Pessoais'|trans({'en': 'Account'}) }}</h1>
-                {{ form_open('secure/my_account', 'class="form-horizontal"') }}
-                    <!-- Dados para acesso -->
+                <h1 class="page-title">{{ lang('personal_info') }}</h1>
+                {{ form_open('secure/my_account', 'class="form-horizontal"') }}                    
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h3 class="panel-title">
                                 <i class="glyphicon glyphicon-asterisk"></i>
-                                {{ 'Dados para acesso'|trans({'en': 'Account'}) }}
+                                {{ lang('account_data') }}
                             </h3>
                         </div>
                         <div class="panel-body">
-                            <p>{{ 'Se você não quiser alterar sua senha, deixar os campos em branco.'|trans({'en': 'Leave the password blank if you don´t want to change it.'}) }}</p>
+                            <p>{{ lang('account_password_instructions') }}</p>
                             <div class="form-group">
                                 <label for="email" class="col-sm-3 control-label">
-                                    {{ 'E-mail'|trans({'en': 'E-mail'}) }}
+                                    {{ lang('account_email') }}
                                     <sup>*</sup>
                                 </label>
                                 <div class="col-sm-5">
-                                    {{ form_input({'name': 'email', 'placeholder': 'E-mail'|trans({'en': 'E-mail'}), 'class': 'form-control', 'value': set_value('email', customer.email), 'autocomplete': 'off'}) }}
+                                    {{ form_input({'name': 'email', 'placeholder': lang('account_email'), 'class': 'form-control', 'value': set_value('email', customer.email), 'autocomplete': 'off'}) }}
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="password" class="col-sm-3 control-label">
-                                    {{ 'Senha'|trans({'en': 'Password'}) }}
+                                    {{ lang('account_password') }}
                                 </label>
                                 <div class="col-sm-5">
-                                    {{ form_input({'name': 'password', 'type': 'password', 'placeholder': 'Senha'|trans({'en': 'Password'}), 'class': 'form-control', 'value': '', 'autocomplete': 'off'}) }}
+                                    {{ form_input({'name': 'password', 'type': 'password', 'placeholder': lang('account_password'), 'class': 'form-control', 'value': '', 'autocomplete': 'off'}) }}
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="confirm" class="col-sm-3 control-label">
-                                    {{ 'Confirme'|trans({'en': 'Confirm'}) }}
+                                    {{ lang('account_confirm') }}
                                 </label>
                                 <div class="col-sm-5">
-                                    {{ form_input({'name': 'confirm', 'type': 'password', 'placeholder': 'Confirmar senha'|trans({'en': 'Confirm password'}), 'class': 'form-control', 'value': '', 'autocomplete': 'off'}) }}
+                                    {{ form_input({'name': 'confirm', 'type': 'password', 'placeholder': lang('account_confirm'), 'class': 'form-control', 'value': '', 'autocomplete': 'off'}) }}
                                 </div>
                             </div>
                         </div>
@@ -142,81 +140,81 @@
                         <div class="panel-heading">
                             <h3 class="panel-title">
                                 <i class="glyphicon glyphicon-bookmark"></i>
-                                {{ 'Dados pessoais'|trans({'en': 'Personal information'}) }}
+                                {{ lang('personal_info') }}
                             </h3>
                         </div>
                         <div class="panel-body">
                             {% if customer.cnpj %}
                                 <div class="form-group">
                                     <label for="cnpj" class="col-sm-3 control-label">
-                                        {{ 'CNPJ'|trans({'en': 'CNPJ'}) }}
+                                        {{ lang('account_cnpj') }}
                                         <sup>*</sup>
                                     </label>
                                     <div class="col-sm-5">
-                                        {{ form_input({'name': 'cnpj', 'placeholder': 'CNPJ'|trans({'en': 'CNPJ'}), 'class': 'form-control', 'value': set_value('cnpj', customer.cnpj)}) }}
+                                        {{ form_input({'name': 'cnpj', 'placeholder': lang('account_cnpj'), 'class': 'form-control', 'value': set_value('cnpj', customer.cnpj)}) }}
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="company" class="col-sm-3 control-label">
-                                        {{ 'Empresa'|trans({'en': 'Company'}) }}
+                                        {{ lang('account_company') }}
                                         <sup>*</sup>
                                     </label>
                                     <div class="col-sm-5">
-                                        {{ form_input({'name': 'company', 'placeholder': 'Empresa'|trans({'en': 'Company'}), 'class': 'form-control', 'value': set_value('company', customer.company)}) }}
+                                        {{ form_input({'name': 'company', 'placeholder': lang('account_company'), 'class': 'form-control', 'value': set_value('company', customer.company)}) }}
                                     </div>
                                 </div>
                             {% else %}
                                 <div class="form-group">
                                     <label for="firstname" class="col-sm-3 control-label">
-                                        {{ 'Nome'|trans({'en': 'Firstname'}) }}
+                                        {{ lang('account_firstname') }}
                                         <sup>*</sup>
                                     </label>
                                     <div class="col-sm-5">
-                                        {{ form_input({'name': 'firstname', 'placeholder': 'Nome'|trans({'en': 'Firstname'}), 'class': 'form-control', 'value': set_value('firstname', customer.firstname)}) }}
+                                        {{ form_input({'name': 'firstname', 'placeholder': lang('account_firstname'), 'class': 'form-control', 'value': set_value('firstname', customer.firstname)}) }}
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="lastname" class="col-sm-3 control-label">
-                                        {{ 'Sobrenome'|trans({'en': 'Lastname'}) }}
+                                        {{ lang('account_lastname') }}
                                         <sup>*</sup>
                                     </label>
                                     <div class="col-sm-5">
-                                        {{ form_input({'name': 'lastname', 'placeholder': 'Sobrenome'|trans({'en': 'Lastname'}), 'class': 'form-control', 'value': set_value('lastname', customer.lastname)}) }}
+                                        {{ form_input({'name': 'lastname', 'placeholder': lang('account_lastname'), 'class': 'form-control', 'value': set_value('lastname', customer.lastname)}) }}
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="cpf" class="col-sm-3 control-label">
-                                        {{ 'CPF'|trans({'en': 'CPF'}) }}
+                                        {{ lang('account_cpf') }}
                                         <sup>*</sup>
                                     </label>
                                     <div class="col-sm-5">
-                                        {{ form_input({'name': 'cpf', 'placeholder': 'CPF'|trans({'en': 'CPF'}), 'class': 'form-control', 'value': set_value('cpf', customer.cpf)}) }}
+                                        {{ form_input({'name': 'cpf', 'placeholder': lang('account_cpf'), 'class': 'form-control', 'value': set_value('cpf', customer.cpf)}) }}
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="sex" class="col-sm-3 control-label">
-                                        {{ 'Sexo'|trans({'en': 'Gender'}) }}
+                                        {{ lang('account_sex') }}
                                     </label>
                                     <div class="col-sm-5">
-                                        {{ form_dropdown('sex', {0: 'Masculino'|trans({'en': 'Men'}), 1: 'Feminino'|trans({'en': 'Woman'})}, set_value('sex', customer.sex), 'class="form-control"') }}
+                                        {{ form_dropdown('sex', {0: lang('account_sex_m'), 1: lang('account_sex_w')}, set_value('sex', customer.sex), 'class="form-control"') }}
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="birthday" class="col-sm-3 control-label">
-                                        {{ 'Data de Nascimento'|trans({'en': 'Birthday'}) }}
+                                        {{ lang('account_birthday') }}
                                     </label>
                                     <div class="col-sm-5">
-                                        {{ form_input({'name': 'birthday', 'placeholder': 'Data de Nascimento'|trans({'en': 'Birthday'}), 'class': 'form-control', 'value': set_value('birthday', customer.birthday|to_formated_date)}) }}
+                                        {{ form_input({'name': 'birthday', 'placeholder': lang('account_birthday'), 'class': 'form-control', 'value': set_value('birthday', customer.birthday|to_formated_date)}) }}
                                     </div>
                                 </div>
                             {% endif %}
                             <div class="form-group">
                                 <label for="telephone" class="col-sm-3 control-label">
-                                    {{ 'Telefone'|trans({'en': 'Phone'}) }}
+                                    {{ lang('account_phone') }}
                                     <sup>*</sup>
                                 </label>
                                 <div class="col-sm-5">
-                                    {{ form_input({'name': 'phone', 'placeholder': 'Telefone'|trans({'en': 'Phone'}), 'class': 'form-control', 'value': set_value('phone', customer.phone)}) }}
+                                    {{ form_input({'name': 'phone', 'placeholder': lang('account_phone'), 'class': 'form-control', 'value': set_value('phone', customer.phone)}) }}
                                 </div>
                             </div>
                         </div>
@@ -226,25 +224,25 @@
                             <div class="pull-left">
                                 <label>
                                     <input type="checkbox" name="email_subscribe" value="1" {{ set_radio('email_subscribe', '1', true) }} />
-                                    Deseja receber nossa newsletter?
+                                    {{ lang('want_to_receive_newsletter') }}
                                 </label>
                                 <br />
-                                <small>(Não compartilhamos seu email com terceiros)</small>
+                                <small>({{ lang('want_to_receive_newsletter_hint') }})</small>
                             </div>
                             <div class="pull-right">
-                                * Campos obrigatórios
+                                * {{ lang('required_fields') }}
                             </div>
                             <div class="clearfix"></div>
                         </div>
                     </div>
                     <div class="pull-right">
-                        <input type="submit" value="ATUALIZAR" class="btn btn-primary btn-bck" />
+                        <input type="submit" value="{{ lang('form_update') }}" class="btn btn-primary btn-bck" />
                     </div>
                 </form>
             </div>
             <div class="tab-pane" id="addresses">
                 <div class="row">
-                    <h1 class="col-sm-9 page-title">Endereços</h1>
+                    <h1 class="col-sm-9 page-title">{{ lang('your_addresses') }}</h1>
                     <div class="col-sm-3 margin-top">
                         <input type="button" class="btn btn-link edit_address pull-right" rel="0" value="{{ lang('add_address') }}" />
                     </div>
@@ -282,7 +280,7 @@
                 {% endif %}
             </div>
             <div class="tab-pane" id="myorders">
-                <h1 class="page-title">Histórico de Pedidos</h1>
+                <h1 class="page-title">{{ lang('order_history') }}</h1>
                 {% if orders|count > 0 %}
                     <table class="table table-striped">
                         <thead>
@@ -290,7 +288,7 @@
                                 <th>{{ lang('order_date') }}</th>
                                 <th>{{ lang('order_number') }}</th>
                                 <th>{{ lang('order_status') }}</th>
-                                <th>Refazer Pedido?</th>
+                                <th>{{ lang('duplicate_order_title') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -309,7 +307,7 @@
                                     </td>
                                     <td>
                                         <a href="{{ site_url('secure/duplicate_cart/' ~ order.order_number) }}" class="btn btn-sm btn-success">
-                                            Refazer
+                                            {{ lang('duplicate_order') }}
                                         </a>
                                     </td>
                                 </tr>
@@ -321,7 +319,7 @@
                 {% endif %}
             </div>
             <div class="tab-pane" id="mytestimonials">
-                <h1 class="page-title">Depoimentos</h1>
+                <h1 class="page-title">{{ lang('my_testimonials') }}</h1>
                 {% for product in purchased_products %}
                     {{ form_open('testimonials/create', {'class': 'testimonial-form'}) }}
                         <div class="row rating-product">
@@ -330,24 +328,25 @@
                             </div>
                             <div class="col-md-9">
                                 <div class="form-group">
-                                    <label>Quantas estrelas dá para '{{ product.name }}'?</label>
+                                    <label>{{ lang('how_much_stars_for', {'name': product.name}) }}</label>
                                     <ul class="rating-list list-unstyled">
                                         <li>
                                             <div class="pull-left rating-stars" data-name="rating_look"></div>
-                                            Beleza do produto
+                                            {{ lang('rating_look') }}
                                         </li>
                                         <li>
                                             <div class="pull-left rating-stars" data-name="rating_usability"></div>
-                                            Usabilidade do produto</li>
+                                            {{ lang('rating_usability') }}
+                                        </li>
                                         <li>
                                             <div class="pull-left rating-stars" data-name="rating_support"></div>
-                                            Atendimento e segurança na compra
+                                            {{ lang('rating_support') }}
                                         </li>
                                     </ul>
                                 </div>
-                                <label for="message">Comentário</label>
+                                <label for="message">{{ lang('testimonial_message') }}</label>
                                 {{ form_textarea({'name': 'message', 'class': 'form-control', 'rows': '5'}) }}
-                                <p class="help-block">Comente sobre o produto, o design, a usabilidade, as primeiras impressões ao abrir a caixa, a entrega, o atendimento...</p>
+                                <p class="help-block">{{ lang('testimonial_message_help') }}</p>
                         
                                 {{ form_hidden('sender_email', customer.email)  }}
                                 {{ form_hidden('customer_id', customer.id)  }}
@@ -356,13 +355,13 @@
                                 {{ form_hidden('sender_name',  customer.firstname) }}
                                 {{ form_hidden('product_id',  product.id) }}
                                 
-                                <input type="submit" name="submit" value="Enviar" class="btn btn-primary" />
+                                <input type="submit" name="submit" value="{{ lang('form_submit') }}" class="btn btn-primary" />
                             </div>
                         </div>
                         <hr>
                     {{ form_close() }}
                 {% else %}
-                Não há produtos novos.
+                    {{ lang('no_new_products_for_testimonial') }}
                 {% endfor %}
 
                 <script type="text/javascript" src="{{ base_url('assets/js/jquery.raty.js') }}"></script>
@@ -377,7 +376,7 @@
                             return true;
                         }else{
                             e.preventDefault();
-                            alert('Por favor coloque um comentario e dá estrelas antes de enviar.');
+                            alert('{{ lang('required_fields_testimonial') }}');
                             return false; 
                         };
                     });
@@ -385,7 +384,7 @@
                 </script>
             </div>
             <div class="tab-pane" id="mywishlist">
-                <h1 class="page-title">Lista de desejos</h1>
+                <h1 class="page-title">{{ lang('my_wishlist') }}</h1>
                 {% for product in wishes %}
                     <div class="row rating-product">
                         <div class="col-md-3">
@@ -399,14 +398,14 @@
                             </strong>
                             <p class="buy-fields">
                                 {{ form_open('cart/add_to_cart', '', {'cartkey': cart('cartkey'), 'id': product.id, 'variant_id': product.variant_id}) }}
-                                <button class="btn btn-primary buy-btn" type="submit" value="submit"><i class="glyphicon glyphicon-shopping-cart"></i> Comprar agora</button> ou <a href="{{ site_url('secure/removewish/' ~ product.id ~ '/' ~ product.variant_id) }}">excluir</a>
+                                <button class="btn btn-primary buy-btn" type="submit" value="submit"><i class="glyphicon glyphicon-shopping-cart"></i> {{ lang('buy_wish_now') }}</button> {{ lang('form_or') }} <a href="{{ site_url('secure/removewish/' ~ product.id ~ '/' ~ product.variant_id) }}">{{ lang('form_delete') }}</a>
                                 {{ form_close() }}
                             </p>
                         </div>
                     </div>
                     <hr>
                 {% else %}
-                Não há desejos na sua lista.
+                    {{ lang('no_wishes_yet') }}
                 {% endfor %}
             </div>
         </div>

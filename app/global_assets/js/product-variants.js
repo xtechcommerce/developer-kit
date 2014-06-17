@@ -94,7 +94,7 @@ var ProductVariants = {};
                 }
             });
 
-            var selected_key = selected.sort(function(a, b){return a-b}).join('_');
+            var selected_key = selected.sort(function(a, b){ return a-b; }).join('_');
 
             if(this.options.variant_map[selected_key]) {
                 var variant_price = parseFloat(this.options.variant_map[selected_key].price_num);

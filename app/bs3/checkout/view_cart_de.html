@@ -8,15 +8,10 @@
 
   {% else %}
 
-  <script type="text/javascript">
-    var checkoutCallbacks = $.Callbacks();
-    var checkoutErrors = false;
-    var checkoutNoSubmit = false;
-    var checkoutCart = {total: {{ cart('total')|default('0.00') }}, shipping_cost: {{ cart('shipping_cost')|default('0.00') }}, subtotal: {{ cart('discounted_subtotal')|default('0.00') }}};
-  </script>
   {{ global_css('view_cart.css', true) }}
   {{ global_js('tinyvalidation.js', true) }}
   {{ global_js('shop-v3.js', true) }}
+  {{ global_js('shop-de.js', true) }}
 
     <div class="summary">
 
@@ -68,9 +63,34 @@
           </div>
         {% endif %}
 
-        {{ form_open('checkout/create', 'id="onepage_checkoutform" data-validate-on-load="true" autocomplete="off"') }}
+        {{ form_open('checkout/create', 'id="confirm_checkoutform" data-validate-on-load="true" autocomplete="off"',  {'confirmable': true}) }}
 
-          {% include 'bs3/checkout/form.html' %}
+          {% include 'bs3/checkout/form_int.html' %}
+          
+          <div class="modal" id="confirm_modal">
+            <div class="modal-dialog" style="width:1000px;">
+              <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h3 class="no-margin">
+                        {{ lang('check_order') }}
+                    </h3>
+                </div>
+
+                <div class="modal-body" id="summary_in_modal">
+                    
+                </div>
+
+                <div class="modal-footer">
+                  <div class="pull-left">
+                    {{ lang('accept_laws_1') }}<br>
+                    {{ lang('accept_laws_2') }}
+                  </div>
+                  <a href="#" class="btn btn-primary btn-lg pull-right" id="confirm-order-btn">{{ lang('confirm_order') }}</a>
+                </div>
+              </div>
+            </div>
+          </div>
 
         {{ form_close() }}
 

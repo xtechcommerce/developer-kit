@@ -15,17 +15,17 @@
 
     <div class="well">
       <h2 class="text-center" style="margin-bottom:25px">
-        Valor: R$ {{ order.total }}
+        Valor: $R {{ order.total }}
       </h2>
     </div>
 
-    {{ form_open('payment/order/' ~ order.order_number, '', order_inputs) }}
+    {{ form_open('payment/order/' ~ order.order_number, '', {'module': module}) }}
         
         <div id="payment_tabs">
 
           <ul class="nav nav-tabs">
             {% for method, info in payment_methods %}
-              <li class="{{ order_inputs.module == method ? 'active' : 'inactive' }}">
+              <li class="{{ module == method ? 'active' : 'inactive' }}">
                 <a class="payment-method-nav" data-toggle="data" href="#payment-{{ method }}">
                   {{ info.name }}
                 </a>
@@ -35,7 +35,7 @@
   
           <div class="tab-content">
             {% for method, info in payment_methods %}
-              <div id="payment-{{ method }}" class="tab-pane payment-method{{ order_inputs.module == method ? ' active' : '' }}">
+              <div id="payment-{{ method }}" class="tab-pane payment-method{{ module == method ? ' active' : '' }}">
                 {{ info.form|raw }}
               </div>
             {% endfor %}

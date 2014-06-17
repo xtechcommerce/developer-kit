@@ -2,17 +2,55 @@
 
 {% block content %}
 
-{% import 'product_listing.html' as product_listing %}
+{% if campaign.landing_config['image:banner'] %}
 
-<div class="jumbotron">
-  <h1 class="text-center" style="margin-bottom:25px">
-    {{ campaign.mission }}
-  </h1>
-</div>
+    <div class="campaign-banner">
+        {{ host_img(campaign.landing_config['image:banner'], 'full', {'class': 'img-responsive'}) }}
+    </div>
 
-<div class="row prod-list">
+{% else %}
+
+    <div class="campaign-jumbotron jumbotron">
+      <h1 class="text-center" style="margin-bottom:25px">
+        {{ campaign.mission }}
+      </h1>
+    </div>
+
+{% endif %}
+
+<hr>
+
+<div class="row">
   {% for product in products %}
-    {{ product_listing.item(product, category, 3) }}
+    <div class="col-sm-3">
+        {% if product.quantity <= 0 %}
+            <span class="abs outofstock">Esgotado</span>
+        {% else %}
+        {% if product.saleprice > 0 %}
+          <span class="abs sale">Sale</span>
+        {% endif %}
+        {% endif %}
+        <a href="{{ site_url(product.slug) }}" class="product-pic">
+            {{ product_img(product, 'small', {'class': 'img-responsive'}) }}
+        </a>
+        <div class="product-info clearfix">
+            <p class="price pull-right">
+              {% if product.saleprice > 0 %}
+                  {{ product.saleprice|format_currency }} <del>{{ product.price|format_currency }}</del>
+              {% else %}
+                  {{ product.price|format_currency }}
+              {% endif %}
+            </p>
+            <a href="{{ site_url(product.slug) }}"><strong>{{ product.name }}</strong></a>
+        </div>
+    </div>
+
+    {% if loop.index % 4 == 0 %}
+        <div class="clearfix">
+            &nbsp;
+        </div>
+    {% endif %}
+
   {% endfor %}
 </div>
 

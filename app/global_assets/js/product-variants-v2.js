@@ -3,7 +3,24 @@ var ProductVariants = {};
 (function ($) {
 
     ProductVariants = function (element, options) {
-        this.variant_validation_msg = 'Por favor selecione todos opções do produto para continuar a compra.';
+        this.local_lang;
+
+        if (typeof(lang) == 'undefined') {
+            this.local_lang = {
+                out_of_stock: "Esgotado.",
+                out_of_stock_long: "Esta opção esta esgotado, por favor selecione outra.",
+                all_not_available: "Indisponível.",
+                all_not_available_long: "Este produto esta indisponível.",
+                not_available: "Indisponível.",
+                not_available_long: "Esta opção esta indisponível, por favor selecione outra.",
+                choose_option: "Escolha uma opção.",
+                choose_option_long: "Por favor, selecione todas as opções do produto para continuar a compra.",
+            };
+        }else{
+            this.local_lang = lang;
+        }
+
+        this.variant_validation_msg = this.local_lang.choose_option_long;
         this.defaultOptions = {
             container: 'body',
             customInput: 'input[name=variant_id]',
@@ -112,15 +129,15 @@ var ProductVariants = {};
                 }
             });
 
-            var selected_key = selected.sort().join('_');
+            var selected_key = selected.sort(function(a, b){ return a-b; }).join('_');
 
             if(this.options.variant_map[selected_key]) {
                 this.selected_variant = this.options.variant_map[selected_key];
                 
-                var variant_price = parseFloat(this.selected_variant.price_num);
+                var variant_price = parseFloat(this.options.variant_map[selected_key].price_num);
                 if ($('.variant_price').length > 0) {
                     if (variant_price > 0) {
-                        $('.variant_price').text(this.selected_variant.price);
+                        $('.variant_price').text(this.options.variant_map[selected_key].price);
                         $('.variant_price').show();
                         $('.product_price').hide();
                     }else{
@@ -128,28 +145,28 @@ var ProductVariants = {};
                         $('.product_price').show();
                     }
                     if ($('.installment-price').length > 0) {
-                        $('.installment-price').text(this.currency_symbol + ' ' + (parseInt(this.selected_variant.price_num) / this.installments).toFixed(2).replace('.', ','));
+                        $('.installment-price').text(this.options.currency_symbol + ' ' + (parseInt(this.selected_variant.price_num) / this.options.installments).toFixed(2).replace('.', ','));
                     }
                 }
 
-                if (parseInt(this.selected_variant.quantity) > 0 || this.options.allow_os_purchase > 0) {
+                if (parseInt(this.options.variant_map[selected_key].quantity) > 0 || this.options.allow_os_purchase > 0) {
                     this.validation_success(selected_key);
                     this.options.validationSuccess.call(this);
                 }else{
-                    this.validation_fail('Outofstock', 'Esgotado.', 'Esta opção esta esgotado, por favor selecione outra.', selected_key);
+                    this.validation_fail('Outofstock', this.local_lang.out_of_stock, this.local_lang.out_of_stock_long, selected_key);
                     this.options.validationOutofstock.call(this);
                 }
             } else {
                 if (this.options.overall_quantity <= 0 && this.options.allow_os_purchase === false) {
-                    this.validation_fail('Alloutofstock', 'Indisponível.', 'Este produto esta indisponível.');
+                    this.validation_fail('Alloutofstock', this.local_lang.all_not_available, this.local_lang.all_not_available_long);
                     this.options.validationAlloutofstock.call(this);
                 }else{
                     if (Object.keys(this.options.variant_map).length > 0) {
                         if(qty == qty_sel){
-                            this.validation_fail('NotAvailable', 'Indisponível.', 'Esta opção esta indisponível, por favor selecione outra.');
+                            this.validation_fail('NotAvailable', this.local_lang.not_available, this.local_lang.not_available_long);
                             this.options.validationNotAvailable.call(this);
                         } else{
-                            this.validation_fail('RequiredOption', 'Escolha uma opção.', 'Por favor selecione todos opções do produto para continuar a compra.');
+                            this.validation_fail('RequiredOption', this.local_lang.choose_option, this.local_lang.choose_option_long);
                             this.options.validationRequiredOption.call(this);
                         }
                     }
@@ -163,11 +180,10 @@ var ProductVariants = {};
 
             this.$buyBtn.removeClass('buy-btn-disabled');
             this.$buyMessage.addClass('hide').html('');
-            //console.log(selected_key);
         },
         validation_fail: function (errorcode, error, error_description, selected_key) {
             variant_validation_msg = error + ': ' + error_description;
-            //console.log(error);
+            
             if (errorcode === 'Alloutofstock') {
                 this.allUnavailable();
             }else if(errorcode === 'Outofstock') {

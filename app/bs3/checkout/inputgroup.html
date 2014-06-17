@@ -13,11 +13,13 @@
     {% endif %}
   </div>
 {% endmacro %}
-{% macro dropdown(id, name, options, value, label, cols) %}
+{% macro dropdown(id, name, options, value, label, cols, hide_asterix) %}
   <div class="col-md-{{ cols }}">
     <label>
       {{ label }}
-      <sup>*</sup>
+      {% if not hide_asterix %}
+        <sup>*</sup>
+      {% endif %}
     </label>
     {{ form_dropdown(name, options, value, 'class="form-control" id="' ~ id ~ '"') }}
   </div>
