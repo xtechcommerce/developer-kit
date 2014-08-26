@@ -1,3 +1,27 @@
+{{ global_css('view_cart.css', true) }}
+{{ global_js('shop-v4.js', true) }}
+<script type="text/javascript">
+  var checkoutCallbacks = $.Callbacks();
+  var checkoutErrors = false;
+  var checkoutNoSubmit = false;
+  var checkoutCart = {total: {{ cart('total')|default('0.00') }}, shipping_cost: {{ cart('shipping_cost')|default('0.00') }}, subtotal: {{ cart('discounted_subtotal')|default('0.00') }}};
+
+  var CartSettings = {
+    zonesMap: {{ zones_map|json_encode }},
+    addresses: {{ logged_in ? customer_addresses_keyed|json_encode : '[]' }},
+    defaultAddress: {{ logged_in ? customer.default_shipping_address|default('false') : 'false' }},
+    installments: {{ shop_config('max_installments')|default('0') }},
+    currency_symbol: '{{ shop_config('currency_symbol') }}',
+    total: {{ cart('total')|default('0.00') }},
+    validate: ['email'{{ logged_in ? "" : ", 'password', 'confirm'" }}, 'firstname', 'lastname', 'birthday', 'sex', 'cpf', 'phone', 'zip', 'zone_id', 'city', 'district', 'address1', 'anumber', 'module', 'shipping_method']
+  }
+  var Cart;
+
+  $(document).ready(function(){
+    Cart = new Checkout(CartSettings);
+  });
+</script>
+
 <div id="cartview">
   {% if cart.total_items == 0 %}
 
@@ -8,15 +32,6 @@
 
   {% else %}
 
-  <script type="text/javascript">
-    var checkoutCallbacks = $.Callbacks();
-    var checkoutErrors = false;
-    var checkoutNoSubmit = false;
-    var checkoutCart = {total: {{ cart('total')|default('0.00') }}, shipping_cost: {{ cart('shipping_cost')|default('0.00') }}, subtotal: {{ cart('discounted_subtotal')|default('0.00') }}};
-  </script>
-  {{ global_css('view_cart.css', true) }}
-  {{ global_js('tinyvalidation.js', true) }}
-  {{ global_js('shop-v3.js', true) }}
 
     <div class="summary">
 
@@ -68,7 +83,7 @@
           </div>
         {% endif %}
 
-        {{ form_open('checkout/create', 'id="onepage_checkoutform" data-validate-on-load="true" autocomplete="off"') }}
+        {{ form_open('checkout/create', {'id': 'onepage_checkoutform'}) }}
 
           {% include 'bs3/checkout/form.html' %}
 

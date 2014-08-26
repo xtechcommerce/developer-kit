@@ -1,0 +1,54 @@
+{{ form_open('cart/add_to_cart', '', {'parent_product_id': product.id}) }}
+{{ global_js('product-variants-v2.js', true) }}
+{% for product in product.look_products %}
+    <div class="well">
+    <div class="row lookitem" id="lookitem-{{ product.id }}">
+        <div class="col-md-4">
+            {{ product_img(product, 'thumbnails', {'class': 'thumbnail'}) }}
+        </div>
+        <div class="col-md-8">
+            <label>
+                {{ form_input({'name': 'product[' ~ product.id ~ '][variant_id]', 'value': '', 'type': 'hidden', 'id': 'lookitem-variant-' ~ product.id}) }}
+                {{ form_input({'name': 'product[' ~ product.id ~ '][id]', 'value': product.id, 'type': 'checkbox', 'checked': 'checked'}) }} {{ product.name }}
+            </label>
+            <div class="options clearfix">
+                <div class="variants-wrapper clearfix form-group">
+                    {{ variation_select(product, {'exclude_js': true}) }}
+                    <script type="text/javascript">
+                        $(document).ready(function(){
+                            var productvariants_settings = productvariants_settings_{{ product.id }};
+                            productvariants_settings.container = '#lookitem-{{ product.id }}';
+                            productvariants_settings.customInput = '#lookitem-variant-{{ product.id }}';
+                            var productvariants_{{ product.id }} = new ProductVariants('#product-variants-{{ product.id }}', productvariants_settings);
+                        });
+                    </script>
+                </div>
+                <div class="price">
+                    <span class="buy-message hide pull-right"></span>
+                    {{ product.price|format_currency }}
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+{% endfor %}
+
+
+<div class="price" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer">
+  <div class="buy-price">
+      {% if product.saleprice > 0 %}
+          <strike>{{ product.price|format_currency }}</strike>
+          <span itemprop="price" class="onsale">{{ product.saleprice|format_currency }}</span>
+          <p>Compre junto e ganha {{ (product.price - product.saleprice)|format_currency }}!</p>
+      {% else %}
+          <span itemprop="price">{{ product.price|format_currency }}</span>
+      {% endif %}
+  </div>
+</div>
+
+<div class="buffer-top-sm buffer-bottom-sm">
+    <button class="btn btn-primary btn-lg btn-buy-look" type="submit" value="submit"><i class="glyphicon glyphicon-shopping-cart"></i> Comprar look</button>
+</div>
+
+{{ form_close() }}
+

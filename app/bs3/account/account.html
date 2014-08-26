@@ -148,7 +148,6 @@
                                 <div class="form-group">
                                     <label for="cnpj" class="col-sm-3 control-label">
                                         {{ lang('account_cnpj') }}
-                                        <sup>*</sup>
                                     </label>
                                     <div class="col-sm-5">
                                         {{ form_input({'name': 'cnpj', 'placeholder': lang('account_cnpj'), 'class': 'form-control', 'value': set_value('cnpj', customer.cnpj)}) }}
@@ -157,57 +156,55 @@
                                 <div class="form-group">
                                     <label for="company" class="col-sm-3 control-label">
                                         {{ lang('account_company') }}
-                                        <sup>*</sup>
                                     </label>
                                     <div class="col-sm-5">
                                         {{ form_input({'name': 'company', 'placeholder': lang('account_company'), 'class': 'form-control', 'value': set_value('company', customer.company)}) }}
                                     </div>
                                 </div>
-                            {% else %}
-                                <div class="form-group">
-                                    <label for="firstname" class="col-sm-3 control-label">
-                                        {{ lang('account_firstname') }}
-                                        <sup>*</sup>
-                                    </label>
-                                    <div class="col-sm-5">
-                                        {{ form_input({'name': 'firstname', 'placeholder': lang('account_firstname'), 'class': 'form-control', 'value': set_value('firstname', customer.firstname)}) }}
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="lastname" class="col-sm-3 control-label">
-                                        {{ lang('account_lastname') }}
-                                        <sup>*</sup>
-                                    </label>
-                                    <div class="col-sm-5">
-                                        {{ form_input({'name': 'lastname', 'placeholder': lang('account_lastname'), 'class': 'form-control', 'value': set_value('lastname', customer.lastname)}) }}
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="cpf" class="col-sm-3 control-label">
-                                        {{ lang('account_cpf') }}
-                                        <sup>*</sup>
-                                    </label>
-                                    <div class="col-sm-5">
-                                        {{ form_input({'name': 'cpf', 'placeholder': lang('account_cpf'), 'class': 'form-control', 'value': set_value('cpf', customer.cpf)}) }}
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="sex" class="col-sm-3 control-label">
-                                        {{ lang('account_sex') }}
-                                    </label>
-                                    <div class="col-sm-5">
-                                        {{ form_dropdown('sex', {0: lang('account_sex_m'), 1: lang('account_sex_w')}, set_value('sex', customer.sex), 'class="form-control"') }}
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="birthday" class="col-sm-3 control-label">
-                                        {{ lang('account_birthday') }}
-                                    </label>
-                                    <div class="col-sm-5">
-                                        {{ form_input({'name': 'birthday', 'placeholder': lang('account_birthday'), 'class': 'form-control', 'value': set_value('birthday', customer.birthday|to_formated_date)}) }}
-                                    </div>
-                                </div>
                             {% endif %}
+
+                            <div class="form-group">
+                                <label for="firstname" class="col-sm-3 control-label">
+                                    {{ lang('account_firstname') }}
+                                    <sup>*</sup>
+                                </label>
+                                <div class="col-sm-5">
+                                    {{ form_input({'name': 'firstname', 'placeholder': lang('account_firstname'), 'class': 'form-control', 'value': set_value('firstname', customer.firstname)}) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastname" class="col-sm-3 control-label">
+                                    {{ lang('account_lastname') }}
+                                </label>
+                                <div class="col-sm-5">
+                                    {{ form_input({'name': 'lastname', 'placeholder': lang('account_lastname'), 'class': 'form-control', 'value': set_value('lastname', customer.lastname)}) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="cpf" class="col-sm-3 control-label">
+                                    {{ lang('account_cpf') }}
+                                    <sup>*</sup>
+                                </label>
+                                <div class="col-sm-5">
+                                    {{ form_input({'name': 'cpf', 'placeholder': lang('account_cpf'), 'class': 'form-control', 'value': set_value('cpf', customer.cpf)}) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="sex" class="col-sm-3 control-label">
+                                    {{ lang('account_sex') }}
+                                </label>
+                                <div class="col-sm-5">
+                                    {{ form_dropdown('sex', {0: lang('account_sex_m'), 1: lang('account_sex_w')}, set_value('sex', customer.sex), 'class="form-control"') }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="birthday" class="col-sm-3 control-label">
+                                    {{ lang('account_birthday') }}
+                                </label>
+                                <div class="col-sm-5">
+                                    {{ form_input({'name': 'birthday', 'placeholder': lang('account_birthday'), 'class': 'form-control', 'value': set_value('birthday', customer.birthday|to_formated_date)}) }}
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label for="telephone" class="col-sm-3 control-label">
                                     {{ lang('account_phone') }}

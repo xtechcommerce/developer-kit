@@ -1,23 +1,5 @@
 {% set country_id = set_value('country_id', (customer.ship_address.country_id ? customer.ship_address.country_id : shop_config('default_country_id'))) %}
 
-<script type="text/javascript">
-
-var CartSettings = {
-  zonesMap: {{ zones_map|json_encode }},
-  addresses: {{ logged_in ? customer_addresses_keyed|json_encode : '[]' }},
-  defaultAddress: {{ logged_in ? customer.default_shipping_address|default('false') : 'false' }},
-  installments: {{ shop_config('max_installments')|default('0') }},
-  currency_symbol: '{{ shop_config('currency_symbol') }}',
-  total: {{ cart('total')|default('0.00') }},
-}
-var Cart;
-
-$(document).ready(function(){
-  Cart = new Checkout(CartSettings);
-});
-
-</script>
-
 {% import 'bs3/checkout/inputgroup.html' as inputgroup %}
 
 <div class="col-lg-12">
@@ -73,21 +55,18 @@ $(document).ready(function(){
 
   {% endif %}
 
-  <div class="row cart-bottom-buffer cart-account-fields">
-    <div id="person_fields"{{ customer.cnpj ? ' class="hide"' : '' }}>
-      {{ inputgroup.input('a_firstname', 'firstname', set_value('firstname', customer.firstname), lang('account_firstname'), 2) }}
-      {{ inputgroup.input('a_lastname', 'lastname', set_value('lastname', customer.lastname), lang('account_lastname'), 2) }}
-      {{ inputgroup.input('a_birthday', 'birthday', set_value('birthday', customer.birthday)|to_formated_date, lang('account_birthday'), 2, 'text', 'notEmpty', true) }}
-      {{ inputgroup.dropdown('a_sex', 'sex', {0: 'Masculino', 1: 'Feminino'}, set_value('sex', customer.sex), lang('account_sex'), 2) }}
-      {{ inputgroup.input('a_cpf', 'cpf', set_value('cpf', customer.cpf), lang('account_cpf'), '2 brasil-only', 'text', 'notEmpty') }}
-    </div>
-
-    <div id="company_fields"{{ customer.cnpj ? '' : ' class="hide"' }}>
-      {{ inputgroup.input('a_company', 'company', set_value('company', customer.company), lang('account_company'), 2) }}
-      {{ inputgroup.input('a_cnpj', 'cnpj', set_value('cnpj', customer.cnpj), lang('account_cnpj'), '2 brasil-only') }}
-    </div>
-
+  <div id="person_fields" class="row cart-bottom-buffer cart-account-fields">
+    {{ inputgroup.input('a_firstname', 'firstname', set_value('firstname', customer.firstname), lang('account_firstname'), 2) }}
+    {{ inputgroup.input('a_lastname', 'lastname', set_value('lastname', customer.lastname), lang('account_lastname'), 2) }}
+    {{ inputgroup.input('a_birthday', 'birthday', set_value('birthday', customer.birthday)|to_formated_date, lang('account_birthday'), 2) }}
+    {{ inputgroup.dropdown('a_sex', 'sex', {0: 'Masculino', 1: 'Feminino'}, set_value('sex', customer.sex), lang('account_sex'), 2) }}
+    {{ inputgroup.input('a_cpf', 'cpf', set_value('cpf', customer.cpf), lang('account_cpf'), '2 brasil-only') }}
     {{ inputgroup.input('phone', 'phone', set_value('phone', customer.phone), lang('address_phone'), 2) }}
+  </div>
+
+  <div id="company_fields" class="row cart-bottom-buffer cart-account-fields{{ customer.cnpj ? '' : ' hide' }}">
+    {{ inputgroup.input('a_company', 'company', set_value('company', customer.company), lang('account_company'), 6, 'text', true) }}
+    {{ inputgroup.input('a_cnpj', 'cnpj', set_value('cnpj', customer.cnpj), lang('account_cnpj'), '6 brasil-only', 'text', true) }}
   </div>
 
   {% if not logged_in %}
@@ -128,7 +107,7 @@ $(document).ready(function(){
             <sup>*</sup>
         </label>
         <div class="input-group">
-            {{ form_input({'data-validate': 'notEmpty', 'autocomplete': 'off', 'id': 'zip_code', 'class': 'address form-control', 'value': set_value('zip', zipvalue)}) }}
+            {{ form_input({'id': 'zip_code', 'class': 'address form-control', 'value': set_value('zip', zipvalue)}) }}
             <span class="input-group-btn input-group-search-address">
                 <a href="#" class="btn btn-default btn-search-address">{{ lang('search_address') }}</a>
             </span>
@@ -146,7 +125,7 @@ $(document).ready(function(){
   <div class="row cart-bottom-buffer cart-address-fields-two">
     {{ inputgroup.input('a_address1', 'address1', set_value('address1', customer.ship_address.address1), lang('address1'), 7) }}
     {{ inputgroup.input('a_anumber', 'anumber', set_value('anumber', customer.ship_address.anumber), lang('anumber'), 2) }}
-    {{ inputgroup.input('a_address2', 'address2', set_value('address2', customer.ship_address.address2), lang('address2'), 3, 'text', 'noValidate', true) }}
+    {{ inputgroup.input('a_address2', 'address2', set_value('address2', customer.ship_address.address2), lang('address2'), 3, 'text', true) }}
   </div>
 
   {{ form_hidden('address_id', address_id) }}

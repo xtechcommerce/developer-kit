@@ -84,40 +84,50 @@ var ProductVariants = {};
             }
         },
         init_button_select: function () {
-            that = this;
+            this.$container.find('.prod-variant-li:first-child').find('.prod-variant-btn').each($.proxy(function(i, e){
 
-            $('.prod-variant-li:first-child').find('.prod-variant-btn').each(function(){
-                if(typeof that.options.variant_map_keyed[$(this).data('id').toString()] != 'undefined'){
-                    $(this).removeClass(that.options.disableClass);
+                self = $(e);
+                if(typeof this.options.variant_map_keyed[self.data('id').toString()] != 'undefined'){
+                    self.removeClass(this.options.disableClass);
                 }else{
-                    $(this).addClass(that.options.disableClass);
+                    self.addClass(this.options.disableClass);
                 }
-            });
 
-            $('.prod-variant-btn').click(function(e){
-                e.preventDefault();
-                self = $(this);
-                self.addClass('active').parent().siblings().find('.prod-variant-btn').removeClass('active');
-                $('.product_option option[value='+self.data('id')+']').prop('selected', true);
-                  
-                if(self.closest('.prod-variant-li').is(':first-child') == true){
-                  var options_available = that.options.variant_map_keyed[self.data('id')];
-                  $('.prod-variant-btn').each(function(){
-                    if($(this).closest('.prod-variant-li').is(':first-child') == false){
-                      if($.inArray($(this).data('id').toString(), options_available) > -1){
-                          $(this).removeClass(that.options.disableClass);
-                      }else{
-                        $(this).addClass(that.options.disableClass);
-                      }
+            }, this));
+
+            this.$container.find('.prod-variant-btn').on('click', $.proxy(this.optionButtonClick, this));
+            this.$container.find('.prod-variant-btn[data-id='+this.$wrapper.find('.product_option option:selected').val()+']').addClass('active');
+        },
+        optionButtonClick: function(e) {
+            e.preventDefault();
+
+            self = $(e.target);
+
+            if (!self.hasClass('prod-variant-btn')) {
+                self = self.closest('.prod-variant-btn');
+            }
+            
+            self.addClass('active').parent().siblings().find('.prod-variant-btn').removeClass('active');
+            this.$wrapper.find('.product_option option[value=' + self.data('id') + ']').prop('selected', true);
+            
+            if(self.closest('.prod-variant-li').is(':first-child') == true){
+                var options_available = this.options.variant_map_keyed[self.data('id')];
+                this.$container.find('.prod-variant-btn').each($.proxy(function(i, e){
+    
+                    self = $(e);
+                    if(self.closest('.prod-variant-li').is(':first-child') == false){
+                        if($.inArray(self.data('id').toString(), options_available) > -1){
+                            self.removeClass(this.options.disableClass);
+                        }else{
+                            self.addClass(this.options.disableClass);
+                        }
                     }
-                  });
-                }
-
-                self.blur();
-                that.toggle_variant_form();
-            });
-
-            $('.prod-variant-btn[data-id='+$('.product_option option:selected').val()+']').addClass('active');
+    
+                }, this));
+            }
+    
+            self.blur();
+            this.toggle_variant_form();
         },
         toggle_variant_form: function () {
             var selected = new Array(); var qty_sel = 0;
@@ -148,8 +158,7 @@ var ProductVariants = {};
                         $('.installment-price').text(this.options.currency_symbol + ' ' + (parseInt(this.selected_variant.price_num) / this.options.installments).toFixed(2).replace('.', ','));
                     }
                 }
-
-                if (parseInt(this.options.variant_map[selected_key].quantity) > 0 || this.options.allow_os_purchase > 0) {
+                if (parseInt(this.options.variant_map[selected_key].quantity) > 0 || this.options.allow_os_purchase) {
                     this.validation_success(selected_key);
                     this.options.validationSuccess.call(this);
                 }else{

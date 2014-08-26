@@ -32,6 +32,9 @@ $address = array(
     );
 
 $data['design_mode'] = true;
+$data['countries'] = array(30 => 'Brazil');
+$data['zones_map'] = array("AC" => "440","AL" => "441","RJ" => "458");
+$data['country_id'] = 30;
 
 $data['categories'] = array(
         array('category'=>array('id'=>1, 'name'=>'Novidades', 'slug'=>'#')),

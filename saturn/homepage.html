@@ -34,7 +34,7 @@
 {% import 'product_listing.html' as product_listing %}
 
 <div class="row products centered mt prod-list">
-    <h3>Featured</h3>
+    <h3>{{ template_settings('text:featured') }}</h3>
     <div class="mt"></div>
     {% for product in products %}
         {{ product_listing.item(product, category) }}

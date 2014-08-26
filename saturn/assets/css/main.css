@@ -669,6 +669,12 @@ footer .flags{
 	padding: 20px;	
 }
 
+#pagseguro_container .well{
+    background: none;
+    border: 0 none;
+    box-shadow: none;
+}
+
 @media (max-width: 991px) {
   .checkout .form-control, .checkout .btn{
   	margin-bottom: 10px;

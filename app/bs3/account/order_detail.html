@@ -45,7 +45,7 @@
                 <tfoot>
                     {% if loja.group_discount > 0 %}
                       <tr>
-                        <td colspan="4">
+                        <td colspan="4" class="text-right">
                           <strong>
                             {{ lang('group_discount') }}
                           </strong>
@@ -56,7 +56,7 @@
                       </tr>
                     {% endif %}
                     <tr>
-                      <td colspan="4">
+                      <td colspan="4" class="text-right">
                         <strong>
                           {{ lang('subtotal') }}
                         </strong>
@@ -67,7 +67,7 @@
                     </tr>
                     {% if loja.shipping_cost > 0 %}
                       <tr>
-                        <td colspan="4">
+                        <td colspan="4" class="text-right">
                           <strong>
                             {{ lang('shipping') }}
                           </strong>
@@ -77,9 +77,21 @@
                         </td>
                       </tr>
                     {% endif %}
+                    {% if loja.look_discount > 0 %}
+                      <tr>
+                        <td colspan="4" class="text-right">
+                          <strong>
+                            {{ lang('look_discount') }}
+                          </strong>
+                        </td>
+                        <td>
+                          -{{ loja.look_discount|format_currency }}
+                        </td>
+                      </tr>
+                    {% endif %}
                     {% if loja.coupon_discount > 0 %}
                       <tr>
-                        <td colspan="4">
+                        <td colspan="4" class="text-right">
                           <strong>
                             {{ lang('coupon_discount') }}
                           </strong>
@@ -90,7 +102,7 @@
                       </tr>
                     {% endif %}
                     <tr>
-                      <td colspan="4">
+                      <td colspan="4" class="text-right">
                         <strong>
                           {{ lang('grand_total') }}
                         </strong>

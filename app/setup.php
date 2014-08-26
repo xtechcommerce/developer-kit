@@ -12,16 +12,16 @@ $settings_file         = './' . $GLOBALS['template'] . '/settings.json';
 
 if (file_exists($settings_file)) {
     $settings_file_content = file_get_contents($settings_file);
-    $settings_json         = json_decode($settings_file_content);
+    $settings_json         = json_decode($settings_file_content, true);
     
     if ($settings_json != null) {
     
-        if (isset($settings_json->template_settings)) {
-            $template_settings = $settings_json->template_settings;
+        if (isset($settings_json['template_settings'])) {
+            $template_settings = $settings_json['template_settings'];
         }
     
-        if (isset($settings_json->collections)) {
-            $collections = $settings_json->collections;
+        if (isset($settings_json['collections'])) {
+            $collections = $settings_json['collections'];
         }
     
     }
@@ -103,6 +103,15 @@ $functions = array(
     'get_collection_pagination',
     'get_element',
     'host_img',
+    'stared_testimonials',
+    'metatags',
+    'facebook_metatags',
+    'is_local',
+    'is_owndomain',
+    'filter_active_props',
+    'filter_active_options',
+    'card_months',
+    'card_years',
 );
 
 foreach ($functions as $function) {
@@ -130,6 +139,7 @@ $filters = array(
     'number_format',
     'trans',
     'round',
+    'humanize',
 );
 
 foreach ($filters as $filter) {

@@ -21,7 +21,8 @@ if (typeof(checkoutNoSubmit) == 'undefined') {
             defaultAddress: false,
             installments: 12,
             currency_symbol: '$',
-            total: 0
+            total: 0,
+            validate: []
         };
 
         this.options = $.extend({}, this.defaultOptions, options);
@@ -34,6 +35,12 @@ if (typeof(checkoutNoSubmit) == 'undefined') {
         this.$btnOpenLogin = $('.btn-open-login');
         this.$countrySelect = $('select[name=country_id]');
         this.$billCheckbox = $('.cart-bill-address .checkbox');
+        this.$nameInputs = $('input[name=firstname], input[name=lastname]');
+        this.$fullnameInputs = $('input[data-get=fullname]');
+
+        this.$nameInputs.on('change', $.proxy(this.syncInputs, this));
+
+        this.syncInputs();
 
         this.$billCheckbox.click(function(e){
             if($(e.target).is('input'))
@@ -96,32 +103,32 @@ if (typeof(checkoutNoSubmit) == 'undefined') {
             });
         });
 
-        var inputErrors;
-
-        var validationOptions = {
-              onError: function(errors){
-                inputErrors = 'Por favor, preencha todos os campos com * antes de prosseguir.';
-              },
-              onValid: function(){
-                inputErrors = false;
-              }
-            };
-
         $checkoutButton = $('#onepage_checkoutform').find('button[type=submit]');
         var oldcontent = $checkoutButton.html();
 
-        $('#onepage_checkoutform').submit(function(e){
+        $('#onepage_checkoutform').submit($.proxy(function(e){
             $checkoutButton.blur();
+
+            that = this;
+            inputErrors = false;
+            $.each(this.options.validate, function(key, value){
+                if ($('#onepage_checkoutform').find('[name=' + value + ']').attr('type') === 'radio' && $('#onepage_checkoutform').find('[name=' + value + ']:checked').length === 0 && inputErrors === false) {
+                    inputErrors = 'Por favor selecione uma opção no campo "' + lang[value] + '"!';
+                }else if($('#onepage_checkoutform').find('[name=' + value + ']').val() === '' && inputErrors === false) {
+                    inputErrors = 'Por favor preencha o campo "' + lang[value] + '"!';
+                }
+            });
+
+            if (inputErrors !== false) {
+                e.preventDefault();
+                alert(inputErrors);
+                return false;
+            }
+
             $checkoutButton.addClass('disabled');
             $checkoutButton.html('Carregando...');
 
-            //$('#onepage_checkoutform').tinyValidation(validationOptions);
-            inputErrors = false;
             checkoutCallbacks.fire('checkout');
-
-            if (inputErrors !== false && checkoutErrors === false) {
-                checkoutErrors = inputErrors;
-            }
 
             if (checkoutErrors === false) {
                 
@@ -140,7 +147,7 @@ if (typeof(checkoutNoSubmit) == 'undefined') {
                 alert(checkoutErrors);
                 return false;
             }
-        });
+        }, this));
     };
 
     Checkout.prototype = {
@@ -149,6 +156,13 @@ if (typeof(checkoutNoSubmit) == 'undefined') {
             money = parseFloat(money);
             money = money.toFixed(2).replace('.', ',');
             return this.options.currency_symbol + ' ' + money;
+        },
+        syncInputs: function() {
+            if (this.$nameInputs.length === 2 && this.$fullnameInputs.length > 0) {
+                var fullname = $(this.$nameInputs[0]).val();
+                fullname = fullname + ' ' + $(this.$nameInputs[1]).val();
+                this.$fullnameInputs.val(fullname);
+            }
         },
         countryChange: function() {
             this.country = this.$countrySelect.val();

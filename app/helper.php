@@ -4,7 +4,7 @@
 
 function template_navigator()
 {
-    $templates = array('category', 'forgot_password', 'homepage', 'login', 'my_account', 'order_detail', 'order_placed', 'page', 'product', 'register', 'view_cart', 'looks', 'look', 'landingpage');
+    $templates = array('category', 'forgot_password', 'homepage', 'login', 'my_account', 'order_detail', 'order_placed', 'page', 'product', 'register', 'view_cart', 'landingpage');
     $nav = '<ul style="list-style:none;background-color:#FFF;position:fixed;top:0;left:0;font-size:12px;margin:10px;padding:10px;z-index:99999">';
     foreach ($templates as $template) {
         $nav .= '<li class="template-designer-close"><a style="color:#898989" href="index.php?p=' . $template . '">' . $template . '.html</a></li>';
@@ -382,14 +382,44 @@ function product_properties()
 
 function header_code(){
     $url = parse_url('http://' . $_SERVER['SERVER_NAME'] . $_SERVER['SCRIPT_NAME']);
-    $host = json_encode($_SERVER['HTTP_HOST'] . $url['path'] . '?ajax=');
+    $path = $url['path'];
+    $host = str_replace('/', '\/', $_SERVER['HTTP_HOST'] . $path . '?ajax=');
     return <<<EOF
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="Keywords" content="">
     <meta name="Description" content="">
     <script type="text/javascript">
-        var site_url = {"address_form":"http:\/\/$host\/secure\/address_form","delete_address":"http:\/\/$host\/secure\/delete_address","base":"http:\/\/$host\/","add_to_cart":"http:\/\/$host\/cart\/add_to_cart","save_cart":"http:\/\/$host\/cart\/save_cart","my_orders":"http:\/\/$host\/secure\/my_orders","set_address":"http:\/\/$host\/cart\/set_address","busca_cep":"http:\/\/$host\/shipping\/busca_cep","get_frete":"http:\/\/$host\/shipping\/get_frete","search_list":"http:\/\/$host\/search\/listing","search_ajax":"http:\/\/$host\/search\/find","variant_detail":"http:\/\/$host\/cart\/variant"}
+    var site_url = {"address_form":"http:\/\/$host\/secure\/address_form","delete_address":"http:\/\/$host\/secure\/delete_address","base":"http:\/\/$host\/","add_to_cart":"http:\/\/$host\/cart\/add_to_cart","save_cart":"http:\/\/$host\/cart\/save_cart","my_orders":"http:\/\/$host\/secure\/my_orders","set_address":"http:\/\/$host\/cart\/set_address","busca_cep":"http:\/\/$host\/shipping\/busca_cep","get_frete":"http:\/\/$host\/shipping\/get_frete","search_list":"http:\/\/$host\/search\/listing","search_ajax":"http:\/\/$host\/search\/find","variant_detail":"http:\/\/$host\/cart\/variant"};
+    </script>
+    <script type="text/javascript">
+        var lang = {
+            out_of_stock: "Esgotado.",
+            out_of_stock_long: "Esta opção esta esgotado, por favor selecione outra.",
+            all_not_available: "Indisponível.",
+            all_not_available_long: "Este produto esta indisponível.",
+            not_available: "Indisponível.",
+            not_available_long: "Esta opção esta indisponível, por favor selecione outra.",
+            choose_option: "Escolha uma opção.",
+            choose_option_long: "Por favor, selecione todas as opções do produto para continuar a compra.",
+            email: "Email",
+            firstname: "Nome",
+            lastname: "Sobrenome",
+            birthday: "Data de nascimento",
+            sex: "Sexo",
+            cpf: "CPF",
+            phone: "Telefone",
+            zip: "CEP",
+            zone_id: "Estado",
+            city: "Cidade",
+            district: "Bairro",
+            address1: "Endereço",
+            anumber: "Número",
+            module: "Forma de pagemento",
+            shipping_method: "Forma de entrega",
+            password: "Senha",
+            confirm: "Confirmar Senha"
+        };
     </script>
 EOF;
 }
@@ -428,6 +458,22 @@ function shop_config($key){
     switch ($key) {
         case 'base_http':
             return 'http';
+            break;
+
+        case 'international':
+            return false;
+            break;
+
+        case 'max_installments':
+            return 6;
+            break;
+
+        case 'currency_symbol':
+            return '$';
+            break;
+
+        case 'default_country_id':
+            return 30;
             break;
         
         default:
@@ -489,3 +535,40 @@ function filters_widget()
     global $twig;
     return $twig->render('bs3/category/filters.html');
 }
+
+function stared_testimonials(){
+    return array();
+}
+
+function metatags(){
+    return '';
+}
+
+function facebook_metatags(){
+    return '';
+}
+
+function is_local(){
+    return false;
+}
+
+function is_owndomain(){
+    return false;
+}
+
+function filter_active_props(){
+    return array();
+}
+
+function filter_active_options(){
+    return array();
+}
+
+function card_months(){
+    return array();
+}
+
+function card_years(){
+    return array();
+}
+

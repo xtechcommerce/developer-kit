@@ -2,6 +2,7 @@
 <html lang="pt-BR" dir="ltr">
 <head>
     {{ header_code() }}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ shop_config('company_name') }} | {{ document_title(seo_title|default(page_title)) }}</title>
   
     {# CSS #}
@@ -62,7 +63,7 @@
               <a href="#" class="show-search"><span class="glyphicon glyphicon-search" data-toggle="tooltip" data-placement="bottom" title="Busca"></span></a>
             </li>
             <li class="has-icon">
-              <a href="{{ site_url('contact') }}"><span class="glyphicon glyphicon-envelope" data-toggle="tooltip" data-placement="bottom" title="Contato"></span></a>
+              <a href="{{ site_url('contato') }}"><span class="glyphicon glyphicon-envelope" data-toggle="tooltip" data-placement="bottom" title="Contato"></span></a>
             </li>
             {% if logged_in %}
               <li class="has-icon">
@@ -192,7 +193,7 @@
             %}
             {% for social, attr in socials %}
               {% if attr.link %}
-                <a href="{{ attr.link }}"><span class="socicon">{{ social }}</span></a>
+                <a href="{{ attr.link }}" target="_blank"><span class="socicon">{{ social }}</span></a>
               {% endif %}
             {% endfor %}
           </div>

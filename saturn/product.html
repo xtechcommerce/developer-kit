@@ -53,6 +53,14 @@
 		</div>
 		<div class="col-md-5">
 			<div class="buffer-left-md">
+			
+			    {% if product.lookable %}
+			        
+			        {% include '_look.html' %}
+			        
+			    {% else %}
+			    
+			    
 				<h1 class="buffer-top-no" itemprop="name">{{ product.name }}</h1>
 
 				{% if product.sku %}
@@ -125,6 +133,19 @@
 
 				<div class="buffer-top-sm buffer-bottom-sm">
 					{{ form_open('cart/add_to_cart', {'class': 'addwish-btn-form'}, {'id': product.id, 'variant_id': '', 'cartkey': cart('cartkey')}) }}
+					
+					    {% for option in options %}
+					        {% if option.id in product.available_options %}
+					            {% if option.type == 'textarea' %}
+						            <label>{{ option.name }}</label>
+				                    <textarea class="form-control" name="option[{{ option.id }}]"></textarea>
+				                {% elseif option.type == 'textfield' %}
+				                    <label>{{ option.name }}</label>
+				                    <input class="form-control" name="option[{{ option.id }}]">
+				                {% endif %}
+				            {% endif %}
+				        {% endfor %}
+						
 						<button class="addwish-btn hide" type="submit" name="action" value="addwish"></button>
 						<button class="btn btn-primary btn-lg buy-btn-lg alert-unavailable disabled hide" type="submit" value="submit">{{ lang('out_of_stock') }}</button>
 						<button class="btn btn-primary btn-lg buy-btn buy-btn-lg" type="submit" value="submit">{{ lang('form_buy') }}</button>
@@ -144,6 +165,8 @@
 				    </div>
 				</fieldset>
 				{{ form_close() }}
+				
+				{% endif %}
 
 			</div>
 		</div>

@@ -1,7 +1,7 @@
 <?php 
 
 // Config
-$GLOBALS['template'] = 'xtech';
+$GLOBALS['template'] = 'saturn';
 
 
 require_once './app/twig/lib/Twig/Autoloader.php';

@@ -23,6 +23,11 @@
     .navbar-default .navbar-brand{
         color: {{ template_settings('color:text_navbar') }};
     }
+    .navbar-default .navbar-nav > li > a:hover,
+    .navbar-icons .has-icon a:hover,
+    .navbar-default .navbar-brand:hover{
+        color: {{ template_settings('color:text_navbar_over') }};
+    }
     .navbar-default .navbar-nav > .dropdown > a .caret{
         border-top-color: {{ template_settings('color:text_navbar') }};
         border-bottom-color: {{ template_settings('color:text_navbar') }};
@@ -47,6 +52,11 @@
     .btn-theme, .btn-primary {
         color: {{ template_settings('color:btn_font') }};
         background-color: {{ template_settings('color:btn_bg') }};
+    }
+    
+    .btn-theme:hover, .btn-primary:hover {
+        color: {{ template_settings('color:btn_font_over') }};
+        background-color: {{ template_settings('color:btn_bg_over') }};
     }
 
     footer {

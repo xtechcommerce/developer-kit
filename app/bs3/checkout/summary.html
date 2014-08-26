@@ -83,6 +83,20 @@
       </td>
     </tr>
 
+    {% if cart('look_discount') > 0 %}
+      <tr>
+        <td colspan="4" class="text-right">
+          <strong>
+            {{ lang('look_discount') }}
+          </strong>
+        </td>
+        <td>
+          -{{ cart('look_discount')|format_currency }}
+        </td>
+      </tr>
+
+    {% endif %}
+
     {% if cart('coupon_discount') > 0 %}
       <tr>
         <td colspan="4" class="text-right">
