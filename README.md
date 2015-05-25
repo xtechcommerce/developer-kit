@@ -1,4 +1,4 @@
-## Bem-vindo a Xtech
+## Bem-vindo a Xtech Commerce
 
 ### Functions
 https://github.com/xtechcommerce/developer-kit/wiki/Functions
