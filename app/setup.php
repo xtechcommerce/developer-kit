@@ -112,6 +112,8 @@ $functions = array(
     'filter_active_options',
     'card_months',
     'card_years',
+    'body_code',
+    'current_lang',
 );
 
 foreach ($functions as $function) {
