@@ -572,3 +572,7 @@ function card_years(){
     return array();
 }
 
+function current_lang(){
+    return 'portugues';
+}
+
