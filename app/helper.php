@@ -576,3 +576,7 @@ function current_lang(){
     return 'portugues';
 }
 
+function body_code(){
+    return '';
+}
+
