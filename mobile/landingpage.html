@@ -1,0 +1,52 @@
+{% extends _layout %}
+
+{% block content %}
+
+{% if campaign.landing_config['image:banner'] %}
+	<div class="campaign-banner">
+			{{ host_img(campaign.landing_config['image:banner'], 'full', {'class': 'img-responsive'}) }}
+	</div>
+{% else %}
+	<div class="campaign-jumbotron jumbotron">
+		<h1 style="text-align: center; margin: 0px 2% 25px;">
+			{{ campaign.mission }}
+		</h1>
+	</div>
+{% endif %}
+
+<hr>
+
+<div id="products" class="products clearfix">
+	{% for product in products %}
+
+		<div class="product">
+			<a href="{{ site_url(product.slug) }}" class="rel bl">
+				{% if product.quantity <= 0 %}
+						<span class="abs outofstock">{{ lang('out_of_stock') }}</span>
+				{% elseif product.saleprice > 0 %}
+					<span class="abs sale">Sale</span>
+				{% endif %}
+				{{ product_img(product, 'small') }}
+			</a>
+			<div class="product-info">
+				<p class="desc"><a href="{{ site_url(product.slug) }}"><strong>{{ product.name }}</strong></a></p>
+				<p class="price">
+					<em>
+					{% if product.saleprice > 0 %}
+						{{ product.saleprice|format_currency }} <del>{{ product.price|format_currency }}</del>
+					{% else %}
+						{{ product.price|format_currency }}
+					{% endif %}
+					</em>
+				</p>
+			</div>
+		</div>
+
+		{% if loop.index % 2 == 0 %}
+		<div class="break btm-border"></div>
+		{% endif %}
+
+	{% endfor %}
+</div>
+
+{% endblock %}

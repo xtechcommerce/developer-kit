@@ -1,0 +1,86 @@
+<div id="look">
+    {{ form_open('cart/add_to_cart', '', {'parent_product_id': product.id}) }}
+    {{ global_js('product-variants-v2.js', true) }}
+    {% for product in product.look_products %}
+        <h5>{{ product.name }}</h5>
+        <div class="side-pad side-margin">
+            <div class="row lookitem" id="lookitem-{{ product.id }}">
+                {{ product_img(product, 'small', {'class': 'btm-margin'}) }}
+                <label class="mobile-checkbox">
+                    {{ form_input({'name': 'product[' ~ product.id ~ '][variant_id]', 'value': '', 'type': 'hidden', 'id': 'lookitem-variant-' ~ product.id}) }}
+                    Incluir este produto? {{ form_input({'name': 'product[' ~ product.id ~ '][id]', 'value': product.id, 'type': 'checkbox', 'checked': 'checked'}) }}
+                </label>
+                <div class="options clearfix">
+                    <div class="variants-wrapper clearfix form-group">
+                        <div class="hide">{{ variation_select(product, {'button_selects': true, 'exclude_js': true}) }}</div>
+                        <script type="text/javascript">
+                            $(document).ready(function(){
+                                var productvariants_settings = productvariants_settings_{{ product.id }};
+                                productvariants_settings.container = '#lookitem-{{ product.id }}';
+                                productvariants_settings.customInput = '#lookitem-variant-{{ product.id }}';
+                                var productvariants_{{ product.id }} = new ProductVariants('#product-variants-{{ product.id }}', productvariants_settings);
+                            });
+                        </script>
+
+                        {% if product.options|count > 0 %}
+                            <div class="clearfix prod-variants">
+                                <ul>        
+                                    {% for option in product.options %}
+                                    <li class="prod-variant-li clearfix">
+                                        <div class="prod-variant">
+                                            <span class="prod-variant-title">
+                                                {{ 'Selecione a opção para'|trans({'en':'Select an option for'}) }}
+                                                <span class="color">{{option.name}}:</span>
+                                            </span>
+                                            <ul class="list-inline">
+                                                {% for value in option.values %}
+                                                    <li>
+                                                        <button class="sub btn btn-default prod-variant-btn" data-id="{{value.id}}">{{value.name}}</button>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                        
+                        <script type="text/javascript">
+                            $(document).ready(function(){
+                                var productvariants_settings = productvariants_settings_{{ product.id }};
+                                productvariants_settings.container = '#lookitem-{{ product.id }}';
+                                productvariants_settings.customInput = '#lookitem-variant-{{ product.id }}';
+                                var productvariants_{{ product.id }} = new ProductVariants('#product-variants-{{ product.id }}', productvariants_settings);
+                            });
+                        </script>
+                    </div>
+                    <div class="price">
+                        <span class="buy-message hide pull-right"></span>
+                        {{ 'Valor deste produto:'|trans({'en':'Product\'s value:'}) }} <span class="single_price">{{ product.price|format_currency }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    
+    <div class="prod-action side-pad">
+        <div class="price" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer">
+            <div class="buy-price">
+                {% if product.saleprice > 0 %}
+                  <del>{{ product.price|format_currency }}</del>
+                  <span itemprop="price" class="onsale">{{ product.saleprice|format_currency }}</span>
+                  <p>{{ 'Economize'|trans({'en':'Save'}) }} {{ (product.price - product.saleprice)|format_currency }}!</p>
+                {% else %}
+                  <span itemprop="price">{{ product.price|format_currency }}</span>
+                {% endif %}
+            </div>
+        </div>
+            
+        <button class="btn buy-btn btn-buy-look" type="submit" value="submit">
+            <i class="glyphicon glyphicon-shopping-cart"></i> {{ lang('form_buy') }}
+        </button>   
+    </div>
+    
+    {{ form_close() }}
+</div>
