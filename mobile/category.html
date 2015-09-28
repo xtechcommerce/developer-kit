@@ -5,60 +5,101 @@
 
 <div class="body">
 	<div id="collection" class="clearfix">
-	
+
 		<div class="side-pad btm-margin">
-			
+
 			<h1 class="title">{{ category.name }}</h1>
 			<div class="description">{{ category.description }}</div>
-			
+
 		</div>
-	
+
 		{% if categories[category.root_category].children|count > 0 %}
 		<div class="side-pad btm-margin">
-	    <select class="tag-filter" name="tag-filter">
-	    	{% for category_group in categories[category.root_category].children %}
-	      	<option data-url="{{ site_url(categories[category.root_category].category.slug ~ '/' ~ category_group.category.slug) }}" value="">{{ category_group.category.name }}</option>
-	      	{% for subcategory_group in category_group.children %}
-	      		<option data-url="{{ site_url(categories[category.root_category].category.slug ~ '/' ~ category_group.category.slug ~ '/' ~ subcategory_group.category.slug) }}" value="">{{ subcategory_group.category.name }}</option>
-	      	{% endfor %}
-	      {% endfor %}
-	    </select>
+		<select class="tag-filter" name="tag-filter">
+			<option value="">- {{ 'Selecionar categorias'|trans({'en':'Select Categories'}) }}-</option>
+			{% for category_group in categories[category.root_category].children %}
+			<option value="{{ site_url(categories[category.root_category].category.slug ~ '/' ~ category_group.category.slug) }}">{{ category_group.category.name }}</option>
+			{% for subcategory_group in category_group.children %}
+				<option value="{{ site_url(categories[category.root_category].category.slug ~ '/' ~ category_group.category.slug ~ '/' ~ subcategory_group.category.slug) }}">{{ subcategory_group.category.name }}</option>
+			{% endfor %}
+		  {% endfor %}
+		</select>
 	  </div>
 	  {% endif %}
-	    
+
 		<div id="products" class="products clearfix">
-			
+
 			{% for product in products %}
 
 				<div class="product">
 				  <a href="{{ site_url(product.slug) }}" class="rel bl">
-				  	{% if product.saleprice > 0 %}
-				  		<span class="abs sale">Sale</span>
-				  	{% endif %}
-				    {{ product_img(product, 'small') }}
+					{% if product.saleprice > 0 %}
+						<span class="abs sale">Sale</span>
+					{% endif %}
+					{{ product_img(product, 'small') }}
 				  </a>
-				  <div class="product-info full-margin btm-border clearfix">
-				    <p class="description"><a href="{{ site_url(product.slug) }}"><strong>{{ product.name }}</strong></a></p>
-				    <p class="price">
-				    	<em>
-				    	{% if product.saleprice > 0 %}
-				    		{{ product.saleprice|format_currency }} <del>{{ product.price|format_currency }}</del>
-				    	{% else %}
-				    		{{ product.price|format_currency }}
-				    	{% endif %}
-				    	</em>
-				    </p>
+				  <div class="product-info">
+					<p class="desc"><a href="{{ site_url(product.slug) }}"><strong>{{ product.name }}</strong></a></p>
+					<p class="price">
+						<em>
+						{% if product.saleprice > 0 %}						
+							{% if current_lang() == 'english' %}
+								{{ shop_config('currency_symbol') }}
+								{{ product.saleprice|number_format(2, '.', ',') }}
+								<del>
+									{{ shop_config('currency_symbol') }}
+									{{ product.price|number_format(2, '.', ',') }}
+								</del>
+							{% else %}
+								{{ product.saleprice|format_currency }} <del>{{ product.price|format_currency }}</del>
+							{% endif %}
+						{% else %}
+							{% if current_lang() == 'english' %}
+								{{ shop_config('currency_symbol') }}
+								{{ product.price|number_format(2, '.', ',') }}
+							{% else %}
+								{{ product.price|format_currency }}
+							{% endif %}
+						{% endif %}
+						</em>
+					</p>
+					{# Parcelamento #}
+					{% if product.installments > 0 %}
+						<p class="installments-price">
+							{% set product_price = product.saleprice > 0 ? product.saleprice : product.price %}
+							<strong>{{ product.installments }}x</strong>
+							{{ 'de'|trans({'en':'of'}) }} 
+							{% if current_lang() == 'english' %}
+								<strong>
+									{{ shop_config('currency_symbol') }}
+									{{ (product_price/product.installments)|number_format(2, '.', ',') }}
+								</strong>
+							{% else %}
+								<strong>{{ (product_price/product.installments)|format_currency }}</strong>
+							{% endif %}
+							<span>{{ 's/ juros'|trans({'en':''}) }}</span>
+						</p>
+					{% endif %}
 				  </div>
 				</div>
 
+				{% if loop.index % 2 == 0 %}
+				<div class="break btm-border"></div>
+				{% endif %}
+
 			{% else %}
-			<div class="product clearfix">
-				Não há produtos nesta categoria.
+			<div class="alert">
+				{{ lang('no_products') }}
 			</div>
 			{% endfor %}
 
+			{# Paginaçao #}
+			<div class="text-center">
+				{{ pagination() }}
+			</div>
+
 		</div>
-			
+
 	</div>
 </div>
 

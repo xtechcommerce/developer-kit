@@ -3,44 +3,43 @@
 {% block content %}
 
 <div class="body">
-        
-  <div id="customer-accounts" class="clearfix side-pad">
-       
-    <div id="customer">
-      <h1 class="title">Criar conta</h1>
 
-      {% if validation_errors() %}
-      <div class="alert alert-danger">
-          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-          {{ validation_errors() }}
-      </div>
-      {% endif %}
+	<div id="customer-accounts" class="clearfix side-pad">
 
-      {{ form_open('secure/register', 'id="customer_register"') }}
+		<div id="customer">
+			<h1 class="title">{{ lang('create_new_account') }}</h1>
 
-        <input type="hidden" value="{{ redirect }}" name="redirect"/>
-        <input type="hidden" value="submitted" name="submitted"/>
-      
-        {{ form_input({'name': 'email', 'placeholder': 'Email', 'class': 'input-xlarge', 'value': set_value('email'), 'autocomplete': 'off'}) }}
-        {{ form_input({'name': 'password', 'placeholder': 'Sua senha', 'class': 'input-xlarge', 'value': '', 'autocomplete': 'off', 'type': 'password'}) }}
-        {{ form_input({'name': 'confirm', 'placeholder': 'Confirmar senha', 'class': 'input-xlarge', 'value': '', 'autocomplete': 'off', 'type': 'password'}) }}
-        
-        {{ form_dropdown('sex', {0: 'Masculino', 1: 'Feminino'}, set_value('sex'), 'class="input-xlarge"') }}
-        {{ form_input({'name': 'firstname', 'placeholder': 'Nome', 'class': 'input-xlarge', 'value': set_value('firstname')}) }}
-        {{ form_input({'name': 'lastname', 'placeholder': 'Sobrenome', 'class': 'input-xlarge', 'value': set_value('lastname')}) }}
-        {{ form_input({'name': 'phone', 'placeholder': '(21) 12345-1234', 'class': 'input-xlarge', 'value': set_value('phone')}) }}
-        {{ form_input({'name': 'cpf', 'placeholder': '000.000.000-00', 'class': 'input-xlarge', 'value': set_value('cpf')}) }}
-        {{ form_input({'name': 'birthday', 'placeholder': '00/00/0000', 'class': 'input-xlarge', 'value': set_value('birthday')}) }}
+			{% if validation_errors() %}
+			<div class="alert">
+				{{ validation_errors() }}
+			</div>
+			{% endif %}
 
-        <div class="form-inline btm-margin">
-          <button class="btn" type="submit">Cadastrar</button>
-          <span class="note"><a href="{{ site_url('secure/login') }}">ou voltar</a></span>
-        </div>
+			{{ form_open('secure/register', 'id="customer_register"') }}
 
-      {{ form_close() }}
-    </div>
+				<input type="hidden" value="{{ redirect }}" name="redirect"/>
+				<input type="hidden" value="submitted" name="submitted"/>
 
-  </div>
+				{{ form_input({'name': 'email', 'placeholder': lang("address_email"), 'class': 'input-block-level', 'value': set_value('email'), 'autocomplete': 'off'}) }}
+				{{ form_input({'name': 'password', 'placeholder': lang("password"), 'class': 'input-block-level', 'value': '', 'autocomplete': 'off', 'type': 'password'}) }}
+				{{ form_input({'name': 'confirm', 'placeholder': lang("account_confirm"), 'class': 'input-block-level', 'value': '', 'autocomplete': 'off', 'type': 'password'}) }}
+
+				{{ form_dropdown('sex', {0: 'Masculino'|trans({'en':'Male'}) , 1: 'Feminino'|trans({'en':'Female'}) }, set_value('sex'), 'class="input-block-level"') }}
+				{{ form_input({'name': 'firstname', 'placeholder': lang("account_firstname"), 'class': 'input-block-level', 'value': set_value('firstname')}) }}
+				{{ form_input({'name': 'lastname', 'placeholder': lang("account_lastname"), 'class': 'input-block-level', 'value': set_value('lastname')}) }}
+				{{ form_input({'name': 'phone', 'placeholder': '(21) 12345-1234', 'class': 'input-block-level', 'value': set_value('phone')}) }}
+				{{ form_input({'name': 'cpf', 'placeholder': lang("cpf"), 'class': 'input-block-level', 'value': set_value('cpf')}) }}
+				{{ form_input({'name': 'birthday', 'placeholder': lang("birthday"), 'class': 'input-block-level', 'value': set_value('birthday')}) }}
+
+				<div class="form-inline btm-margin">
+					<button class="btn" type="submit">{{ lang('register') }}</button>
+					<span class="note"><a href="{{ site_url('secure/login') }}">{{ lang('form_back') }}</a></span>
+				</div>
+
+			{{ form_close() }}
+		</div>
+
+	</div>
 
 </div>
 

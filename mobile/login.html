@@ -3,31 +3,31 @@
 {% block content %}
 
 <div class="body">
-        
-  <div id="customer-accounts" class="clearfix side-pad">
-       
-    <div id="customer">
-      <h1 class="title">Login</h1>
-      {{ form_open('secure/login', 'id="customer_login"') }}
 
-        <input type="hidden" value="{{ redirect }}" name="redirect"/>
-        <input type="hidden" value="submitted" name="submitted"/>
-      
-        <input type="email" value="" name="email" id="customer_email" class="input-xlarge" placeholder="Email">
-        <input type="password" value="" name="password" id="customer_password" class="input-xlarge" placeholder="Password">
-        
-        <div class="form-inline btm-margin">
-          <button class="btn" type="submit">Entrar</button>
-          <span class="note"><a href="{{ site_url('secure/register') }}">ou criar uma nova conta</a></span>
-        </div>
-        <div id="forgot_password">
-          <p><a href="{{ site_url('secure/forgot_password') }}">Esqueceu sua senha?</a></p>
-        </div>
+	<div id="customer-accounts" class="clearfix side-pad">
 
-      {{ form_close() }}
-    </div>
+		<div id="customer">
+			<h1 class="title">{{ lang('identify_header') }}</h1>
+			{{ form_open('secure/login', 'id="customer_login"') }}
 
-  </div>
+				<input type="hidden" value="{{ redirect }}" name="redirect"/>
+				<input type="hidden" value="submitted" name="submitted"/>
+
+				<input type="email" value="" name="email" id="customer_email" class="input-block-level" placeholder="{{ lang('enter_with_your_email') }}">
+				<input type="password" value="" name="password" id="customer_password" class="input-block-level" placeholder="{{ lang('your_password') }}">
+
+				<div class="form-inline btm-margin">
+					<button class="btn" type="submit">{{ lang('page_title_login') }}</button>
+					<span class="note"><a href="{{ site_url('secure/register') }}">{{ 'ou criar uma nova conta'|trans({'en':'or create a new account'}) }}</a></span>
+				</div>
+				<div id="forgot_password">
+					<p><a href="{{ site_url('secure/forgot_password') }}">{{ lang('forgot_password') }}</a></p>
+				</div>
+
+			{{ form_close() }}
+		</div>
+
+	</div>
 
 </div>
 

@@ -3,40 +3,50 @@
 {% block content %}
 
 <div class="body">
-        
-  <div id="customer-accounts" class="clearfix">
-       
-    <h1 class="side-margin">Meus pedidos</h1>
-    <table class="table">
 
-      <tr>
-        <th>{{ lang('order_number') }}</th>
-        <th>{{ lang('order_status') }}</th>
-      </tr>
+	<div id="customer-accounts" class="clearfix">
 
-      {% for order in orders %}
-      
-      <tr>
-        <td>
-          <a href="{{ site_url('secure/order/' ~ order.order_number) }}">
-            {{ order.order_number }}<br>
-            <small>{{ order.ordered_on|to_formated_date }}</small>
-          </a>
-        </td>
-        <td><span class="label {{ order.status|get_status_label }}">{{ order.status|translate_order_status }}</span></td>
-      </tr>
-          
-      {% else %}
+		<div class="side-margin">
+			<a href="{{ site_url('secure/logout') }}" class="btn pull-right">{{ lang('logout') }}</a>
+			<h1>
+				{{ lang('page_title_my_account') }}
+			</h1>
+		</div>
+		<p class="note side-margin">
+			{{ 'Bem-vindo'|trans({'en':'Welcome'}) }} {{ customer.firstname }}!
+		</p>
 
-      <tr>
-        <td colspan="3">{{ lang('no_order_history') }}</td>
-      </tr>
+		<h2 class="side-margin">{{ 'Meus pedidos'|trans({'en':'My orders'}) }}</h2>
+		<table class="table">
 
-      {% endfor %}
-      
-    </table>
+			<tr>
+				<th>{{ lang('order_number') }}</th>
+				<th>{{ lang('order_status') }}</th>
+			</tr>
 
-  </div>
+			{% for order in orders %}
+
+			<tr>
+				<td>
+					<a href="{{ site_url('secure/order/' ~ order.order_number) }}">
+						{{ order.order_number }}<br>
+						<small>{{ order.ordered_on|to_formated_date }}</small>
+					</a>
+				</td>
+				<td><span class="label {{ order.status|get_status_label }}">{{ order.status|translate_order_status }}</span></td>
+			</tr>
+
+			{% else %}
+
+			<tr>
+				<td colspan="3">{{ lang('no_order_history') }}</td>
+			</tr>
+
+			{% endfor %}
+
+		</table>
+
+	</div>
 
 </div>
 

@@ -2,17 +2,17 @@
 
 {% block content %}
 
-<div class="body">
-    
-  <div id="order" class="clearfix side-pad">
+	<div class="body">
 
-    <h1 class="title">Compra realizada com successo!</h1>
-    <h2>O número do seu pedido é #{{ order.order_number }}</h2>
-    <p>Enviamos os detalhes do seu pedido para {{ order.email }}.</p>
-    <p><a class="btn" href="{{ site_url('/') }}">Voltar para pagina inicial</a></p>
+		<div id="order" class="clearfix side-pad">
 
-  </div>
+			<h1 class="title">{{ 'Compra realizada com successo!'|trans({'en':'Purchase made with success!'}) }}</h1>
+			<h2>{{ 'O número do seu pedido é'|trans({'en':'Your order number is'}) }} #{{ order.order_number }}</h2>
+			<p>{{ 'Enviamos os detalhes do seu pedido para'|trans({'en':'We sent the details from your order to'}) }} {{ order.email }}.</p>
+			<p><a class="btn" href="{{ site_url('/') }}">{{ lang('form_back') }}</a></p>
 
-</div>
+		</div>
+
+	</div>
 
 {% endblock %}
