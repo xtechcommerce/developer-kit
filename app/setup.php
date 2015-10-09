@@ -114,6 +114,7 @@ $functions = array(
     'card_years',
     'body_code',
     'current_lang',
+    'get_look_name',
 );
 
 foreach ($functions as $function) {

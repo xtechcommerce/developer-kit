@@ -158,6 +158,11 @@ function pagination()
     return '';
 }
 
+function get_look_name()
+{
+    return '';
+}
+
 function cart_contents()
 {
     global $data;
