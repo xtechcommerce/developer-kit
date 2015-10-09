@@ -319,9 +319,7 @@
 				{% if shop_config('international') %}
 				<div class="cart-bottom-buffer cart-preselect-header">
 					<h2>{{ lang('choose_your_country') }}</h2>
-					<div class="row">
-						{{ inputgroup.dropdown('country_id', 'country_id', countries, country_id, lang('address_country'), 4) }}
-					</div>
+					{{ inputgroup.dropdown('country_id', 'country_id', countries, country_id, lang('address_country'), 4) }}
 				</div>
 				<hr class="cart-seperator">
 				{% else %}
