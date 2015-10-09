@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+	<head>
+		<meta charset="UTF-8">
+		<title>{{ shop_config('company_name') }}</title>
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+		<style type="text/css">
+		/* General */
+		body{
+			color: #696969;
+			font-size: 18px;
+			padding-top: 40px;
+		}
+		.alert{
+			font-size: 14px;
+		}
+		.container{
+			position: relative;
+			width: 700px;
+			max-width: none !important;
+		}
+		.socials{
+			position: absolute;
+			bottom: 0;
+			right: 20px;
+		}
+		h1.status{
+			border-top: 1px solid #e4e4e4;
+			font-size: 2.5em;
+			font-weight: 300;
+			line-height: 1em;
+			padding: 30px 0 0;
+		}
+		form{
+			border-top: 1px solid #e4e4e4;
+			margin-top: 30px;
+			padding-top: 30px;
+		}
+		.newsletter{
+			background: #fff;
+			border-radius: 5px;
+			box-shadow: 0 2px 6px -2px #d3d3d3;
+			padding: 1.25em;
+		}
+		.newsletter input{
+			border-radius: 5px;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+			padding: 1em;
+			border: 0;
+		}
+		.newsletter input[type="email"]{
+			background: #f6f6f6;
+			width: 70%;
+		}
+		.newsletter input[type="submit"]{
+			font-size: 18px;
+			margin-top: -5px;
+			text-transform: uppercase;
+		}
+		/*Rodape*/
+		footer{
+			padding: 50px 0;
+		}
+		</style>
+
+	</head>
+	<body>
+		<header>
+
+			<div class="container">
+
+				<div class="row">
+
+					<h1 id="site-logo" class="text-center" itemprop="name">
+						<img src="{{ logo_url() }}" alt="Logo" />
+					</h1>
+
+					<div class="socials">
+
+						<ul class="list-inline">
+
+							{% if shop_config('social_facebook') %}
+							<li>
+
+								<a href="https://www.facebook.com/{{ shop_config('social_facebook') }}" target="_blank">
+
+									<img src="/assets/img/icon-facebook.png" alt="Curta nossa página no facebook"  width="24" height="24" />
+								</a>
+
+							</li>
+							{% endif %}
+
+							{% if shop_config('social_twitter') %}
+							<li>
+
+								<a href="https://www.twitter.com/{{ shop_config('social_twitter') }}" target="_blank">
+
+									<img src="/assets/img/icon-twitter.png" alt="Siga-nos no Twitter"  width="24" height="24" />
+								</a>
+
+							</li>
+							{% endif %}
+
+							{% if shop_config('social_google') %}
+							<li>
+
+								<a href="https://plus.google.com/{{ shop_config('social_google') }}" target="_blank">
+
+									<img src="/assets/img/icon-google.png" alt="Curta nossa página no Google Plus"  width="24" height="24" />
+								</a>
+
+							</li>
+							{% endif %}
+
+						</ul>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</header>
+
+		<section id="site-content">
+
+			<div class="container">
+
+				<div class="row">
+
+					<div class="col-xs-12 text-center">
+
+						<h1 class="status">
+
+							Em manutenção
+
+						</h1>
+
+						<br />
+
+						<p>
+
+							No momento, nós estamos trabalhando numa loja incrível para você.
+
+						</p>
+
+						<p>
+
+							Fique por dentro das novidades e seja avisado assim que estivermos no ar.
+
+						</p>
+
+
+						
+
+							{% if validation_errors() %}
+								<div class="alert alert-danger">
+									<a class="close" data-dismiss="alert">×</a>
+									{{ validation_errors() }}
+								</div>
+							{% endif %}
+
+							<div class="newsletter">
+
+								<input type="hidden" value="{{ current_url() }}" name="redirect"/>
+
+								<input type="email" name="email" value="" placeholder="Fique por dentro. Entre com seu e-mail aqui" />
+
+								<input type="submit" value="Cadastrar" class="btn btn-primary" />
+
+							</div>
+
+						</form>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</section>
+
+		<footer>
+
+			<div class="container">
+
+				<div class="row">
+
+					<div class="col-xs-12">
+
+						<p class="text-center">
+
+							&copy; {{ shop_config('company_name') }} {{ "now"|date('Y') }}. Todos os direitos reservados.
+
+						</p>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</footer>
+
+	</body>
+
+</html>

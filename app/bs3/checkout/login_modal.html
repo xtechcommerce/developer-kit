@@ -1,60 +1,60 @@
 <div class="modal fade" id="login_modal">
-    <div class="modal-dialog">
-        <div class="modal-content">
+	<div class="modal-dialog">
+		<div class="modal-content">
 
-            {{ form_open('secure/login') }}
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">×</button>
-                    <h3 class="no-margin">
-                        {{ lang('login') }}
-                    </h3>
-                </div>
+			{{ form_open('secure/login') }}
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">×</button>
+					<h3 class="no-margin">
+						{{ lang('login') }}
+					</h3>
+				</div>
 
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="alert alert-info alert-account-exists hide">
-                              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                              {{ lang('account_already_exists') }}
-                            </div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="alert alert-info alert-account-exists hide">
+							  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+							  {{ lang('account_already_exists') }}
+							</div>
 
-                            <fieldset>
-                                <div class="form-group">
-                                    <label for="email">
-                                        {{ lang('email') }}
-                                    </label>
-                                    <input type="text" name="email" class="form-control" />
-                                </div>
+							<fieldset>
+								<div class="form-group">
+									<label for="email">
+										{{ lang('email') }}
+									</label>
+									<input type="text" name="email" class="form-control" />
+								</div>
 
-                                <div class="form-group">
-                                    <label for="password">
-                                        {{ lang('password') }}
-                                    </label>
-                                    <input type="password" name="password" class="form-control" />
-                                </div>
-                            </fieldset>
-                            
-                            <input type="hidden" value="{{ site_url('cart/view_cart') }}" name="redirect" />
-                            <input type="hidden" value="submitted" name="submitted"/>
+								<div class="form-group">
+									<label for="password">
+										{{ lang('password') }}
+									</label>
+									<input type="password" name="password" class="form-control" />
+								</div>
+							</fieldset>
 
-                            <div class="form-group">
-                                <a href="{{ site_url('secure/forgot_password') }}">
-                                    {{ lang('forgot_password') }}
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+							<input type="hidden" value="{{ site_url('cart/view_cart') }}" name="redirect" />
+							<input type="hidden" value="submitted" name="submitted"/>
 
-                <div class="modal-footer">
-                    <a href="#" class="btn btn-default" data-dismiss="modal">
-                        {{ lang('close') }}
-                    </a>
-                    <input type="submit" value="{{ lang('login') }}" name="submit" class="btn btn-primary" />
-                </div>
+							<div class="form-group">
+								<a href="{{ site_url('secure/forgot_password') }}">
+									{{ lang('forgot_password') }}
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
 
-            {{ form_close() }}
+				<div class="modal-footer">
+					<a href="#" class="btn btn-default" data-dismiss="modal">
+						{{ lang('close') }}
+					</a>
+					<input type="submit" value="{{ lang('login') }}" name="submit" class="btn btn-primary" />
+				</div>
 
-        </div>
-    </div>
+			{{ form_close() }}
+
+		</div>
+	</div>
 </div>

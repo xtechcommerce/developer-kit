@@ -1,34 +1,34 @@
 {% if validation_errors() %}
-  <div class="alert alert-danger">
-    <a class="close" data-dismiss="alert">×</a>
-    {{ validation_errors() }}
-  </div>
+	<div class="alert alert-danger">
+		<a class="close" data-dismiss="alert">×</a>
+		{{ validation_errors() }}
+	</div>
 {% else %}
 
-  {% set customer = cart('customer') %}
-  {% set shipping = cart('shipping_method') %}
-  {% set payment = cart('payment_method') %}
-  
-  <div class="well">
-  <div class="row">
-      <div class="col-md-4">
-  
-          <h4><a href="#" data-dismiss="modal" class="btn btn-xs btn-default pull-right">{{ lang('form_edit') }}</a>{{ lang('shipping_address') }}</h4>
-          {{ customer.ship_address|format_address_nl2br }}
-      </div>
-      <div class="col-md-4">
-          <h4><a href="#" data-dismiss="modal" class="btn btn-xs btn-default pull-right">{{ lang('form_edit') }}</a>{{ lang('billing_address') }}</h4>
-          {{ customer.bill_address|format_address_nl2br }}
-      </div>
-      <div class="col-md-4">
-          <h4><a href="#" data-dismiss="modal" class="btn btn-xs btn-default pull-right">{{ lang('form_edit') }}</a>{{ lang('payment_method') }}</h4>
-          {{ payment.module|humanize }} ({{ payment.type }})
-          <h4><a href="#" data-dismiss="modal" class="btn btn-xs btn-default pull-right">{{ lang('form_edit') }}</a>{{ lang('shipping_method') }}</h4>
-          {{ shipping.method }}
-      </div>
-  </div>
-  </div>
-  
-  {% include 'bs3/checkout/summary.html' %}
+	{% set customer = cart('customer') %}
+	{% set shipping = cart('shipping_method') %}
+	{% set payment = cart('payment_method') %}
+
+	<div class="well">
+	<div class="row">
+			<div class="col-md-4">
+
+					<h4><a href="#" data-dismiss="modal" class="btn btn-xs btn-default pull-right">{{ lang('form_edit') }}</a>{{ lang('shipping_address') }}</h4>
+					{{ customer.ship_address|format_address_nl2br }}
+			</div>
+			<div class="col-md-4">
+					<h4><a href="#" data-dismiss="modal" class="btn btn-xs btn-default pull-right">{{ lang('form_edit') }}</a>{{ lang('billing_address') }}</h4>
+					{{ customer.bill_address|format_address_nl2br }}
+			</div>
+			<div class="col-md-4">
+					<h4><a href="#" data-dismiss="modal" class="btn btn-xs btn-default pull-right">{{ lang('form_edit') }}</a>{{ lang('payment_method') }}</h4>
+					{{ payment.module|humanize }} ({{ payment.type }})
+					<h4><a href="#" data-dismiss="modal" class="btn btn-xs btn-default pull-right">{{ lang('form_edit') }}</a>{{ lang('shipping_method') }}</h4>
+					{{ shipping.method }}
+			</div>
+	</div>
+	</div>
+
+	{% include 'bs3/checkout/summary.html' %}
 
 {% endif %}

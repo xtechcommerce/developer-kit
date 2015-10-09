@@ -1,101 +1,105 @@
 {{ global_css('view_cart.css', true) }}
-{{ global_js('shop-v4.js', true) }}
+{{ global_js('shop-v8.js', true) }}
 <script type="text/javascript">
-  var checkoutCallbacks = $.Callbacks();
-  var checkoutErrors = false;
-  var checkoutNoSubmit = false;
-  var checkoutCart = {total: {{ cart('total')|default('0.00') }}, shipping_cost: {{ cart('shipping_cost')|default('0.00') }}, subtotal: {{ cart('discounted_subtotal')|default('0.00') }}};
+	var checkoutCallbacks = $.Callbacks();
+	var checkoutErrors = false;
+	var checkoutNoSubmit = false;
+	var checkoutCart = {total: {{ cart('total')|default('0.00') }}, shipping_cost: {{ cart('shipping_cost')|default('0.00') }}, subtotal: {{ cart('discounted_subtotal')|default('0.00') }}, discount: {{ (cart('subtotal') - cart('discounted_subtotal'))|default('0.00') }}};
 
-  var CartSettings = {
-    zonesMap: {{ zones_map|json_encode }},
-    addresses: {{ logged_in ? customer_addresses_keyed|json_encode : '[]' }},
-    defaultAddress: {{ logged_in ? customer.default_shipping_address|default('false') : 'false' }},
-    installments: {{ shop_config('max_installments')|default('0') }},
-    currency_symbol: '{{ shop_config('currency_symbol') }}',
-    total: {{ cart('total')|default('0.00') }},
-    validate: ['email'{{ logged_in ? "" : ", 'password', 'confirm'" }}, 'firstname', 'lastname', 'birthday', 'sex', 'cpf', 'phone', 'zip', 'zone_id', 'city', 'district', 'address1', 'anumber', 'module', 'shipping_method']
-  }
-  var Cart;
+	var CartSettings = {
+		zonesMap: {{ zones_map|json_encode }},
+		addresses: {{ logged_in ? customer_addresses_keyed|json_encode : '[]' }},
+		defaultAddress: {{ logged_in ? customer.default_shipping_address|default('false') : 'false' }},
+		installments: {{ shop_config('max_installments')|default('0') }},
+		currency_symbol: '{{ shop_config('currency_symbol') }}',
+		total: {{ cart('total')|default('0.00') }},
+		{% if current_lang() == 'english' %}
+			validate: ['email'{{ logged_in ? "" : ", 'password', 'confirm'" }}, 'firstname', 'lastname', 'birthday', 'sex', 'phone', 'zip', 'zone_id', 'city', 'district', 'address1', 'anumber', 'module', 'shipping_method']
+		{% else %}
+			validate: ['email'{{ logged_in ? "" : ", 'password', 'confirm'" }}, 'firstname', 'lastname', 'birthday', 'sex', 'cpf', 'phone', 'zip', 'zone_id', 'city', 'district', 'address1', 'anumber', 'module', 'shipping_method']
+		{% endif %}
+	}
+	var Cart;
 
-  $(document).ready(function(){
-    Cart = new Checkout(CartSettings);
-  });
+	$(document).ready(function(){
+		Cart = new Checkout(CartSettings);
+	});
 </script>
 
 <div id="cartview">
-  {% if cart.total_items == 0 %}
+	{% if cart.total_items == 0 %}
 
-    <div class="alert alert-info">
-      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-      {{ lang('empty_view_cart') }}
-    </div>
+		<div class="alert alert-info">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+			{{ lang('empty_view_cart') }}
+		</div>
 
-  {% else %}
-
-
-    <div class="summary">
-
-      <div class="page-header">
-        <h2>{{ lang('your_cart') }}</h2>
-      </div>
-
-      {{ form_open('cart/update_cart', {'id': 'update_cart_form'}) }}
-
-        <div id="checkout_summary">
-          {% include 'bs3/checkout/summary.html' %}
-        </div>
-
-        <div class="row cart-summary-bottom">
-
-            <div class="cart-coupon col-md-6">
-              <label>
-                {{ lang('coupon_label') }}
-              </label>
-              <div class="input-group">
-                <input type="text" name="coupon_code" class="form-control" style="width: 50%;" />
-                <input type="submit" class="btn btn-default" value="{{ lang('apply_coupon') }}" />
-              </div>
-            </div>
-            
-            <div class="cart-secure col-md-6">
-              <ul class="list-inline pull-right">
-                <li><span class="glyphicon glyphicon-lock"></span> {{ lang('secure_checkout') }}</li>
-                <li><span class="glyphicon glyphicon-home"></span> {{ lang('guarantied_shipping') }}</li>
-              </ul>
-            </div>
-
-        </div>
-
-      {{ form_close() }}
-
-    </div>
+	{% else %}
 
 
-    <div class="checkout">
-      <div class="row">
+		<div class="summary">
 
-        {% if validation_errors() %}
-          <div class="col-md-12">
-            <div class="alert alert-danger">
-              <a class="close" data-dismiss="alert">×</a>
-              {{ validation_errors() }}
-            </div>
-          </div>
-        {% endif %}
+			<div class="page-header">
+				<h2>{{ lang('your_cart') }}</h2>
+			</div>
 
-        {{ form_open('checkout/create', {'id': 'onepage_checkoutform'}) }}
+			{{ form_open('cart/update_cart', {'id': 'update_cart_form'}) }}
 
-          {% include 'bs3/checkout/form.html' %}
+				<div id="checkout_summary">
+					{% include 'bs3/checkout/summary.html' %}
+				</div>
 
-        {{ form_close() }}
+				<div class="row cart-summary-bottom">
 
-        {% if not logged_in %}
-          {% include 'bs3/checkout/login_modal.html' %}
-        {% endif %}
+						<div class="cart-coupon col-md-6">
+							<label>
+								{{ lang('coupon_label') }}
+							</label>
+							<div class="input-group">
+								<input type="text" name="coupon_code" class="form-control" style="width: 50%;" />
+								<input type="submit" class="btn btn-default" value="{{ lang('apply_coupon') }}" />
+							</div>
+						</div>
 
-      </div>
-    </div>
+						<div class="cart-secure col-md-6">
+							<ul class="list-inline pull-right">
+								<li><span class="glyphicon glyphicon-lock"></span> {{ lang('secure_checkout') }}</li>
+								<li><span class="glyphicon glyphicon-home"></span> {{ lang('guarantied_shipping') }}</li>
+							</ul>
+						</div>
+
+				</div>
+
+			{{ form_close() }}
+
+		</div>
 
 
-  {% endif %}
+		<div class="checkout">
+			<div class="row">
+
+				{% if validation_errors() %}
+					<div class="col-md-12">
+						<div class="alert alert-danger">
+							<a class="close" data-dismiss="alert">×</a>
+							{{ validation_errors() }}
+						</div>
+					</div>
+				{% endif %}
+
+				{{ form_open('checkout/create', {'id': 'onepage_checkoutform'}) }}
+
+					{% include 'bs3/checkout/form.html' %}
+
+				{{ form_close() }}
+
+				{% if not logged_in %}
+					{% include 'bs3/checkout/login_modal.html' %}
+				{% endif %}
+
+			</div>
+		</div>
+
+
+	{% endif %}
 </div>

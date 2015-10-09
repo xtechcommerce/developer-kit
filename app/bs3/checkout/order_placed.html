@@ -1,92 +1,122 @@
 <h1 class="page-title">Compra realizada com sucesso!</h1>
 
 <div class="row">
-    <div class="col-lg-12">
-    
-        <div class="row">
+	<div class="col-lg-12">
 
-            <div class="col-md-6">
-                <h4>O número do seu pedido é #{{ order.order_number }}</h4>
-                {% if payment.info.boletourl %}
-                <!-- Boleto begin -->
-            
-                  <p>Agora, resta imprimir o boleto. Ele pode ser pago em qualquer agência ou pelo site do seu banco.</p>
-                  <p><a class="btn btn-primary btn-lg" target="_blank" href="{{ payment.info.boletourl }}">Imprimir boleto</a></p>
-                  <p>Como o banco leva um dia para processar o boleto, o prazo de entrega começa a valer um dia após o seu pagamento.</p>
-            
-                <!-- Boleto end -->
-                {% else %}
-                <!-- Other begin -->
-            
-                  <p>
-                    Enviamos os detalhes do seu pedido para {{ order.email }}.
-                    {% if payment.info.status %}
-                      <br>O status atual da sua transação é '{{ payment.info.status }}'.
-                    {% endif %}
-                  </p>
-                  
-                  <p><a class="btn btn-default" href="{{ site_url('/') }}">Voltar para pagina inicial</a></p>
-            
-                <!-- Other end -->
-                {% endif %}
-            </div>
+		<div class="row">
 
-            <div class="col-md-6">
-                {{ global_js('sharer.js', true) }}
-                {{ global_css('sharer.css', true) }}
-                
-                <div class="panel panel-default">
-                      <div class="panel-heading">
-                            <h3 class="panel-title">Compartilhe sua compra!</h3>
-                      </div>
-                      <div class="panel-body">
-                            <p>Instruções: Selecione um produto e escolha Facebook ou Twitter.</p>
-                            <div class="share-product-list row">
-                            {% for product in order.contents %}
-                                <div class="col-md-4">
-                                    <a class="thumbnail share-product{{ loop.first ? ' active' : '' }}" href="#" data-description="{{ product.excerpt }}" data-caption="{{ product.name }}" data-link="{{ site_url('p/' ~ product.id) }}" data-picture="{{ product_img(product, 'thumbnails', {'only_link': true}) }}" data-name="Em breve dono de uma linda {{ product.name }} da {{ shop_config('company_name') }}!">
-                                        {{ product_img(product, 'thumbnails') }}
-                                    </a>
-                                </div>
-                            {% endfor %}
-                            </div>
-                      </div>
-                      <div class="panel-footer text-center">
-                        <a class="facebookbtn-link btn btn-default" href="#">
-                          Facebook
-                        </a> ou 
-                        <a class="twitterbtn-link btn btn-default" href="#">
-                          Twitter
-                        </a>
-                      </div>
-                </div>
+			<div class="col-md-6">
+				<h4>O número do seu pedido é #{{ order.order_number }}</h4>
+				{% if payment.info.boletourl %}
+					<!-- Boleto begin -->
 
-            </div>
+					<p>Agora, resta imprimir o boleto. Ele pode ser pago em qualquer agência ou pelo site do seu banco.</p>
+					<p><a class="btn btn-primary btn-lg" target="_blank" href="{{ payment.info.boletourl }}">Imprimir boleto</a></p>
+					<p>Como o banco leva um dia para processar o boleto, o prazo de entrega começa a valer um dia após o seu pagamento.</p>
 
-        </div>
+				<!-- Boleto end -->
+				{% elseif payment.info.paymenturl %}
 
-        <script>
-            ga('require', 'ecommerce', 'ecommerce.js');
-            ga('ecommerce:addTransaction', {
-              'id': '{{ order.order_number }}',                                    // Transaction ID. Required.
-              'affiliation': '{{ shop_config('company_name') }}',                  // Affiliation or store name.
-              'revenue': '{{ order.total|number_format(2, ".", "") }}',            // Grand Total.
-              'shipping': '{{ order.shipping|number_format(2, ".", "") }}',        // Shipping.
-              'tax': '0',                                                          // Tax.
-              'currency': '{{ shop_config('currency') }}'
-            });
-            {% for product in order.contents %}
-            ga('ecommerce:addItem', {
-              'id': '{{ order.order_number }}',                                    // Transaction ID. Required.
-              'name': '{{ product.name }}',                                        // Product name. Required.
-              'sku': '{{ product.sku }}',                                          // SKU/code.
-              'category': '{{ get_product_category(product.id) }}',                // Category or variation.
-              'price': '{{ product.price|number_format(2, ".", "") }}',            // Unit price.
-              'quantity': '{{ product.quantity }}'                                 // Quantity.
-            });
-            {% endfor %}
-            ga('ecommerce:send');
-        </script>
-    
-    </div>
+					<p>Agora, resta completar o pagamento. Clique no link abaixo para efetuar o pagamento do seu pedido.</p>
+					<p><a class="btn btn-primary btn-lg" target="_blank" href="{{ payment.info.paymenturl }}">Efetuar o Pagamento</a></p>
+
+				{% else %}
+				<!-- Other begin -->
+
+					<p>
+						Enviamos os detalhes do seu pedido para {{ order.email }}.
+						{% if payment.info.status %}
+							<br>O status atual da sua transação é '{{ payment.info.status }}'.
+						{% endif %}
+					</p>
+
+					<p><a class="btn btn-default" href="{{ site_url('/') }}">Voltar para pagina inicial</a></p>
+
+				<!-- Other end -->
+				{% endif %}
+			</div>
+
+			<div class="col-md-6">
+				{{ global_js('sharer.js', true) }}
+				{{ global_css('sharer.css', true) }}
+
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Compartilhe sua compra!</h3>
+					</div>
+					<div class="panel-body">
+						<p>Instruções: Selecione um produto e escolha Facebook ou Twitter.</p>
+						<div class="share-product-list row">
+							{% for product in order.contents %}
+								<div class="col-md-4">
+									<a class="thumbnail share-product{{ loop.first ? ' active' : '' }}" href="#" data-description="{{ product.excerpt }}" data-caption="{{ product.name }}" data-link="{{ site_url('p/' ~ product.id) }}" data-picture="{{ product_img(product, 'thumbnails', {'only_link': true}) }}" data-name="Em breve dono de uma linda {{ product.name }} da {{ shop_config('company_name') }}!">
+										{{ product_img(product, 'thumbnails') }}
+									</a>
+								</div>
+							{% endfor %}
+						</div>
+					</div>
+					<div class="panel-footer text-center">
+						<a class="facebookbtn-link btn btn-default" href="#">
+							Facebook
+						</a> ou
+						<a class="twitterbtn-link btn btn-default" href="#">
+							Twitter
+						</a>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+
+		{% if not is_local() %}
+			<script>
+				ga('require', 'ecommerce');
+
+				var gaTransaction = {
+					'id': '{{ order.order_number }}',                                    // Transaction ID. Required.
+					'affiliation': '{{ shop_config('company_name') }}',                  // Affiliation or store name.
+					'revenue': '{{ order.total|number_format(2, ".", "") }}',            // Grand Total.
+					'shipping': '{{ order.shipping|number_format(2, ".", "") }}',        // Shipping.
+					'tax': '0',                                                          // Tax.
+					'currency': '{{ shop_config('currency') }}'
+				};
+
+				ga('ecommerce:addTransaction', gaTransaction);
+
+				{% for product in order.contents %}
+				ga('ecommerce:addItem', {
+					'id': '{{ order.order_number }}',                                    // Transaction ID. Required.
+					'name': '{{ product.name }}',                                        // Product name. Required.
+					'sku': '{{ product.sku }}',                                          // SKU/code.
+					'category': '{{ get_product_category(product.id) }}',                // Category or variation.
+					'price': '{{ product.price|number_format(2, ".", "") }}',            // Unit price.
+					'quantity': '{{ product.quantity }}'                                 // Quantity.
+				});
+				{% endfor %}
+
+				ga('ecommerce:send');
+
+				{% if shop_config('google_analytics') %}
+				ga('customTracker.require', 'ecommerce');
+				ga('customTracker.ecommerce:addTransaction', gaTransaction);
+
+				{% for product in order.contents %}
+				ga('customTracker.ecommerce:addItem', {
+					'id': '{{ order.order_number }}',                                    // Transaction ID. Required.
+					'name': '{{ product.name }}',                                        // Product name. Required.
+					'sku': '{{ product.sku }}',                                          // SKU/code.
+					'category': '{{ get_product_category(product.id) }}',                // Category or variation.
+					'price': '{{ product.price|number_format(2, ".", "") }}',            // Unit price.
+					'quantity': '{{ product.quantity }}'                                 // Quantity.
+				});
+				{% endfor %}
+
+				ga('customTracker.ecommerce:send');
+				{% endif %}
+			</script>
+		{% endif %}
+
+	</div>
 </div>

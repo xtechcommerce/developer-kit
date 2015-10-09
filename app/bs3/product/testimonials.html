@@ -1,57 +1,57 @@
 {% if testimonials|count > 0 %}
 
-<script type="text/javascript">
-$(document).ready(function(){
-    $.getScript('{{ global_js('jquery.raty.js') }}', function( data, textStatus, jqxhr ) {
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$.getScript('{{ global_js('jquery.raty.js') }}', function( data, textStatus, jqxhr ) {
 
-      $('.rating-stars-view').each(function(){
-          var name = $(this).data('name');
-          $(this).raty({
-              path: '{{ global_asset('img/') }}', 
-              score: function() {
-                  return $(this).attr('data-score');
-              },
-              readOnly: true
-          });
-      });
+				$('.rating-stars-view').each(function(){
+					var name = $(this).data('name');
+					$(this).raty({
+						path: '{{ global_asset('img/') }}', 
+						score: function() {
+							return $(this).attr('data-score');
+						},
+						readOnly: true
+					});
+				});
 
-    });
-});
-</script>
-<div class="testimonials">
-    <h2>Notas totais</h2>
-    <ul class="testimonials-rating-totals" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
-         <li style="display:none">
-           <span itemprop="reviewCount">{{ testimonials|count }}</span>
-           <span itemprop="ratingValue">{{ testimonial_totals.total }}</span>
-         </li>
-         <li><div class="rating-stars-view pull-left" data-score="{{ testimonial_totals.total }}"></div>Média geral </li>
-         <li><div class="rating-stars-view pull-left" data-score="{{ testimonial_totals.rating_look }}"></div>Beleza do produto </li>
-         <li><div class="rating-stars-view pull-left" data-score="{{ testimonial_totals.rating_usability }}"></div>Usabilidade do produto </li>
-         <li><div class="rating-stars-view pull-left" data-score="{{ testimonial_totals.rating_support }}"></div>Atendimento e segurança </li>
-    </ul>
-    <hr>
-    <h2>O que clientes dizem</h2>
-    <div class="testimonials-listing">
-       {% for testimonial in testimonials %}
-           <div class="testimonial row" itemprop="review" itemscope itemtype="http://schema.org/Review">
-                <div class="col-md-8">
-                    <strong class="testimonial-author" itemprop="author">{{ testimonial.firstname }}</strong> escreveu na data  
-                    <strong class="testimonial-date" itemprop="datePublished">{{ testimonial.created_at|to_formated_date }}</strong>:
-                    <div class="testimonial-message" itemprop="description">{{ testimonial.message }}</div>
-                </div>
-                <div class="col-md-4">
-                    <ul class="testimonials-ratings" itemscope itemtype="http://schema.org/Rating">
-                         <li><div class="rating-stars-view pull-left" data-score="{{ testimonial.total }}" itemprop="ratingValue" content="{{ testimonial.total }}"></div>Média geral</li>
-                         <li><div class="rating-stars-view pull-left" data-score="{{ testimonial.rating_look}}"></div>Beleza do produto</li>
-                         <li><div class="rating-stars-view pull-left" data-score="{{ testimonial.rating_usability }}"></div>Usabilidade do produto</li>
-                         <li><div class="rating-stars-view pull-left" data-score="{{ testimonial.rating_support }}"></div>Atendimento e segurança</li>
-                    </ul>
-                </div>
-           </div>
-           <hr>
-       {% endfor %}
-    </div>
-</div>
+			});
+		});
+	</script>
+	<div class="testimonials">
+		<h2>Notas totais</h2>
+		<ul class="testimonials-rating-totals" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+			<li style="display:none">
+				<span itemprop="reviewCount">{{ testimonials|count }}</span>
+				<span itemprop="ratingValue">{{ testimonial_totals.total }}</span>
+			</li>
+			<li><div class="rating-stars-view pull-left" data-score="{{ testimonial_totals.total }}"></div>Média geral </li>
+			<li><div class="rating-stars-view pull-left" data-score="{{ testimonial_totals.rating_look }}"></div>Beleza do produto </li>
+			<li><div class="rating-stars-view pull-left" data-score="{{ testimonial_totals.rating_usability }}"></div>Usabilidade do produto </li>
+			<li><div class="rating-stars-view pull-left" data-score="{{ testimonial_totals.rating_support }}"></div>Atendimento e segurança </li>
+		</ul>
+		<hr>
+		<h2>O que clientes dizem</h2>
+		<div class="testimonials-listing">
+			{% for testimonial in testimonials %}
+				<div class="testimonial row" itemprop="review" itemscope itemtype="http://schema.org/Review">
+					<div class="col-md-8">
+						<strong class="testimonial-author" itemprop="author">{{ testimonial.firstname }}</strong> escreveu na data  
+						<strong class="testimonial-date" itemprop="datePublished">{{ testimonial.created_at|to_formated_date }}</strong>:
+						<div class="testimonial-message" itemprop="description">{{ testimonial.message }}</div>
+					</div>
+					<div class="col-md-4">
+						<ul class="testimonials-ratings" itemscope itemtype="http://schema.org/Rating">
+							<li><div class="rating-stars-view pull-left" data-score="{{ testimonial.total }}" itemprop="ratingValue" content="{{ testimonial.total }}"></div>Média geral</li>
+							<li><div class="rating-stars-view pull-left" data-score="{{ testimonial.rating_look}}"></div>Beleza do produto</li>
+							<li><div class="rating-stars-view pull-left" data-score="{{ testimonial.rating_usability }}"></div>Usabilidade do produto</li>
+							<li><div class="rating-stars-view pull-left" data-score="{{ testimonial.rating_support }}"></div>Atendimento e segurança</li>
+						</ul>
+					</div>
+				</div>
+				<hr>
+			{% endfor %}
+		</div>
+	</div>
 
 {% endif %}

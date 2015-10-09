@@ -1,16 +1,16 @@
 {% macro input(id, name, value, label, cols, type, hide_asterix) %}
-  <div class="col-md-{{ cols }}">
-    <label style="white-space:nowrap">
-      {{ label }}{% if not hide_asterix %} <sup>*</sup>{% endif %}
-    </label>
-    {{ form_input({'autocomplete': 'off', 'id': id, 'type': type|default('text'), 'class': 'address form-control', 'name': name, 'value': value}) }}
-  </div>
+	<div class="col-md-{{ cols }}">
+		<label style="white-space:nowrap">
+			{{ label }}{% if not hide_asterix %} <sup>*</sup>{% endif %}
+		</label>
+		{{ form_input({'autocomplete': 'off', 'id': id, 'type': type|default('text'), 'class': 'address form-control', 'name': name, 'value': value}) }}
+	</div>
 {% endmacro %}
 {% macro dropdown(id, name, options, value, label, cols, hide_asterix) %}
-  <div class="col-md-{{ cols }}">
-    <label style="white-space:nowrap">
-      {{ label }}{% if not hide_asterix %} <sup>*</sup>{% endif %}
-    </label>
-    {{ form_dropdown(name, options, value, 'class="form-control" id="' ~ id ~ '"') }}
-  </div>
+	<div class="col-md-{{ cols }}">
+		<label style="white-space:nowrap">
+			{{ label }}{% if not hide_asterix %} <sup>*</sup>{% endif %}
+		</label>
+		{{ form_dropdown(name, options, value, 'class="form-control" id="' ~ id ~ '"') }}
+	</div>
 {% endmacro %}
