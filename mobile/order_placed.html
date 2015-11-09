@@ -7,6 +7,21 @@
 			<h1 class="title">{{ 'Compra realizada com successo!'|trans({'en':'Purchase made with success!'}) }}</h1>
 			<h2>{{ 'O número do seu pedido é'|trans({'en':'Your order number is'}) }} #{{ order.order_number }}</h2>
 			<p>{{ 'Enviamos os detalhes do seu pedido para'|trans({'en':'We sent the details from your order to'}) }} {{ order.email }}.</p>
+
+			{% if payment.info.boletourl %}
+			<!-- Boleto begin -->
+
+				<p>Agora, resta imprimir o boleto. Ele pode ser pago em qualquer agência ou pelo site do seu banco.</p>
+				<p><a class="btn btn-primary btn-lg" target="_blank" href="{{ payment.info.boletourl }}">Imprimir boleto</a></p>
+				<p>Como o banco leva um dia para processar o boleto, o prazo de entrega começa a valer um dia após o seu pagamento.</p>
+
+			<!-- Boleto end -->
+			{% elseif payment.info.paymenturl %}
+
+				<p>Agora, resta completar o pagamento. Clique no link abaixo para efetuar o pagamento do seu pedido.</p>
+				<p><a class="btn btn-primary btn-lg" target="_blank" href="{{ payment.info.paymenturl }}">Efetuar o Pagamento</a></p>
+
+			{% endif %}
 			
 			{% if shop_config('ebit_id') is not empty %}
 				<br>
