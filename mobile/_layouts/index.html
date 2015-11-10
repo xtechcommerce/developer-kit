@@ -140,7 +140,7 @@
 				<ul id="footer_navigation">
 					{% for page in get_children_of_page('institucional') %}
 						<li>
-							<a href="{{ site_url(page.slug) }}">{{ page.title }}</a>
+							<a href="{{ page.url is empty ? site_url(page.slug) : page.url }}" {{ page.new_window ? 'target="_blank"':''}}>{{ page.title }}</a>
 						</li>
 					{% endfor %}
 				</ul>
