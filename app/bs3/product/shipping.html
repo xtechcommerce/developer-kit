@@ -1,0 +1,82 @@
+<div class="prod-frete">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="frete">
+                {{ form_open('/shipping/get_frete?format=json', 'id="form-shipping"') }}
+                <fieldset>
+                    <label for="cep">Frete e Prazo</label>
+				    <div class="input-group">
+				        <input type="text" id="zip_code" name="zip" class="form-control" placeholder="CEP" />
+				        <span class="input-group-btn">
+					        <input type="submit" value="Calcular" name="submit" class="btn btn-primary disabled"/>
+					    </span>
+				    </div>
+                </fieldset>
+                <input type="hidden" name="product_price" value="{{ product.saleprice > 0 ? product.saleprice : product.price }}" />
+                <input type="hidden" name="product_weight" value="{{ product.weight }}" />
+                <input type="hidden" name="product_height" value="{{ product.height }}" />
+                <input type="hidden" name="product_width" value="{{ product.width }}" />
+                <input type="hidden" name="product_depth" value="{{ product.depth }}" />
+                <input type="hidden" name="processing_days" value="{{ product.processing_days }}" />
+                {{ form_close() }}
+                <div class="frete_results"></div>
+	            <script>
+                    $('#zip_code').mask('99999-999');
+                    $('#zip_code').on('keyup', function(){
+                        var zipTest = $('#zip_code').val().search('_');
+                        if(zipTest == -1){
+                            $('#form-shipping input[type=submit]').removeClass('disabled');
+                        }else{
+                            $('#form-shipping input[type=submit]').addClass('disabled');
+                        };
+	                });
+	                
+	                $('#form-shipping').on('submit', function(e){
+                        e.preventDefault();
+                        $('#form-shipping input[type=submit]').addClass('disabled').val('Calculando...');
+                        
+                        {% if not product.shippable %}
+                            $shipping = '<p>1: <strong>Frete Grátis</strong></p>';
+                            $('.frete_results').removeClass('error').fadeIn().html($shipping);
+                        {% else %}
+                            var action = $(this).attr('action');
+                            var zip = $('#zip_code').val().replace("-", "");
+                            var product_price = $('input[name=product_price]').val();
+                            var product_weight = $('input[name=product_weight]').val();
+                            var product_height = $('input[name=product_height]').val();
+                            var product_width = $('input[name=product_width]').val();
+                            var product_depth = $('input[name=product_depth]').val();
+                            var processing_days = $('input[name=processing_days]').val();
+                            
+                            $.getJSON(site_url.base + 'shipping/busca_cep', {zip: zip}, function(data) {
+                                $shipping = '';
+                                var serialized = {country: 30, product_price: product_price, product_weight: product_weight, product_height: product_height, product_width: product_width, product_depth: product_depth, processing_days: processing_days, zip: zip, address: data};
+
+                                if(data['resultado'] == 0){
+                                    $shipping = '<p><strong>Endereço não encontrado. Corrija seu CEP...</strong></p>';
+                                    $('.frete_results').removeClass('error').fadeIn().html($shipping);
+                                    $('#form-shipping input[type=submit]').removeClass('disabled').val('Calcular');
+                                }else{
+                                    $.post(action, serialized, function(fdata){
+                                        // console.log(fdata);
+                                        $('#form-shipping input[type=submit]').removeClass('disabled').val('Calcular');
+                                        
+                                        $.each(fdata["shipping_rates"], function(i, curr){
+                                                if(curr['num'] == 0){
+                                                    curr['str']='Frete Grátis';
+                                                }
+                                                
+                                                $shipping = $shipping + '<p>'+i+': <strong>'+curr['str']+'</strong><br>Prazo de Entrega: <strong> '+curr['time']+' dias úteis</strong></p>';
+                                        });
+                                        
+                                        $('.frete_results').removeClass('error').fadeIn().html($shipping);
+				                    });
+                                }
+                            });
+                        {% endif %}
+	                });
+	            </script>
+            </div>
+        </div>
+    </div>
+</div>
