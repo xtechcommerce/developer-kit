@@ -347,6 +347,12 @@ function breadcrumbs_widget(){
     return $twig->render('widgets/breadcrumbs.html');
 }
 
+function shipping_widget(){
+    global $twig, $data;
+    return $twig->render('bs3/product/shipping.html', $data);
+}
+
+
 function get_children_of_page($slug){
     global $data;
     return $data['pages'];
