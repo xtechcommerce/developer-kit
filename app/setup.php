@@ -115,6 +115,7 @@ $functions = array(
     'body_code',
     'current_lang',
     'get_look_name',
+    'shipping_widget',
 );
 
 foreach ($functions as $function) {
