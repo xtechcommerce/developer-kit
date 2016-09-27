@@ -20,7 +20,7 @@
 			{% for cartkey, product in cart('contents') %}
 				<tr>
 					<td width="7%" class="cart-product-img">{{ product_img(product, 'thumbnails', {'width': 78}) }}</td>
-					<td>
+					<td class="cart-product-name" data-slug="{{ product.slug }}">
 						<strong>{{ product.name }}{{ product.sku ? ' (' ~ product.sku ~ ')' : '' }}</strong>
 						{% for name, value in product.options %}
 							<div>
@@ -63,6 +63,17 @@
 			{% endfor %}
 		</tbody>
 		<tfoot>
+			<tr>
+				<td colspan="4" class="text-right">
+					<strong>
+						{{ lang('subtotal') }}
+					</strong>
+				</td>
+				<td>
+					{{ cart('subtotal')|format_currency }}
+				</td>
+			</tr>
+
 			{% if cart('group_discount') > 0 %}
 				<tr>
 					<td colspan="4" class="text-right">
@@ -75,16 +86,6 @@
 					</td>
 				</tr>
 			{% endif %}
-			<tr>
-				<td colspan="4" class="text-right">
-					<strong>
-						{{ lang('subtotal') }}
-					</strong>
-				</td>
-				<td>
-					{{ cart('subtotal')|format_currency }}
-				</td>
-			</tr>
 
 			{% if cart('look_discount') > 0 %}
 				<tr>

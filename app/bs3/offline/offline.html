@@ -68,93 +68,59 @@
 	</head>
 	<body>
 		<header>
-
 			<div class="container">
-
 				<div class="row">
-
 					<h1 id="site-logo" class="text-center" itemprop="name">
 						<img src="{{ logo_url() }}" alt="Logo" />
 					</h1>
 
 					<div class="socials">
-
 						<ul class="list-inline">
-
 							{% if shop_config('social_facebook') %}
 							<li>
-
 								<a href="https://www.facebook.com/{{ shop_config('social_facebook') }}" target="_blank">
-
 									<img src="/assets/img/icon-facebook.png" alt="Curta nossa página no facebook"  width="24" height="24" />
 								</a>
-
 							</li>
 							{% endif %}
 
 							{% if shop_config('social_twitter') %}
 							<li>
-
 								<a href="https://www.twitter.com/{{ shop_config('social_twitter') }}" target="_blank">
-
 									<img src="/assets/img/icon-twitter.png" alt="Siga-nos no Twitter"  width="24" height="24" />
 								</a>
-
 							</li>
 							{% endif %}
 
 							{% if shop_config('social_google') %}
 							<li>
-
 								<a href="https://plus.google.com/{{ shop_config('social_google') }}" target="_blank">
-
 									<img src="/assets/img/icon-google.png" alt="Curta nossa página no Google Plus"  width="24" height="24" />
 								</a>
-
 							</li>
 							{% endif %}
-
 						</ul>
-
 					</div>
-
 				</div>
-
 			</div>
-
 		</header>
 
 		<section id="site-content">
-
 			<div class="container">
-
 				<div class="row">
-
 					<div class="col-xs-12 text-center">
-
 						<h1 class="status">
-
 							Em manutenção
-
 						</h1>
-
 						<br />
-
 						<p>
-
 							No momento, nós estamos trabalhando numa loja incrível para você.
-
 						</p>
-
 						<p>
-
 							Fique por dentro das novidades e seja avisado assim que estivermos no ar.
-
 						</p>
 
-
-						
-
+						{{ form_open('contact/newsletter_signup') }}
 							{% if validation_errors() %}
 								<div class="alert alert-danger">
 									<a class="close" data-dismiss="alert">×</a>
@@ -163,47 +129,26 @@
 							{% endif %}
 
 							<div class="newsletter">
-
 								<input type="hidden" value="{{ current_url() }}" name="redirect"/>
-
 								<input type="email" name="email" value="" placeholder="Fique por dentro. Entre com seu e-mail aqui" />
-
 								<input type="submit" value="Cadastrar" class="btn btn-primary" />
-
 							</div>
-
 						</form>
-
 					</div>
-
 				</div>
-
 			</div>
-
 		</section>
 
 		<footer>
-
 			<div class="container">
-
 				<div class="row">
-
 					<div class="col-xs-12">
-
 						<p class="text-center">
-
 							&copy; {{ shop_config('company_name') }} {{ "now"|date('Y') }}. Todos os direitos reservados.
-
 						</p>
-
 					</div>
-
 				</div>
-
 			</div>
-
 		</footer>
-
 	</body>
-
 </html>

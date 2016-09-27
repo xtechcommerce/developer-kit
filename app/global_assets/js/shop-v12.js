@@ -21,7 +21,10 @@ if (typeof(checkoutNoSubmit) == 'undefined') {
             defaultAddress: false,
             installments: 12,
             currency_symbol: '$',
-            total: 0
+            total: 0,
+            language: 'portugues',
+            checkout_path: 'checkout',
+            validate: []
         };
 
         this.options = $.extend({}, this.defaultOptions, options);
@@ -29,11 +32,19 @@ if (typeof(checkoutNoSubmit) == 'undefined') {
         this.country = $('#country_id').val();
         this.$email = $('#a_email');
         this.$btnSearchAddress = $('.btn-search-address');
-        this.$zip = $('#zip_code');
+        this.$zip_fields = $('.a_zip');
+        this.$zip_code = $('#zip_code');
+        this.$zip = $('#a_zip');
         this.$shippingMethodRow = '.shippingwrap td, .shippingwrap input';
         this.$btnOpenLogin = $('.btn-open-login');
         this.$countrySelect = $('select[name=country_id]');
         this.$billCheckbox = $('.cart-bill-address .checkbox');
+        this.$nameInputs = $('input[name=firstname], input[name=lastname]');
+        this.$fullnameInputs = $('input[data-get=fullname]');
+
+        this.$nameInputs.on('change', $.proxy(this.syncInputs, this));
+
+        this.syncInputs();
 
         this.$billCheckbox.click(function(e){
             if($(e.target).is('input'))
@@ -41,6 +52,8 @@ if (typeof(checkoutNoSubmit) == 'undefined') {
                 $('.cart-bill-fields').toggle();
             }
         });
+
+        var that = this;
 
         if (this.$countrySelect.length > 0 || this.country != 30) {
             this.$countrySelect.on('change', $.proxy(this.countryChange, this));
@@ -62,7 +75,7 @@ if (typeof(checkoutNoSubmit) == 'undefined') {
         this.$btnSearchAddress.on('click', $.proxy(this.doSearchAddress, this));
         $(document).on('click', this.$shippingMethodRow, $.proxy(this.setShipping, this));
         $(document).on('click', '.choose_address', $.proxy(this.chooseAddress, this));
-        this.$zip.delayKeyup($.proxy(this.searchAddress, this, true, true), 1000);
+        this.$zip_fields.delayKeyup($.proxy(this.searchAddress, this, true, true), 1000);
 
 
         if (this.options.defaultAddress) {
@@ -85,46 +98,64 @@ if (typeof(checkoutNoSubmit) == 'undefined') {
 
         });
 
-        $('#payment_tabs a.payment-method-nav').each(function(){
-            var $this = $(this);
-            $this.click(function (e){
-                e.preventDefault();
-                $this.tab('show');
-                var id = $('#payment_tabs div.payment-method.active').attr('id');
-                var method = id.split('-')[1];
-                $('input[name=module]').val(method);
-            });
-        });
-
-        var inputErrors;
-
-        var validationOptions = {
-              onError: function(errors){
-                inputErrors = 'Por favor, preencha todos os campos com * antes de prosseguir.';
-              },
-              onValid: function(){
-                inputErrors = false;
-              }
-            };
-
         $checkoutButton = $('#onepage_checkoutform').find('button[type=submit]');
         var oldcontent = $checkoutButton.html();
 
-        $('#onepage_checkoutform').submit(function(e){
+        $('#payment_tabs a.payment-method-nav').each(function(){
+            var $this = $(this);
+            $this.on('click', function (e){
+                e.preventDefault();
+                $this.tab('show');
+                id = $('#payment_tabs div.payment-method.active').attr('id');
+                module = id.split('-')[1];
+                setTimeout(function(){
+                    $('input[name="module"]').val(module);
+                }, 300);
+                that.setPaymentDiscount(module);
+                //Pay-block
+                block = $(this).data('payblock');
+                if (block != '' && typeof block != 'undefined') {
+                    $checkoutButton.addClass('disabled');
+                } else {
+                    $checkoutButton.removeClass('disabled');
+                }
+            });
+
+            // Force update cart if this method has discount, for example
+            if($this.parent().hasClass('active')){
+                $this.trigger('click');
+            }
+        });
+
+        $('#onepage_checkoutform').submit($.proxy(function(e){
             $checkoutButton.blur();
-            $checkoutButton.addClass('disabled');
-            $checkoutButton.html('Carregando...');
 
-            //$('#onepage_checkoutform').tinyValidation(validationOptions);
+            that = this;
             inputErrors = false;
-            checkoutCallbacks.fire('checkout');
+            $.each(this.options.validate, function(key, value){
+                if(inputErrors === false){
+                    var el = $('#onepage_checkoutform');
+                    if (el.find('[name=' + value + ']').attr('type') === 'radio' && el.find('[name=' + value + ']:checked').length === 0) {
+                        inputErrors = lang['radio_not_selected'] + '"' + lang[value] + '"!';
+                    }else if(el.find('[name=' + value + ']').val() === '') {
+                        inputErrors = lang['field_not_filled'] + '"' + lang[value] + '"!';
+                    }
+                }
+            });
 
-            if (inputErrors !== false && checkoutErrors === false) {
-                checkoutErrors = inputErrors;
+            if (inputErrors !== false) {
+                e.preventDefault();
+                alert(inputErrors);
+                return false;
             }
 
+            $checkoutButton.addClass('disabled');
+            $checkoutButton.html(lang['loading']);
+
+            checkoutCallbacks.fire('checkout');
+
             if (checkoutErrors === false) {
-                
+
                 if (checkoutNoSubmit === false) {
                     return true;
                 }else{
@@ -140,36 +171,54 @@ if (typeof(checkoutNoSubmit) == 'undefined') {
                 alert(checkoutErrors);
                 return false;
             }
-        });
+        }, this));
     };
 
     Checkout.prototype = {
         constructor: Checkout,
+        setPaymentDiscount: function(module){
+            $.post(site_url.base + 'checkout/set_payment_method/'+this.options.checkout_path, {module: module}, $.proxy(this.updateSummary, this), 'json');
+        },
         money: function(money) {
             money = parseFloat(money);
             money = money.toFixed(2).replace('.', ',');
             return this.options.currency_symbol + ' ' + money;
         },
+        syncInputs: function() {
+            if (this.$nameInputs.length === 2 && this.$fullnameInputs.length > 0) {
+                var fullname = $(this.$nameInputs[0]).val();
+                fullname = fullname + ' ' + $(this.$nameInputs[1]).val();
+                this.$fullnameInputs.val(fullname);
+            }
+        },
         countryChange: function() {
             this.country = this.$countrySelect.val();
             this.toggleBrazilSpecificFields();
+            this.searchAddress();
 
-            $('select[name=zone_id]').html('<option>Carregando</option>');
+            $('select[name=zone_id]').html('<option>'+ lang['loading'] +'</option>');
             $.post(site_url.base + 'locations/get_zone_menu', {id: this.country}, function(data) {
                 $('select[name=zone_id]').html(data);
             });
         },
         toggleBrazilSpecificFields: function() {
-            if (this.country != 30) {
+            if (this.country != 30 && this.language != 'portugues') {
+                // Remove cpf validation
+                var iov = this.options.validate.indexOf('cpf');
+                if (iov > -1) {
+                    this.options.validate.splice(iov, 1);
+                }
+
                 $('.brasil-only').addClass('hide');
                 $('.other-countries').removeClass('hide');
                 $('#phone').unmask();
             }else{
+                this.options.validate.push('cpf');
+
                 $('.brasil-only').removeClass('hide');
                 $('.other-countries').addClass('hide');
                 $('#phone').mask_brazilian_phone();
             }
-            this.searchAddress();
         },
         openLogin: function(e) {
             e.preventDefault();
@@ -198,7 +247,7 @@ if (typeof(checkoutNoSubmit) == 'undefined') {
                 {
                     zone_id = value;
                     $('#zone_id').val(zone_id);
-                    
+
                 }
             });
 
@@ -212,27 +261,29 @@ if (typeof(checkoutNoSubmit) == 'undefined') {
                 $('#phone').unmask();
             }
             $('#zip_code').mask("99999-999");
-            $('#zip_code_val').mask("99999-999");
             $('#a_cnpj').mask('99.999.999/9999-99');
             $('#a_cpf').mask('999.999.999-99');
             $('#a_birthday').mask('99/99/9999');
         },
+        updateSummary: function(data) {
+            $('.shipping_cost').html('<span class="total">'+ lang['summary_total'] +': '+this.money(data.total)+'</span>');
+            if ($('#checkout_summary').length > 0) {
+                $('#checkout_summary').html(data.summary);
+            }
+            if (data.shipping_cost > 0) {
+                $('.shipping_cost').append(' <span class="shipping">('+this.money(data.subtotal)+' + '+ lang['summary_shipping'] +': '+this.money(data.shipping_cost)+')</span>');
+            }
+            checkoutCart = data;
+            this.updateCartCallback(data);
+        },
         updateCart: function(method, e) {
-            var that = this;
-            $.post(site_url.base + 'checkout/set_shipping_method', {shipping_method: method, zip: $('#zip_code').val()}, function(data){
-                $('.shipping_cost').html('<span class="total">Total: '+that.money(data.total)+'</span>');
-                if (data.shipping_cost > 0) {
-                    $('.shipping_cost').append(' <span class="shipping">('+that.money(data.subtotal)+' + Frete: '+that.money(data.shipping_cost)+')</span>');
-                }
-                checkoutCart = data;
-                that.updateCartCallback(data);
-            }, 'json');
+            $.post(site_url.base + 'checkout/set_shipping_method/'+this.options.checkout_path, {shipping_method: method, zip: $('#zip_code').val()}, $.proxy(this.updateSummary, this), 'json');
         },
         updateCartCallback: function(data) {
             var that = this;
             $updateTriggers = $('[data-update=cart]');
             $updateTriggers.each(function(){
-                eval($(this).data('calc') + '({installments: '+that.options.installments+', total: '+data.total+'});');
+                eval($(this).data('calc') + '({installments: '+that.options.installments+', shipping_cost: '+data.shipping_cost+', subtotal: '+data.subtotal+', discount: '+data.discount+', total: '+data.total+'});');
             });
         },
         setShipping: function(e) {
@@ -242,6 +293,28 @@ if (typeof(checkoutNoSubmit) == 'undefined') {
             {
                 $check.attr('checked', true);
                 this.updateCart($check.val());
+                this.payBlock();
+            }
+        },
+        payBlock: function(){
+            var s_checked = $('#shipping_table input[name="shipping_method"]:checked');
+            var module = s_checked.data('paymodule');
+            if (s_checked.length == 0 || module == '') {
+                $('.payment-method').css('height', 'auto');
+                $('.tab-pane .pay-block-mask').remove();
+                $('.payment-method-nav').css('color', '#000');
+                $('.cart-actions button').removeClass('disabled');
+                $('.payment-method-nav').attr('data-payblock', '');
+            } else {
+                $('.payment-method-nav').css('color', '#ccc');
+                $('.payment-method-nav').attr('data-payblock', 'true');
+                $('.payment-method').css('height', '100px');
+                $('.tab-pane').append('<div class="pay-block-mask" style="background: #efefef; height: 100px; position: absolute; top: 0px; width: 100%;"><p style="color: #888; font-weight: bold; padding: 40px 0; text-align: center;">Meio de pagamento indisponível para esta forma de envio.</p></div>');
+                $('.payment-method-nav[href="#payment-'+module+'"]').css('color', '#000');
+                $('.payment-method-nav[href="#payment-'+module+'"]').attr('data-payblock', '');
+                $('.payment-method-nav[href="#payment-'+module+'"]').trigger('click');
+                $('#payment-'+module+' .pay-block-mask').remove();
+                $('#payment-'+module).css('height', 'auto');
             }
         },
         doSearchAddress: function(e) {
@@ -249,25 +322,26 @@ if (typeof(checkoutNoSubmit) == 'undefined') {
             this.searchAddress(true, true);
         },
         searchAddress: function(focus, update_address, event) {
-            var that = this;
-            if (this.country == 30) {
-                var value = this.$zip.val();
+            var that = this,
+                address = {country: this.country, zip: this.$zip.val(), zip_code: this.$zip.val()};
 
-                $('input[name=zip]').val(value);
-    
-                if (value.length==9 && value.indexOf('_') == -1) {
+            if (address.country == 30) {
+                $('input[name=zip]').val(address.zip_code);
+
+                if (address.zip_code.length==9 && address.zip_code.indexOf('_') == -1) {
                     $('#shipping_table').html('<tr><td><div class="loading"><i class="icon-refresh"></i> Calculando o frete</div></td></tr>');
-                    var zip = value.replace("-", "");
-    
+                    address.zip_code = address.zip_code.replace("-", "");
+
+                    var last_btn_address_text = $('.btn-search-address').text();
                     $('.btn-search-address').addClass('disabled');
                     $('.btn-search-address').text('Buscando...');
-    
-                    $.getJSON(site_url.base + 'shipping/busca_cep',{zip: zip}, function(data) {
+
+                    $.getJSON(site_url.base + 'shipping/busca_cep', {zip: address.zip_code}, function(data) {
                         $('.btn-search-address').removeClass('disabled');
-                        $('.btn-search-address').text('Buscar endereço');
-    
+                        $('.btn-search-address').text(last_btn_address_text);
+
                         if(data["resultado"] == "1" && update_address){
-    
+
                             $("input[name=district]").val(unescape(data["bairro"]));
                             $("input[name=city]").val(unescape(data["cidade"]));
                             $("select[name=zone_id]").val(unescape( that.options.zonesMap[data["uf"]] ));
@@ -276,7 +350,10 @@ if (typeof(checkoutNoSubmit) == 'undefined') {
                                 $("input[name=anumber]").focus();
                             }
                         }
-                        $.post(site_url.base + 'shipping/get_frete', {zip: zip, data: data}, function(fdata) {
+
+                        data["country"] = address.country;
+
+                        $.post(site_url.base + 'shipping/get_frete', {zip: address.zip_code, address: data}, function(fdata) {
                             $('#shipping_table').html(fdata);
                             if ($('#shipping_table input').length == 1) {
                                 $('#shipping_table input').prop('checked', true);
@@ -284,19 +361,23 @@ if (typeof(checkoutNoSubmit) == 'undefined') {
                             if ($('#shipping_table input:checked').length > 0) {
                                 that.updateCart($('#shipping_table input:checked').val());
                             }
+                            that.payBlock();
                         });
                     });
                 }
             }else{
-                $.post(site_url.base + 'shipping/get_frete', {country: this.country}, function(fdata) {
-                    $('#shipping_table').html(fdata);
-                    if ($('#shipping_table input').length == 1) {
-                        $('#shipping_table input').prop('checked', true);
-                    }
-                    if ($('#shipping_table input:checked').length > 0) {
-                        that.updateCart($('#shipping_table input:checked').val());
-                    }
-                });
+                if (address.zip.length > 0) {
+                    $.post(site_url.base + 'shipping/get_frete', {zip: address.zip, address: address}, function(fdata) {
+                        console.log(fdata);
+                        $('#shipping_table').html(fdata);
+                        if ($('#shipping_table input').length == 1) {
+                            $('#shipping_table input').prop('checked', true);
+                        }
+                        if ($('#shipping_table input:checked').length > 0) {
+                            that.updateCart($('#shipping_table input:checked').val());
+                        }
+                    });
+                }
             }
         },
         checkEmail: function() {
@@ -336,9 +417,9 @@ $.fn.delayKeyup = function(callback, ms){
 };
 
 function populate_address(id) {
-    
+
 }
 
 function toggle_shipping(key){
-    
+
 }

@@ -45,6 +45,7 @@
 					</div>
 				</div>
 			</div>
+
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<h3 class="panel-title">
@@ -53,6 +54,33 @@
 					</h3>
 				</div>
 				<div class="panel-body">
+
+					{% if shop_config('company_fields') %}
+						<button class="btn btn-default" id="company_fields_btn" type="button">
+							{{ lang('account_iam') }} {{ lang('account_am_company') }}
+						</button>
+						<button class="btn btn-default" id="person_fields_btn" type="button" style="display: none;">
+							{{ lang('account_iam') }} {{ lang('account_am_person') }}
+						</button>
+						<hr>
+					{% endif %}
+
+					<div class="form-group is_company" style="display: none;">
+						<label for="cnpj" class="col-md-3 control-label ">
+							{{ lang('account_cnpj') }}
+						</label>
+						<div class="col-md-5">
+							{{ form_input({'name': 'cnpj', 'placeholder': '00.000.000/0000-00', 'class': 'form-control', 'value': set_value('cnpj')}) }}
+						</div>
+					</div>
+					<div class="form-group is_company"  style="display: none;">
+						<label for="company" class="col-md-3 control-label">
+							{{ lang('account_company') }}
+						</label>
+						<div class="col-md-5">
+							{{ form_input({'name': 'company', 'placeholder': lang('account_company'), 'class': 'form-control', 'value': set_value('company')}) }}
+						</div>
+					</div>
 					<div class="form-group">
 						<label for="name" class="col-md-3 control-label">
 							{{ lang('account_firstname') }}
@@ -65,7 +93,6 @@
 					<div class="form-group">
 						<label for="name" class="col-md-3 control-label">
 							{{ lang('account_lastname') }}
-							<sup>*</sup>
 						</label>
 						<div class="col-md-5">
 							{{ form_input({'name': 'lastname', 'placeholder': lang('account_lastname'), 'class': 'form-control', 'value': set_value('lastname')}) }}
@@ -83,7 +110,6 @@
 					<div class="form-group">
 						<label for="cpf" class="col-md-3 control-label">
 							{{ lang('account_cpf') }}
-							<sup>*</sup>
 						</label>
 						<div class="col-md-5">
 							{{ form_input({'name': 'cpf', 'placeholder': '000.000.000-00', 'class': 'form-control', 'value': set_value('cpf')}) }}
@@ -135,8 +161,33 @@
 			$(document).ready(function(){
 				$('input[name=phone]').mask_brazilian_phone();
 				$('input[name=cpf]').mask('999.999.999-99');
+				$('input[name=cnpj]').mask('99.999.999/9999-99');
 				$('input[name=birthday]').mask('99/99/9999');
+
+				if ($('input[name=cnpj]').val().length > 0) {
+					show_company();		
+				}
+
+				$('#company_fields_btn').click(function(){
+					show_company();
+				});
+
+				$('#person_fields_btn').click(function(){
+					$('.is_company').hide();
+					$('#person_fields_btn').hide();
+					$('#company_fields_btn').show();
+				});
 			});
+
+			var show_company = function() {
+				$('.is_company').show();
+
+				$('input[name=cnpj]').val('');
+				$('input[name=company]').val('');
+
+				$('#company_fields_btn').hide();
+				$('#person_fields_btn').show();
+			}
 		//-->
 		</script>
 	</div>

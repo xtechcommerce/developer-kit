@@ -85,8 +85,7 @@ var ProductVariants = {};
         },
         init_button_select: function () {
             this.$container.find('.prod-variant-li:first-child').find('.prod-variant-btn').each($.proxy(function(i, e){
-
-                self = $(e);
+                var self = $(e);
                 if(typeof this.options.variant_map_keyed[self.data('id').toString()] != 'undefined'){
                     self.removeClass(this.options.disableClass);
                 }else{
@@ -101,10 +100,10 @@ var ProductVariants = {};
         optionButtonClick: function(e) {
             e.preventDefault();
 
-            self = $(e.target);
+            var self = $(e.target);
 
             if (!self.hasClass('prod-variant-btn')) {
-                self = self.closest('.prod-variant-btn');
+                var self = self.closest('.prod-variant-btn');
             }
             
             self.addClass('active').parent().siblings().find('.prod-variant-btn').removeClass('active');
@@ -114,7 +113,7 @@ var ProductVariants = {};
                 var options_available = this.options.variant_map_keyed[self.data('id')];
                 this.$container.find('.prod-variant-btn').each($.proxy(function(i, e){
     
-                    self = $(e);
+                    var self = $(e);
                     if(self.closest('.prod-variant-li').is(':first-child') == false){
                         if($.inArray(self.data('id').toString(), options_available) > -1){
                             self.removeClass(this.options.disableClass);
@@ -130,8 +129,11 @@ var ProductVariants = {};
             this.toggle_variant_form();
         },
         toggle_variant_form: function () {
-            var selected = new Array(); var qty_sel = 0;
-            var qty = this.$wrapper.find('.product_option').length;
+            var selected = new Array();
+                qty_sel = 0;
+                qty = this.$wrapper.find('.product_option').length;
+                options_available = new Array();
+
             this.$wrapper.find('.product_option option:selected').each(function(){
                 selected.push($(this).val());
                 if ($(this).val().length > 0) {
@@ -139,18 +141,71 @@ var ProductVariants = {};
                 }
             });
 
+            if (qty_sel > 0) {
+                $('.product_option').slice(1).find('option').not('option[value=""]').addClass('unavailable');
+                var options_available = this.options.variant_map_keyed[selected[0]];
+
+                if (typeof options_available != 'undefined') {
+                    $.each(options_available, function(key, option_id){
+                        $('.product_option option[value=' + option_id + ']').removeClass('unavailable');
+                    });
+                }
+            }else{
+                $('.product_option option').removeClass('unavailable');
+            }
+
+            var total_price_sum = 0.0;
             var selected_key = selected.sort(function(a, b){ return a-b; }).join('_');
 
             if(this.options.variant_map[selected_key]) {
                 this.selected_variant = this.options.variant_map[selected_key];
-                
+                var variant_id = this.options.container.substr(10,this.options.container.length - 1);
                 var variant_price = parseFloat(this.options.variant_map[selected_key].price_num);
-                if ($('.variant_price').length > 0) {
+                
+                if ($('.variant_price').length > 1) {
+                    $('.variant_price').each(function(){
+                        if($(this).data('variant') == variant_id){
+                            if (variant_price > 0) { 
+                                $(this).text('R$ '+variant_price.toFixed(2).replace('.', ','));
+                                $(this).show();
+                                $(this).parent().find('.product_price').hide();        
+                            }else{
+                                $(this).hide();
+                                $(this).parent().find('.product_price').show();
+                            }
+                        }
+                        var unit_price = parseFloat($(this).text().replace('R$','').replace(',','.'));
+                        total_price_sum += unit_price;
+                    });
+                    
+                    var dc = $('.buy-price').data('dc');
+                    var dc_amount = dc.substr(0, dc.indexOf('-'));
+                    var dc_type = dc.substr(dc.indexOf('-') + 1);
+                    
+                    if(dc_type == 'percent'){
+                        var discount = ((total_price_sum * dc_amount)/100);
+                        var total_price_dc = total_price_sum - discount;
+                    } else {
+                        var total_price_dc = total_price_sum - dc_amount;
+                        if (total_price_dc < 0) total_price_dc = 0;
+                    }
+                    
+                    $('.onsale').text('R$ '+total_price_dc.toFixed(2).replace('.',','));
+                    
+                    var economy = parseFloat(dc_amount);
+                    if(dc_type == 'percent') economy = discount;
+
+                    $('.buy-price p').text('Economize R$ '+economy.toFixed(2).replace('.',','));
+                    if($('.buy-price del').length > 0){
+                        $('.buy-price del').text('R$ '+total_price_sum.toFixed(2).replace('.',','))
+                    }
+                    
+                }else if($('.variant_price').length > 0){
                     if (variant_price > 0) {
                         $('.variant_price').text(this.options.variant_map[selected_key].price);
                         $('.variant_price').show();
                         $('.product_price').hide();
-                    } else {
+                    }else{
                         $('.variant_price').hide();
                         $('.product_price').show();
                     }
@@ -158,10 +213,11 @@ var ProductVariants = {};
                         $('.installment-price').text(this.options.currency_symbol + ' ' + (parseFloat(this.selected_variant.price_num) / this.options.installments).toFixed(2).replace('.', ','));
                     }
                 }
+
                 if (parseInt(this.options.variant_map[selected_key].quantity) > 0 || this.options.allow_os_purchase) {
                     this.validation_success(selected_key);
                     this.options.validationSuccess.call(this);
-                } else {
+                }else{
                     this.validation_fail('Outofstock', this.local_lang.out_of_stock, this.local_lang.out_of_stock_long, selected_key);
                     this.options.validationOutofstock.call(this);
                 }

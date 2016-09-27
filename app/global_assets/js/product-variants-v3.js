@@ -130,14 +130,30 @@ var ProductVariants = {};
             this.toggle_variant_form();
         },
         toggle_variant_form: function () {
-            var selected = new Array(); var qty_sel = 0;
-            var qty = this.$wrapper.find('.product_option').length;
+            var selected = new Array();
+                qty_sel = 0;
+                qty = this.$wrapper.find('.product_option').length;
+                options_available = new Array();
+
             this.$wrapper.find('.product_option option:selected').each(function(){
                 selected.push($(this).val());
                 if ($(this).val().length > 0) {
                     qty_sel++;
                 }
             });
+
+            if (qty_sel > 0) {
+                $('.product_option').slice(1).find('option').not('option[value=""]').addClass('unavailable');
+                var options_available = this.options.variant_map_keyed[selected[0]];
+
+                if (typeof options_available != 'undefined') {
+                    $.each(options_available, function(key, option_id){
+                        $('.product_option option[value=' + option_id + ']').removeClass('unavailable');
+                    });
+                }
+            }else{
+                $('.product_option option').removeClass('unavailable');
+            }
 
             var selected_key = selected.sort(function(a, b){ return a-b; }).join('_');
 
@@ -150,7 +166,7 @@ var ProductVariants = {};
                         $('.variant_price').text(this.options.variant_map[selected_key].price);
                         $('.variant_price').show();
                         $('.product_price').hide();
-                    } else {
+                    }else{
                         $('.variant_price').hide();
                         $('.product_price').show();
                     }
@@ -161,7 +177,7 @@ var ProductVariants = {};
                 if (parseInt(this.options.variant_map[selected_key].quantity) > 0 || this.options.allow_os_purchase) {
                     this.validation_success(selected_key);
                     this.options.validationSuccess.call(this);
-                } else {
+                }else{
                     this.validation_fail('Outofstock', this.local_lang.out_of_stock, this.local_lang.out_of_stock_long, selected_key);
                     this.options.validationOutofstock.call(this);
                 }

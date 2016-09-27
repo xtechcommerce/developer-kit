@@ -1,457 +1,501 @@
 <div class="myaccount row">
-	{% if validation_errors() %}
-		<div class="col-md-12">
-			<div class="alert alert-danger">
-				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-				{{ validation_errors() }}
-			</div>
-		</div>
-	{% endif %}
-	<div class="col-md-3 tabbable">
-		<ul id="mytabs" class="nav nav-pills nav-stacked">
-			<li class="active">
-				<a href="#dashboard" data-toggle="tab">
-					<i class="glyphicon glyphicon-home"></i>
-					{{ lang('dashboard') }}
-				</a>
-			</li>
-			<li>
-				<a href="#myaccount" data-toggle="tab">
-					<i class="glyphicon glyphicon-user"></i>
-					{{ lang('personal_info') }}
-				</a>
-			</li>
-			<li>
-				<a href="#addresses" data-toggle="tab">
-					<i class="glyphicon glyphicon-map-marker"></i>
-					{{ lang('addresses') }}
-				</a>
-			</li>
-			<li>
-				<a href="#myorders" data-toggle="tab">
-					<i class="glyphicon glyphicon-shopping-cart"></i>
-					{{ lang('order_history') }}
-				</a>
-			</li>
-			<li>
-				<a href="#mytestimonials" data-toggle="tab">
-					<i class="glyphicon glyphicon-thumbs-up"></i>
-					{{ lang('my_testimonials') }}
-				</a>
-			</li>
-			<li>
-				<a href="#mywishlist" data-toggle="tab">
-					<i class="glyphicon glyphicon-heart"></i>
-					{{ lang('my_wishlist') }}
-				</a>
-			</li>
-		</ul>
-	</div>
-	<div class="col-md-9">
-		<div class="tab-content">
-			<div class="tab-pane active" id="dashboard">
-				<h1 class="page-title">{{ lang('dashboard') }}</h1>
-				<p>
-					{{ lang('dashboard_help') }}
-				</p>
-				<hr />
-				<div class="row">
-					<div class="col-sm-6">
-						<h4>
-							<a href="#" id="edit_account" class="btn pull-right">
-								{{ lang('form_edit') }}
-							</a>
-							{{ lang('account_information') }}
-						</h4>
-						<div class="panel panel-default">
-							<div class="panel-body">
-								{% if customer.cnpj %}
-									{{ customer.company }}<br />
-									{% else %}
-									{{ customer.firstname }}
-									{{ customer.lastname }}<br />
-								{% endif %}
-								{{ customer.email }}<br />
-								{{ customer.phone }}
-							</div>
-						</div>
-					</div>
-					<div class="col-sm-6">
-						<h4>
-							<span class="btn-group pull-right">
-								<a href="#" id="list_all" class="btn">
-									{{ lang('list_all') }}
-								</a>
-							</span>
-							{{ lang('default_address') }}
-						</h4>
-						<div class="panel panel-default">
-							<div class="panel-body">
-								{% if default_address %}
-									{{ default_address.field_data|format_address_nl2br }}
-									{% else %}
-									{{ lang('no_addresses') }}
-								{% endif %}
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="tab-pane" id="myaccount">
-				<h1 class="page-title">{{ lang('personal_info') }}</h1>
-				{{ form_open('secure/my_account', 'class="form-horizontal"') }}
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h3 class="panel-title">
-							<i class="glyphicon glyphicon-asterisk"></i>
-							{{ lang('account_data') }}
-						</h3>
-					</div>
-					<div class="panel-body">
-						<p>{{ lang('account_password_instructions') }}</p>
-						<div class="form-group">
-							<label for="email" class="col-sm-3 control-label">
-								{{ lang('account_email') }}
-								<sup>*</sup>
-							</label>
-							<div class="col-sm-5">
-								{{ form_input({'name': 'email', 'placeholder': lang('account_email'), 'class': 'form-control', 'value': set_value('email', customer.email), 'autocomplete': 'off'}) }}
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="password" class="col-sm-3 control-label">
-								{{ lang('account_password') }}
-							</label>
-							<div class="col-sm-5">
-								{{ form_input({'name': 'password', 'type': 'password', 'placeholder': lang('account_password'), 'class': 'form-control', 'value': '', 'autocomplete': 'off'}) }}
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="confirm" class="col-sm-3 control-label">
-								{{ lang('account_confirm') }}
-							</label>
-							<div class="col-sm-5">
-								{{ form_input({'name': 'confirm', 'type': 'password', 'placeholder': lang('account_confirm'), 'class': 'form-control', 'value': '', 'autocomplete': 'off'}) }}
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h3 class="panel-title">
-							<i class="glyphicon glyphicon-bookmark"></i>
-							{{ lang('personal_info') }}
-						</h3>
-					</div>
-					<div class="panel-body">
-						{% if customer.cnpj %}
-							<div class="form-group">
-								<label for="cnpj" class="col-sm-3 control-label">
-									{{ lang('account_cnpj') }}
-								</label>
-								<div class="col-sm-5">
-									{{ form_input({'name': 'cnpj', 'placeholder': lang('account_cnpj'), 'class': 'form-control', 'value': set_value('cnpj', customer.cnpj)}) }}
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="company" class="col-sm-3 control-label">
-									{{ lang('account_company') }}
-								</label>
-								<div class="col-sm-5">
-									{{ form_input({'name': 'company', 'placeholder': lang('account_company'), 'class': 'form-control', 'value': set_value('company', customer.company)}) }}
-								</div>
-							</div>
-						{% endif %}
+    <div class="col-xs-3 sidebar">
+        <div class="side-header">
+            <i class="glyphicon glyphicon-star"></i> {{ lang('page_title_my_account') }}
+        </div>
+        <ul id="mytabs">
+            <li class="active"><a href="#dashboard" data-toggle="tab">{{ lang('dashboard') }}</a></li>
 
-						<div class="form-group">
-							<label for="firstname" class="col-sm-3 control-label">
-								{{ lang('account_firstname') }}
-								<sup>*</sup>
-							</label>
-							<div class="col-sm-5">
-								{{ form_input({'name': 'firstname', 'placeholder': lang('account_firstname'), 'class': 'form-control', 'value': set_value('firstname', customer.firstname)}) }}
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="lastname" class="col-sm-3 control-label">
-								{{ lang('account_lastname') }}
-							</label>
-							<div class="col-sm-5">
-								{{ form_input({'name': 'lastname', 'placeholder': lang('account_lastname'), 'class': 'form-control', 'value': set_value('lastname', customer.lastname)}) }}
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="cpf" class="col-sm-3 control-label">
-								{{ lang('account_cpf') }}
-								<sup>*</sup>
-							</label>
-							<div class="col-sm-5">
-								{{ form_input({'name': 'cpf', 'placeholder': lang('account_cpf'), 'class': 'form-control', 'value': set_value('cpf', customer.cpf)}) }}
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="sex" class="col-sm-3 control-label">
-								{{ lang('account_sex') }}
-							</label>
-							<div class="col-sm-5">
-								{{ form_dropdown('sex', {0: lang('account_sex_m'), 1: lang('account_sex_w')}, set_value('sex', customer.sex), 'class="form-control"') }}
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="birthday" class="col-sm-3 control-label">
-								{{ lang('account_birthday') }}
-							</label>
-							<div class="col-sm-5">
-								{{ form_input({'name': 'birthday', 'placeholder': lang('account_birthday'), 'class': 'form-control', 'value': set_value('birthday', customer.birthday|to_formated_date)}) }}
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="telephone" class="col-sm-3 control-label">
-								{{ lang('account_phone') }}
-								<sup>*</sup>
-							</label>
-							<div class="col-sm-5">
-								{{ form_input({'name': 'phone', 'placeholder': lang('account_phone'), 'class': 'form-control', 'value': set_value('phone', customer.phone)}) }}
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<div class="pull-left">
-							<label>
-								<input type="checkbox" name="email_subscribe" value="1" {{ set_radio('email_subscribe', '1', true) }} />
-								{{ lang('want_to_receive_newsletter') }}
-							</label>
-							<br />
-							<small>({{ lang('want_to_receive_newsletter_hint') }})</small>
-						</div>
-						<div class="pull-right">
-							* {{ lang('required_fields') }}
-						</div>
-						<div class="clearfix"></div>
-					</div>
-				</div>
-				<div class="pull-right">
-					<input type="submit" value="{{ lang('form_update') }}" class="btn btn-primary btn-bck" />
-				</div>
-			</form>
-		</div>
-		<div class="tab-pane" id="addresses">
-			<div class="row">
-				<h1 class="col-sm-9 page-title">{{ lang('your_addresses') }}</h1>
-				<div class="col-sm-3 margin-top">
-					<input type="button" class="btn btn-link edit_address pull-right" rel="0" value="{{ lang('add_address') }}" />
-				</div>
-			</div>
-			{% if addresses|count > 0 %}
-				<table class="table table-striped">
-					{% for address in addresses %}
-						<tr id="address_{{ address.id }}">
-							<td>
-								{{ address.field_data|format_address_nl2br }}
-							</td>
-							<td>
-								<div class="row">
-									<div class="col-lg-12">
-										<div class="btn-group pull-right">
-											<input type="button" class="btn btn-default edit_address" rel="{{ address.id }}" value="{{ lang('form_edit') }}" />
-											<input type="button" class="btn btn-danger delete_address" rel="{{ address.id }}" value="{{ lang('form_delete') }}" />
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-lg-12">
-										<div class="pull-right" style="padding-top: 10px;">
-											<input type="radio" name="ship_chk" onclick="set_default({{ address.id }},'ship')" {{ default_address.id == address.id ? 'checked="checked"' : '' }}/>
-											{{ lang('default_shipping') }}
-										</div>
-									</div>
-								</div>
-							</td>
-						</tr>
-					{% endfor %}
-				</table>
-				{% else %}
-				{{ lang('no_addresses') }}
-			{% endif %}
-		</div>
-		<div class="tab-pane" id="myorders">
-			<h1 class="page-title">{{ lang('order_history') }}</h1>
-			{% if orders|count > 0 %}
-				<table class="table table-striped">
-					<thead>
-						<tr>
-							<th>{{ lang('order_date') }}</th>
-							<th>{{ lang('order_number') }}</th>
-							<th>{{ lang('order_status') }}</th>
-							<th>{{ lang('duplicate_order_title') }}</th>
-						</tr>
-					</thead>
-					<tbody>
-						{% for order in orders %}
-							<tr>
-								<td>
-									{{ order.ordered_on|to_formated_date('date_format_long') }}
-								</td>
-								<td>
-									<a href="{{ site_url('secure/order/' ~ order.order_number) }}">
-										{{ order.order_number }}
-									</a>
-								</td>
-								<td>
-									<span class="label {{ order.status|get_status_label }}">{{ order.status|translate_order_status }}</span>
-								</td>
-								<td>
-									<a href="{{ site_url('secure/duplicate_cart/' ~ order.order_number) }}" class="btn btn-sm btn-success">
-										{{ lang('duplicate_order') }}
-									</a>
-								</td>
-							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
-				{% else %}
-				{{ lang('no_order_history') }}
-			{% endif %}
-		</div>
-		<div class="tab-pane" id="mytestimonials">
-			<h1 class="page-title">{{ lang('my_testimonials') }}</h1>
-			{% for product in purchased_products %}
-				{{ form_open('testimonials/create', {'class': 'testimonial-form'}) }}
-				<div class="row rating-product">
-					<div class="col-md-3">
-						{{ product_img(product, 'thumbnails', {'class': 'thumbnail'}) }}
-					</div>
-					<div class="col-md-9">
-						<div class="form-group">
-							<label>{{ lang('how_much_stars_for', {'name': product.name}) }}</label>
-							<ul class="rating-list list-unstyled">
-								<li class="clearfix">
-									<div class="pull-left rating-stars" data-name="rating_look"></div>
-									{{ lang('rating_look') }}
-								</li>
-								<li class="clearfix">
-									<div class="pull-left rating-stars" data-name="rating_usability"></div>
-									{{ lang('rating_usability') }}
-								</li>
-								<li class="clearfix">
-									<div class="pull-left rating-stars" data-name="rating_support"></div>
-									{{ lang('rating_support') }}
-								</li>
-							</ul>
-						</div>
-						<label for="message">{{ lang('testimonial_message') }}</label>
-						{{ form_textarea({'name': 'message', 'class': 'form-control', 'rows': '5'}) }}
-						<p class="help-block">{{ lang('testimonial_message_help') }}</p>
+            <li><a href="#myaccount" data-toggle="tab">{{ lang('personal_info') }}</a></li>
 
-						{{ form_hidden('sender_email', customer.email)  }}
-						{{ form_hidden('customer_id', customer.id)  }}
-						{{ form_hidden('referrer', site_url('secure/my_account?tab=mytestimonials'))  }}
-						{{ form_hidden('subject', 'Depoimento')  }}
-						{{ form_hidden('sender_name',  customer.firstname) }}
-						{{ form_hidden('product_id',  product.id) }}
+            <li><a href="#addresses" data-toggle="tab">{{ lang('addresses') }}</a></li>
 
-						<input type="submit" name="submit" value="{{ lang('form_submit') }}" class="btn btn-primary" />
-					</div>
-				</div>
-				<hr>
-				{{ form_close() }}
-				{% else %}
-				{{ lang('no_new_products_for_testimonial') }}
-			{% endfor %}
+            <li><a href="#myorders" data-toggle="tab">{{ lang('order_history') }}</a></li>
 
-			<script type="text/javascript" src="{{ global_js('jquery.raty.js') }}"></script>
-			<script type="text/javascript">
-				$(document).ready(function(){
-					$('.rating-stars').each(function(){
-						var name = $(this).data('name');
-						$(this).raty({path: '/assets/img', scoreName: name});
-					});
-					$('.testimonial-form').submit(function(e){
-						if ($('textarea[name=message]').val() != '' && $('input[name=rating_look]').val()>0 && $('input[name=rating_usability]').val()>0 && $('input[name=rating_support]').val()>0) {
-							return true;
-						}else{
-							e.preventDefault();
-							alert('{{ lang('required_fields_testimonial') }}');
-							return false;
-						};
-					});
-				});
-			</script>
-		</div>
-		<div class="tab-pane" id="mywishlist">
-			<h1 class="page-title">{{ lang('my_wishlist') }}</h1>
-			{% for product in wishes %}
-				<div class="row rating-product">
-					<div class="col-md-3">
-						{{ product_img(product, 'thumbnails', {'class': 'thumbnail'}) }}
-					</div>
-					<div class="col-md-9">
-						<h4>{{ product.name }}</h4>
-						<strong class="buy-price">
-							{{ (product.saleprice > 0 ? '<del class="slash">' ~ product.price|format_currency ~ '</del>' : '')|raw }}
-							<span class="sale">{{ (product.saleprice > 0 ? product.saleprice : product.price)|format_currency }}</span>
-						</strong>
-						<p class="buy-fields">
-							{{ form_open('cart/add_to_cart', '', {'cartkey': cart('cartkey'), 'id': product.id, 'variant_id': product.variant_id}) }}
-							<button class="btn btn-primary buy-btn" type="submit" value="submit"><i class="glyphicon glyphicon-shopping-cart"></i> {{ lang('buy_wish_now') }}</button> {{ lang('form_or') }} <a href="{{ site_url('secure/removewish/' ~ product.id ~ '/' ~ product.variant_id) }}">{{ lang('form_delete') }}</a>
-							{{ form_close() }}
-						</p>
-					</div>
-				</div>
-				<hr>
-				{% else %}
-				{{ lang('no_wishes_yet') }}
-			{% endfor %}
-		</div>
-	</div>
+            <li><a href="#mytestimonials" data-toggle="tab">{{ lang('my_testimonials') }}</a></li>
+
+            <li><a href="#mywishlist" data-toggle="tab">{{ lang('my_wishlist') }}</a></li>
+        </ul>
+    </div>
+    <div class="col-xs-9 main">
+        {% if validation_errors() %}
+        <div class="col-xs-12">
+            <div class="alert alert-danger">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                {{ validation_errors() }}
+            </div>
+        </div>
+        {% endif %}
+        <div class="tab-content">
+            <div class="tab-pane active" id="dashboard">
+                <h2 class="category-header">{{ lang('dashboard') }}</h2>
+                <p>{{ lang('dashboard_help') }}</p>
+
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="inbox">
+                            <h4>
+                                {{ lang('account_information') }}
+                                <span class="pull-right">
+                                    <a href="#" id="edit_account" class="btn_link">
+                                        {{ lang('form_edit') }}
+                                    </a>
+                                </span>
+                            </h4>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <ul>
+                                    {% if customer.cnpj %}
+                                        {{ customer.company }}<br />
+                                        {% else %}
+                                        {{ customer.firstname }}
+                                        {{ customer.lastname }}<br />
+                                    {% endif %}
+                                    {{ customer.email }}<br />
+                                    {{ customer.phone }}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="inbox">
+                            <h4>
+                                {{ lang('default_address') }}
+                                <span class="pull-right">
+                                    <a href="#" id="list_all" class="btn_link">
+                                        {{ lang('list_all') }}
+                                    </a>
+                                </span>
+                            </h4>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <ul>
+                                    {% if default_address %}
+                                    <li>{{ default_address.field_data|format_address_nl2br }}</li>
+                                    {% else %}
+                                    <li>{{ lang('no_addresses') }}</li>
+                                {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane" id="myaccount">
+                <h2 class="category-header">{{ lang('personal_info') }}</h2>
+
+                {{ form_open('secure/my_account', 'class="form-horizontal"') }}
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="inbox">
+                            <h4>{{ lang('account_data') }}</h4>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="alert alert-info">
+                                    <i class="glyphicon glyphicon-info-sign"></i>
+                                    {{ lang('account_password_instructions') }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="email" class="col-xs-3 control-label">
+                                        {{ lang('account_email') }} *
+                                    </label>
+                                    <div class="col-xs-5">
+                                        {{ form_input({'name': 'email', 'placeholder': lang('account_email'), 'class': 'form-control', 'value': set_value('email', customer.email), 'autocomplete': 'off'}) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password" class="col-xs-3 control-label">
+                                        {{ lang('account_password') }}
+                                    </label>
+                                    <div class="col-xs-5">
+                                        {{ form_input({'name': 'password', 'type': 'password', 'placeholder': lang('account_password'), 'class': 'form-control', 'value': '', 'autocomplete': 'off'}) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="confirm" class="col-xs-3 control-label">
+                                        {{ lang('account_confirm') }}
+                                    </label>
+                                    <div class="col-xs-5">
+                                        {{ form_input({'name': 'confirm', 'type': 'password', 'placeholder': lang('account_confirm'), 'class': 'form-control', 'value': '', 'autocomplete': 'off'}) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="inbox">
+                            <h4>{{ lang('personal_info') }}</h4>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                {% if customer.cnpj %}
+                                <div class="form-group">
+                                    <label for="cnpj" class="col-xs-3 control-label">
+                                        {{ lang('account_cnpj') }} *
+                                    </label>
+                                    <div class="col-xs-5">
+                                        {{ form_input({'name': 'cnpj', 'placeholder': lang('account_cnpj'), 'class': 'form-control', 'value': set_value('cnpj', customer.cnpj)}) }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="company" class="col-xs-3 control-label">
+                                        {{ lang('account_company') }} *
+                                    </label>
+                                    <div class="col-xs-5">
+                                        {{ form_input({'name': 'company', 'placeholder': lang('account_company'), 'class': 'form-control', 'value': set_value('company', customer.company)}) }}
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                <div class="form-group">
+                                    <label for="firstname" class="col-xs-3 control-label">
+                                        {{ lang('account_firstname') }} *
+                                    </label>
+                                    <div class="col-xs-5">
+                                        {{ form_input({'name': 'firstname', 'placeholder': lang('account_firstname'), 'class': 'form-control', 'value': set_value('firstname', customer.firstname)}) }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="lastname" class="col-xs-3 control-label">
+                                        {{ lang('account_lastname') }} *
+                                    </label>
+                                    <div class="col-xs-5">
+                                        {{ form_input({'name': 'lastname', 'placeholder': lang('account_lastname'), 'class': 'form-control', 'value': set_value('lastname', customer.lastname)}) }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="cpf" class="col-xs-3 control-label">
+                                        {{ lang('account_cpf') }} *
+                                    </label>
+                                    <div class="col-xs-5">
+                                        {{ form_input({'name': 'cpf', 'placeholder': lang('account_cpf'), 'class': 'form-control', 'value': set_value('cpf', customer.cpf)}) }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="sex" class="col-xs-3 control-label">
+                                        {{ lang('account_sex') }}
+                                    </label>
+                                    <div class="col-xs-5">
+                                        {{ form_dropdown('sex', {0: lang('account_sex_m'), 1: lang('account_sex_w')}, set_value('sex', customer.sex), 'class="form-control"') }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="birthday" class="col-xs-3 control-label">
+                                        {{ lang('account_birthday') }}
+                                    </label>
+                                    <div class="col-xs-5">
+                                        {{ form_input({'name': 'birthday', 'placeholder': lang('account_birthday'), 'class': 'form-control', 'value': set_value('birthday', customer.birthday|to_formated_date)}) }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="telephone" class="col-xs-3 control-label">
+                                        {{ lang('account_phone') }}
+                                    </label>
+                                    <div class="col-xs-5">
+                                        {{ form_input({'name': 'phone', 'placeholder': lang('account_phone'), 'class': 'form-control', 'value': set_value('phone', customer.phone)}) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="inbox">
+                            <h4>{{ 'Newsletter'|trans({'en': 'Newsletter'}) }}</h4>
+                        </div>
+
+                        <div class="panel panel-default panel-newsletter">
+                            <div class="panel-body">
+                                <div>
+                                    <label>
+                                        <input type="checkbox" name="email_subscribe" value="1" {{ customer.subscribed ? 'checked="checked"' : '' }} />
+                                        {{ lang('want_to_receive_newsletter') }}
+                                    </label>
+                                    <small>({{ lang('want_to_receive_newsletter_hint') }})</small>
+                                    <span class="pull-right">
+                                        <input type="submit" value="{{ lang('form_update') }}" class="btn btn-primary btn-bck" />
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane" id="addresses">
+                <h2 class="category-header">{{ lang('your_addresses') }}</h2>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="inbox">
+                            <h4>{{ 'Lista de Endereços'|trans({'en': 'Address'}) }}</h4>
+                        </div>
+
+                        <div class="panel panel-default">
+                            {% if addresses|count > 0 %}
+                                <table class="table table-striped">
+                                    {% for address in addresses %}
+                                        <tr id="address_{{ address.id }}">
+                                            <td>
+                                                {{ address.field_data|format_address_nl2br }}
+                                            </td>
+                                            <td>
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <div class="btn-group pull-right">
+                                                            <input type="button" class="btn btn-default edit_address" rel="{{ address.id }}" value="{{ lang('form_edit') }}" />
+                                                            <input type="button" class="btn btn-danger delete_address" rel="{{ address.id }}" value="{{ lang('form_delete') }}" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <div class="pull-right" style="padding-top: 10px;">
+                                                            <input type="radio" name="ship_chk" onclick="set_default({{ address.id }},'ship')" {{ default_address.id == address.id ? 'checked="checked"' : '' }}/>
+                                                            {{ lang('default_shipping') }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            {% else %}
+                                <div class="panel-body">
+                                    <div class="alert alert-danger"><i class="glyphicon glyphicon-warning-sign"></i>&nbsp; {{ lang('no_addresses') }}</div>
+                                </div>
+                            {% endif %}
+                            <div class="panel-body">
+                                <span class="pull-right">
+                                    <input type="submit" value="{{ lang('add_address') }}" class="btn btn-primary btn-bck  edit_address" />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {{ form_close() }}
+
+        <div class="tab-pane" id="myorders">
+            <h2 class="category-header">{{ lang('order_history') }}</h2>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="inbox">
+                        <h4>{{ 'Pedidos'|trans({'en': 'Orders'}) }}</h4>
+                    </div>
+                    <div class="panel panel-default">
+                        {% if orders|count > 0 %}
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>{{ lang('order_date') }}</th>
+                                        <th>{{ lang('order_number') }}</th>
+                                        <th style="text-align:center;">{{ lang('order_status') }}</th>
+                                        <th style="text-align:center;">{{ lang('duplicate_order_title') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order in orders %}
+                                        <tr>
+                                            <td>
+                                                {{ order.ordered_on|to_formated_date('date_format_long') }}
+                                            </td>
+                                            <td>
+                                                <a href="{{ site_url('secure/order/' ~ order.order_number) }}">
+                                                    {{ order.order_number }}
+                                                </a>
+                                            </td>
+                                            <td align="center">
+                                                <span class="label {{ order.status|get_status_label }}">{{ order.status|translate_order_status }}</span>
+                                            </td>
+                                            <td align="center">
+                                                <a href="{{ site_url('secure/duplicate_cart/' ~ order.order_number) }}" class="btn btn-sm btn-success">
+                                                    {{ lang('duplicate_order') }}
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <div class="panel-body">
+                                <div class="alert alert-danger"><i class="glyphicon glyphicon-warning-sign"></i>&nbsp; {{ lang('no_order_history') }}</div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane" id="mytestimonials">
+            <h2 class="category-header">{{ lang('my_testimonials') }}</h2>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    {% for product in purchased_products %}
+                        {{ form_open('testimonials/create', {'class': 'testimonial-form'}) }}
+                        <div class="row rating-product">
+                            <div class="col-xs-3">
+                                {{ product_img(product, 'thumbnails', {'class': 'thumbnail'}) }}
+                            </div>
+                            <div class="col-xs-9">
+                                <div class="form-group">
+                                    <label>{{ lang('how_much_stars_for', {'name': product.name}) }}</label>
+
+                                    <ul class="rating-list list-unstyled">
+                                        <li>
+                                            <div class="pull-left rating-stars" data-name="rating_look"></div>
+                                            {{ lang('rating_look') }}
+                                        </li>
+                                        <li>
+                                            <div class="pull-left rating-stars" data-name="rating_usability"></div>
+                                            {{ lang('rating_usability') }}
+                                        </li>
+                                        <li>
+                                            <div class="pull-left rating-stars" data-name="rating_support"></div>
+                                            {{ lang('rating_support') }}
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <label for="message">{{ lang('testimonial_message') }}</label>
+
+                                {{ form_textarea({'name': 'message', 'class': 'form-control', 'rows': '5'}) }}
+
+                                <p class="help-block">{{ lang('testimonial_message_help') }}</p>
+
+                                {{ form_hidden('sender_email', customer.email)  }}
+                                {{ form_hidden('customer_id', customer.id)  }}
+                                {{ form_hidden('referrer', site_url('secure/my_account?tab=mytestimonials'))  }}
+                                {{ form_hidden('subject', 'Depoimento')  }}
+                                {{ form_hidden('sender_name',  customer.firstname) }}
+                                {{ form_hidden('product_id',  product.id) }}
+
+                                <input type="submit" name="submit" value="{{ lang('form_submit') }}" class="btn btn-primary" />
+                            </div>
+                        </div>
+                        <hr>
+                        {{ form_close() }}
+                    {% else %}
+                        <div class="alert alert-danger"><i class="glyphicon glyphicon-warning-sign"></i>&nbsp; {{ lang('no_new_products_for_testimonial') }}</div>
+                    {% endfor %}
+
+                    <script type="text/javascript" src="{{ global_js("jquery.raty.js") }}"></script>
+                    <script type="text/javascript">
+                        $(document).ready(function(){
+                            $('.rating-stars').each(function(){
+                                var name = $(this).data('name');
+                                $(this).raty({path: '/assets/img', scoreName: name});
+                            });
+                            $('.testimonial-form').submit(function(e){
+                                if ($('textarea[name=message]').val() != '' && $('input[name=rating_look]').val()>0 && $('input[name=rating_usability]').val()>0 && $('input[name=rating_support]').val()>0) {
+                                    return true;
+                                }else{
+                                    e.preventDefault();
+                                    alert('{{ lang('required_fields_testimonial') }}');
+                                    return false;
+                                };
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane" id="mywishlist">
+            <h2 class="category-header">{{ lang('my_wishlist') }}</h2>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    {% for product in wishes %}
+                        <div class="row rating-product">
+                            <div class="col-xs-3">
+                                {{ product_img(product, 'thumbnails', {'class': 'thumbnail'}) }}
+                            </div>
+                            <div class="col-xs-9">
+                                <h4>{{ product.name }}</h4>
+                                <strong class="buy-price">
+                                    {{ (product.saleprice > 0 ? '<del class="slash">' ~ product.price|format_currency ~ '</del>' : '')|raw }}
+                                    <span class="sale">{{ (product.saleprice > 0 ? product.saleprice : product.price)|format_currency }}</span>
+                                </strong>
+                                <p class="buy-fields">
+                                    {{ form_open('cart/add_to_cart', '', {'cartkey': cart('cartkey'), 'id': product.id, 'variant_id': product.variant_id}) }}
+                                    <button class="btn btn-primary buy-btn" type="submit" value="submit"><i class="glyphicon glyphicon-shopping-cart"></i> {{ lang('buy_wish_now') }}</button> {{ lang('form_or') }} <a href="{{ site_url('secure/removewish/' ~ product.id ~ '/' ~ product.variant_id) }}">{{ lang('form_delete') }}</a>
+                                    {{ form_close() }}
+                                </p>
+                            </div>
+                        </div>
+                        <hr>
+                    {% else %}
+                        <div class="alert alert-danger"><i class="glyphicon glyphicon-warning-sign"></i>&nbsp; {{ 'Não há desejos na sua lista.'|trans({'en':'No wishes in your list.'}) }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-</div>
-<script type="text/javascript">
-	<!--
-	$(document).ready(function(){
-		$('#mytabs a').click(function(e){
-			e.preventDefault();
-			$(this).tab('show');
-		});
-		{% if tab %}
-		$('#mytabs a[href="#{{ tab }}"]').tab('show');
-		{% endif %}
-		$('#list_all').click(function(e){
-			e.preventDefault();
-			$('#mytabs a[href="#addresses"]').tab('show');
-		});
-		$('#edit_account').click(function(e){
-			e.preventDefault();
-			$('#mytabs a[href="#myaccount"]').tab('show');
-		});
-		$('input[name=phone]').mask_brazilian_phone();
-		$('input[name=cpf]').mask('999.999.999-99');
-		$('input[name=birthday]').mask('99/99/9999');
-		$('.delete_address').click(function(){
-			if($('.delete_address').length > 1){
-				if(confirm('{{ lang('delete_address_confirmation') }}')){
-					$.post("{{ site_url('secure/delete_address') }}", { id: $(this).attr('rel') },
-						function(data){
-							$('#address_'+data).remove();
-						});
-				}
-			} else{
-				alert('{{ lang('error_must_have_address') }}');
-			}
-		});
-		$('.edit_address').click(function(e){
-			e.preventDefault();
-			$.post('{{ site_url('secure/address_form') }}/' + $(this).attr('rel'),
-				function(data){
-					$('#modal-container').html(data).modal('show');
-				}
-				);
-		});
-		function set_default(address_id, type){
-			$.post('{{ site_url('secure/set_default_address') }}/',{id:address_id, type:type});
-		}
-	});
-//-->
-</script>
+
+    <script type="text/javascript">
+    <!--
+        $(document).ready(function(){
+            $('#mytabs a').click(function(e){
+                e.preventDefault();
+                $(this).tab('show');
+            });
+            {% if tab %}
+                $('#mytabs a[href="#{{ tab }}"]').tab('show');
+            {% endif %}
+            $('#list_all').click(function(e){
+                e.preventDefault();
+                $('#mytabs a[href="#addresses"]').tab('show');
+            });
+            $('#edit_account').click(function(e){
+                e.preventDefault();
+                $('#mytabs a[href="#myaccount"]').tab('show');
+            });
+            $('input[name=phone]').mask_brazilian_phone();
+            $('input[name=cpf]').mask('999.999.999-99');
+            $('input[name=birthday]').mask('99/99/9999');
+            $('.delete_address').click(function(){
+                if($('.delete_address').length > 1){
+                    if(confirm('{{ lang('delete_address_confirmation') }}')){
+                        $.post("{{ site_url('secure/delete_address') }}", { id: $(this).attr('rel') },
+                        function(data){
+                            $('#address_'+data).remove();
+                        });
+                    }
+                } else{
+                    alert('{{ lang('error_must_have_address') }}');
+                }
+            });
+            $('.edit_address').click(function(e){
+                e.preventDefault();
+                $.post('{{ site_url('secure/address_form') }}/' + $(this).attr('rel'),
+                    function(data){
+                        $('#modal-container').html(data).modal('show');
+                    }
+                );
+            });
+
+            function set_default(address_id, type){
+                $.post('{{ site_url('secure/set_default_address') }}/',{id:address_id, type:type});
+            }
+        });
+    //-->
+    </script>

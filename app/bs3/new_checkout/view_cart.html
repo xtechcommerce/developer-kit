@@ -1,0 +1,213 @@
+{{ global_css('view_cart.css', true) }}
+{{ global_js('shop-v11.js', true) }}
+{{ global_js('cpf-cnpj-validator.js', true) }}
+<script type="text/javascript">
+    var checkoutCallbacks = $.Callbacks();
+    var checkoutErrors = false;
+    var checkoutNoSubmit = false;
+    var checkoutCart = {total: {{ cart('total')|default('0.00') }}, shipping_cost: {{ cart('shipping_cost')|default('0.00') }}, subtotal: {{ cart('discounted_subtotal')|default('0.00') }}, discount: {{ (cart('subtotal') - cart('discounted_subtotal'))|default('0.00') }}};
+
+    var CartSettings = {
+        zonesMap: {{ zones_map|json_encode }},
+        addresses: {{ logged_in ? customer_addresses_keyed|json_encode : '[]' }},
+        defaultAddress: {{ logged_in ? customer.default_shipping_address|default('false') : 'false' }},
+        installments: {{ shop_config('max_installments')|default('0') }},
+        currency_symbol: '{{ shop_config('currency_symbol') }}',
+        total: {{ cart('total')|default('0.00') }},
+        language: '{{ current_lang() }}',
+        checkout_path: 'new_checkout',
+        {% if current_lang() == 'english' %}
+            validate: ['email'{{ logged_in ? "" : ", 'password', 'confirm'" }}, 'firstname', 'lastname', 'birthday', 'sex', 'phone', 'zip', 'zone_id', 'city', 'district', 'address1', 'anumber', 'module', 'shipping_method']
+        {% else %}
+            validate: ['email'{{ logged_in ? "" : ", 'password', 'confirm'" }}, 'firstname', 'lastname', 'birthday', 'sex', 'cpf', 'phone', 'zip', 'zone_id', 'city', 'district', 'address1', 'anumber', 'module', 'shipping_method']
+        {% endif %}
+    }
+    var Cart;
+
+    $(document).ready(function(){
+        Cart = new Checkout(CartSettings);
+
+        cpf_cnpj_validator('#a_cpf', 'cpf-validator', 'CPF inválido.');
+        cpf_cnpj_validator('#a_cnpj', 'cnpj-validator', 'CNPJ inválido.');
+    });
+</script>
+
+<div id="cartview">
+    {% if cart.total_items == 0 %}
+        <div class="alert alert-info alert-no-prod">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            {{ lang('empty_view_cart') }}
+        </div>
+    {% else %}
+        {% if (request.get.step is not defined and step != 'final') or (template_settings('text:cart_min_val') > 0 and cart('subtotal') < template_settings('text:cart_min_val')) %}
+            <div class="row">
+                <div class="page-header text-left">
+                    <a href="{{site_url()}}" class="btn btn-default cart_contBuy pull-left">{{ "Continuar Comprando"|trans({'en':'See more products'}) }}</a>
+                    <h2>{{ lang('your_cart') }}</h2>
+                    {% if not (template_settings('text:cart_min_val') > 0 and cart('subtotal') < template_settings('text:cart_min_val'))  %}
+                        <a href="?step=final" class="btn btn-default cart_finish pull-right">{{ "Finalizar Compra"|trans({'en':'Payment'}) }}</a>
+                    {% endif %}
+                </div>
+            </div>  
+            
+            {% if template_settings('if:cart_email')%}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="form-email" style="display:none;" class="text-center">
+                            <label>{{template_settings('text:cart_email_text')}}</label>
+                            <div class="input-group">
+                                <input id="a_email" class="address form-control" type="text" name="email" value="" autocomplete="on">
+                                <button class="btn btn-primary" type="button" id="save_mail" onclick="mail_validate($('#a_email').val())">{{template_settings('text:cart_email_btn')}}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <script type="text/javascript">
+                    function mail_validate(mail){
+                        if (!isEmail(mail)){
+                            alert('E-mail informado não é válido.');
+                            return false;
+                        } else {
+                            $.post(site_url.base + 'checkout/create', {email: mail}, function(){});
+                            $('#form-email').html('<p>Obrigado!</p>');
+                            var expire = new Date();
+                            expire = new Date(expire.getTime() + 3600000);
+                            document.cookie = "cartmail="+ mail +"; expires=" + expire.toGMTString();
+                            setTimeout(function() {
+                                $('#form-email').slideUp();
+                                $('#checkout_hidden').slideDown();
+                            }, 2000);          
+                        }
+                    }
+                    
+                    $(document).ready(function(){
+                        var the_mail = checkCartMail();
+                        if(the_mail == null){
+                            $('#form-email').show();
+                        } else {
+                            $.post(site_url.base + 'checkout/create', {email: the_mail}, function(){});
+                            var expire = new Date();
+                            expire = new Date(expire.getTime() + 3600000);
+                            document.cookie = "cartmail="+ the_mail +"; expires=" + expire.toGMTString();
+                            $('#checkout_hidden').show();
+                        }
+                    });
+                </script>
+            {% endif %}
+            
+            {% if template_settings('if:cart_email')%}
+                <div id="checkout_hidden">
+            {% else %}
+                <div>
+            {% endif %}
+                <div class="custom-alerts">
+                {% if template_settings('text:cart_min_val') > 0 and cart('subtotal') < template_settings('text:cart_min_val')  %}
+                    <div class="alert alert-info">{{template_settings('text:cart_min_text')|replace({'[min_val]': '<strong>R$ ' ~ template_settings('text:cart_min_val') ~ '</strong>'})}}</div>
+                {% endif %}
+                </div>
+                
+                <div class="summary">
+                    <div id="checkout_summary">
+                        {% include 'bs3/new_checkout/summary.html' %}
+                    </div>
+                    <div class="row cart-summary-bottom">
+                        <div class="cart-secure col-md-6 pull-right">
+                            <ul class="list-inline pull-right">
+                                <li><span class="glyphicon glyphicon-lock"></span> {{ lang('secure_checkout') }}</li>
+                                <li><span class="glyphicon glyphicon-home"></span> {{ lang('guarantied_shipping') }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="row cart-functions" id="checkout">
+                        <div class="col-md-4">
+                            <div class="panel panel-default panel-checkout">
+                                <div class="panel-heading"><i class="fa fa-truck"></i>{{ 'Calcule o Frete'|trans({'en':'Shipping'}) }}</div>
+                                <div class="panel-body">
+                                    {% set country_id = set_value('country_id', (customer.ship_address.country_id ? customer.ship_address.country_id : shop_config('default_country_id'))) %}
+                                    {% import 'bs3/new_checkout/inputgroup.html' as inputgroup %}
+                                    {% if shop_config('international') %}
+                                        <div class="cart-bottom-buffer cart-preselect-header">
+                                            <div class="row">
+                                                {{ inputgroup.dropdown('country_id', 'country_id', countries, country_id, lang('choose_your_country'), 12) }}
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <input type="hidden" name="country_id" value="{{ country_id }}" id="country_id" />
+                                    {% endif %}
+                                    <div class="input-group">
+                                        {{ form_input({'id': 'zip_code', 'class': 'address form-control', 'value': set_value('zip', zipvalue)}) }}
+                                        <span class="input-group-btn input-group-search-address">
+                                            <a href="#" class="btn btn-default btn-search-address">{{ lang('search_address') }}</a>
+                                        </span>
+                                    </div>
+                                    <div class='shippingwrap'>
+                                        <table id="shipping_table"></table>
+                                    </div>
+                                </div>
+                            </div>    
+                        </div>
+                        <div class="col-md-4">
+                            <div class="panel panel-default panel-checkout">
+                              <div class="panel-heading"><i class="fa fa-ticket"></i>{{ 'Insira seu Cupom'|trans({'en':'Coupon Code'}) }}</div>
+                              <div class="panel-body">
+                                  {{ form_open('cart/update_cart', {'id': 'update_cart_form_coupon'}) }}
+                                    <div class="input-group ticket">
+                                        <input type="text" name="box_coupon_code" class="form-control" />
+                                        <input type="submit" class="btn btn-default" value="{{ lang('apply_coupon') }}" />
+                                    </div>
+                                    <script type="text/javascript">
+                                        $('#update_cart_form_coupon').on('submit', function(e){
+                                            e.preventDefault();
+                                            $('#update_cart_form').append('<input type="hidden" name="coupon_code" value="' + $('input[name="box_coupon_code"]').val() + '" class="form-control" />');
+                                            $('#update_cart_form').submit();
+                                        });
+                                    </script>
+                                {{ form_close() }}
+                              </div>
+                            </div>                     
+                        </div>
+                        <div class="col-md-4">
+                            {% if not (template_settings('text:cart_min_val') > 0 and cart('subtotal') < template_settings('text:cart_min_val'))  %}
+                                <a href="?step=final" class="btn btn-default cart_finish width_full">Finalizar Compra</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% elseif request.get.step == "final" or step == 'final' %}
+            <div class="page-header final_step">
+                <h2>Finalização do Pedido</h2>
+            </div>
+            <div class="custom-alerts">
+            </div>
+            <div class="checkout">
+                <div class="row">
+                    {% if validation_errors() %}
+                        <div class="col-md-12">
+                            <div class="alert alert-danger">
+                                <a class="close" data-dismiss="alert">×</a>
+                                {{ validation_errors() }}
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% include 'bs3/new_checkout/form.html' %}
+                    {% if not logged_in %}
+                        {% include 'bs3/new_checkout/login_modal.html' %}
+                    {% endif %}
+                </div>
+            </div>
+            
+            {% if template_settings('if:cart_email') %}
+            <script>
+                $(document).ready(function(){
+                    if(checkCartMail() != null){
+                        $('#a_email').val(checkCartMail());
+                    }
+                });
+            </script>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+</div>

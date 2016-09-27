@@ -1,0 +1,259 @@
+{% set country_id = set_value('country_id', (customer.ship_address.country_id ? customer.ship_address.country_id : shop_config('default_country_id'))) %}
+
+{% import 'bs3/new_checkout/inputgroup.html' as inputgroup %}
+
+<div class="col-xs-12">
+    <div class="row">
+        <div class="table-responsive col-xs-12 header" id="checkout_summary">
+            {% include 'bs3/new_checkout/summary.html' %}
+        </div>
+        <br>
+    </div>
+    {{ form_open('checkout/create', {'id': 'onepage_checkoutform'}) }}
+        <input type="hidden" name="step" value="{{ request.get.step }}" />
+        <div class="row">
+            <div class="col-xs-4">
+                <div class="checkout-box">
+                    {# Address form #}
+                    {% if shop_config('international') %}
+                        <div class="cart-bottom-buffer cart-preselect-header">
+                            <h2>{{ lang('choose_your_country') }}</h2>
+                            <div class="row">
+                                {{ inputgroup.dropdown('country_id', 'country_id', countries, country_id, lang('address_country'), 12) }}
+                            </div>
+                        </div>
+                        <hr class="cart-seperator">
+                    {% else %}
+                        <input type="hidden" name="country_id" value="{{ country_id }}" id="country_id" />
+                    {% endif %}
+                    
+                    <div class="row cart-bottom-buffer cart-account-header">
+                        <div class="col-md-12 header">
+                            <h2>
+                                1. {{ lang('signup_step') }}
+                            </h2>
+                        </div>
+                        {% if not logged_in %}
+                        <div class="col-md-12 cart-account-buttons">
+                            <div>
+                                {% if shop_config('company_fields') %}
+                                    <button class="btn btn-default" id="company_fields_btn" type="button">
+                                        {{ lang('account_iam') }} {{ lang('account_am_company') }}
+                                    </button>
+                                    <button class="btn btn-default hide" id="person_fields_btn" type="button">
+                                        {{ lang('account_iam') }} {{ lang('account_am_person') }}
+                                    </button>
+                                {% endif %}
+                
+                                <button class="btn btn-default btn-open-login" type="button">
+                                    <i class="glyphicon glyphicon-user"></i>
+                                    {{ lang('login_button') }}
+                                </button>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                
+                    {% if not logged_in %}
+                        <div class="row cart-bottom-buffer cart-account-email-fields">
+                            {{ inputgroup.input('a_email', 'email', set_value('email', customer.email), lang('address_email'), 12) }}
+                            {{ inputgroup.input('a_password', 'password', validated_password, lang('account_password'), '6 nopad-right', 'password') }}
+                            {{ inputgroup.input('a_confirm', 'confirm', validated_password, lang('account_confirm'), '6 nopad-left', 'password') }}
+                        </div>
+                        <p class="password_alert">{{ lang('account_password_alert') }}</p>
+                    {% else %}
+                
+                        {{ form_hidden('email', customer.email) }}
+                
+                    {% endif %}
+                
+                    <div id="person_fields" class="row cart-bottom-buffer cart-account-fields">
+                        {{ inputgroup.input('a_firstname', 'firstname', set_value('firstname', customer.firstname), lang('account_firstname'), '6 nopad-right') }}
+                        {{ inputgroup.input('a_lastname', 'lastname', set_value('lastname', customer.lastname), lang('account_lastname'), '6 nopad-left') }}
+                        {{ inputgroup.input('a_birthday', 'birthday', set_value('birthday', customer.birthday)|to_formated_date, lang('account_birthday'), '6 nopad-right') }}
+                        {{ inputgroup.dropdown('a_sex', 'sex', {0: 'Masculino', 1: 'Feminino'}, set_value('sex', customer.sex), lang('account_sex'), '6 nopad-left') }}
+                        {{ inputgroup.input('a_cpf', 'cpf', set_value('cpf', customer.cpf), lang('account_cpf'), '6 brasil-only nopad-right') }}
+                        {{ inputgroup.input('phone', 'phone', set_value('phone', customer.phone), lang('address_phone'), '6 nopad-left') }}
+                    </div>
+                
+                    {% if shop_config('company_fields') %}
+                    <div id="company_fields" class="row cart-bottom-buffer cart-account-fields{{ customer.cnpj ? '' : ' hide' }}">
+                        {{ inputgroup.input('a_company', 'company', set_value('company', customer.company), lang('account_company'), '6 nopad-right', 'text', true) }}
+                        {{ inputgroup.input('a_cnpj', 'cnpj', set_value('cnpj', customer.cnpj), lang('account_cnpj'), '6 brasil-only nopad-left', 'text', true) }}
+                    </div>
+                    {% endif %}
+                
+                    {% if not logged_in %}
+                        <div class="col-lg-12 cart-newsletter">
+                            <label class="checkbox">
+                                <input type="checkbox" name="email_subscribe" value="1" checked="checked" />
+                                {{ lang('account_newsletter_subscribe') }}
+                            </label>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="col-xs-4">
+                <div class="checkout-box">
+                    <div class="row cart-address-header">
+                        <div class="col-md-12 header">
+                            <h2>
+                                2. {{ lang('address_step') }}
+                            </h2>
+                        </div>
+                        <div class="col-md-12 no-space">
+                            {% if logged_in and customer_addresses|count > 1 %}
+                                <button class="btn btn-default pull-right" onclick="$('#address_manager').modal('show');" type="button">
+                                    <i class="glyphicon glyphicon-envelope"></i>
+                                    {{ lang('choose_address') }}
+                                </button>
+                                {% include 'bs3/new_checkout/address_modal.html' %}
+                            {% endif %}
+                        </div>
+                    </div>
+                
+                    <div class="row cart-bottom-buffer cart-address-fields">
+                        {% if logged_in and customer_addresses|count > 1 %}
+                            <div class="col-md-12 brasil-only{{ country_id != 30 ? ' hide' : '' }}">
+                        {% else %}
+                            <div class="col-md-12 no-space brasil-only{{ country_id != 30 ? ' hide' : '' }}">
+                        {% endif %}
+                            <a href="http://www.buscacep.correios.com.br/servicos/dnec/menuAction.do?Metodo=menuEndereco" class="pull-right link-consult-cep" target="_blank">
+                                {{ lang('consulting_zip') }}
+                            </a>
+                            <label>
+                                {{ lang('address_postcode') }}
+                                <sup>*</sup>
+                            </label>
+                            <div class="input-group">
+                                {{ form_input({'id': 'zip_code', 'class': 'address form-control', 'value': set_value('zip', zipvalue)}) }}
+                                <span class="input-group-btn input-group-search-address">
+                                        <a href="#" class="btn btn-default btn-search-address">{{ lang('search_address') }}</a>
+                                </span>
+                            </div>
+                        </div>
+                
+                        <div class="other-countries{{ country_id == 30 ? ' hide' : '' }}">
+                            {{ inputgroup.input('a_zip', 'zip', set_value('zip', zipvalue), lang('address_zip'), 12) }}
+                        </div>
+                        {{ inputgroup.dropdown('zone_id', 'zone_id', zones_menu, set_value('zone_id', customer.ship_address.zone_id), lang('address_state'), 12) }}
+                        {{ inputgroup.input('a_city', 'city', set_value('city', customer.ship_address.city), lang('address_city'), '6 nopad-right') }}
+                        {{ inputgroup.input('a_district', 'district', set_value('district', customer.ship_address.district), lang('district'), '6 nopad-left') }}
+                    </div>
+                
+                    <div class="row cart-bottom-buffer cart-address-fields-two">
+                        {{ inputgroup.input('a_address1', 'address1', set_value('address1', customer.ship_address.address1), lang('address1'), 12) }}
+                        {{ inputgroup.input('a_anumber', 'anumber', set_value('anumber', customer.ship_address.anumber), lang('anumber'), '6 nopad-right') }}
+                        {{ inputgroup.input('a_address2', 'address2', set_value('address2', customer.ship_address.address2), lang('address2'), '6 nopad-left', 'text', true) }}
+                    </div>
+                
+                    {{ form_hidden('address_id', address_id) }}
+                </div>
+            </div>
+            <div class="col-xs-4">
+                {# Shipping form #}
+                <div class="checkout-box">
+                    <div class="row cart-bottom-buffer shippingwrap">
+                        <div class="col-md-12 header">
+                            <h2>
+                                3. {{ lang('shipping_method') }}
+                            </h2>
+                
+                            <table id="shipping_table" class="table">
+                                <tr>
+                                    <td>
+                                        <i class="glyphicon glyphicon-refresh hide"></i>
+                                        {{ lang('insert_address_first') }}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                
+                        <div class="col-md-12">
+                            <h2>
+                                {{ lang('shipping_notes') }}
+                            </h2>
+                            {{ form_textarea({'class': 'address cart-shipping-notes form-control', 'name': 'shipping_notes', 'value': set_value('shipping_notes')}) }}
+                        </div>
+                    </div>
+                    <input id="curr_shipping_code" value="{{ shipping_code }}" type="hidden" />
+                </div>  
+            </div>
+        </div>
+        <div class="row">
+            {# Payments form #}
+            <div class="col-xs-12">
+                <div class="checkout-box m-top30">
+                    <div class="row cart-bottom-buffer-md paymentwrap">
+                        <div class="col-md-12 header">
+                            <h2>
+                                4. {{ lang('payment_method') }}
+                            </h2>
+                            
+                            <div id="payment_tabs">
+                                <div class="shipping_cost pull-right">
+                                    <span class="total">
+                                        {{ lang('grand_total') }}: {{ cart('total')|format_currency }}
+                                    </span>
+                                    <span class="shipping">
+                                        {% if cart('shipping_cost') > 0 %}
+                                            (
+                                                {{ cart('subtotal')|format_currency }} + {{ lang('shipping') }}:
+                                                {{ cart('shipping_cost')|format_currency }}
+                                            )
+                                        {% endif %}
+                                    </span>
+                                </div>
+
+                                {% if payment_methods %}
+
+                                    <input type="hidden" name="module" value="{{ current_module }}" />
+                                    <ul class="nav nav-tabs">
+                                        {% for method, info in payment_methods %}
+                                            <li class="{{ current_module == method ? 'active' : 'inactive' }}">
+                                                <a class="payment-method-nav" data-toggle="data" href="#payment-{{ method }}">
+                                                    {{ info.name }}
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                
+                                    <div class="tab-content">
+                                        {% for method, info in payment_methods %}
+                                            <div id="payment-{{ method }}" class="tab-pane payment-method{{ current_module == method ? ' active' : ' inactive' }}">
+                                                {{ info.form|raw }}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+
+                                {% else %}
+                
+                                    <ul class="nav nav-tabs">
+                                        <li class="active">
+                                            <a class="payment-method-nav" data-toggle="data" href="#payment-undefined">
+                                                {{ lang('undefined') }}
+                                            </a>
+                                        </li>
+                                    </ul>
+                
+                                    <div class="tab-content">
+                                        <div id="payment-undefined" class="tab-pane payment-method active">
+                                            {{ lang('payment_method_undefined') }}
+                                        </div>
+                                    </div>
+                                    
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>  
+                <div class="row cart-bottom-buffer-md text-center cart-actions" style="margin-top:20px;">
+                    <button type="submit" class="btn btn-lg btn-primary">
+                        <i class="glyphicon glyphicon-ok"></i> {{ lang('submit_order') }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    {{ form_close() }}
+</div>

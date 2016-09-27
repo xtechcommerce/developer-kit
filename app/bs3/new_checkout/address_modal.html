@@ -1,0 +1,33 @@
+<div class="modal fade" id="address_manager">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">×</button>
+				<h3 class="no-margin">
+					{{ lang('your_addresses') }}
+				</h3>
+			</div>
+			<div class="modal-body">
+				<p>
+					<table class="table table-striped">
+						{% for address in customer_addresses %}
+							<tr>
+								<td>
+									{{ address.field_data|format_address_nl2br }}
+								</td>
+								<td>
+									<input type="button" class="btn btn-default choose_address pull-right" data-address="{{ address.id }}" onclick="populate_address({{ address.id }});" data-dismiss="modal" value="{{ lang('form_choose') }}" />
+								</td>
+							</tr>
+						{% endfor %}
+					</table>
+				</p>
+			</div>
+			<div class="modal-footer no-margin">
+				<a href="#" class="btn btn-default" data-dismiss="modal">
+					{{ lang('close') }}
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
