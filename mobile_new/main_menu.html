@@ -1,0 +1,104 @@
+<div class="main-menu mean-container">
+    <div class="mean-bar" >
+        <a href="#nav" class="meanmenu-reveal">Show Navigation</a>
+
+        <a href="#nav" class="meanmenu-revseal">
+            <div class="topgs"  style="float: left">Menu</div>
+        </a>
+
+        <a href="{{ site_url('cart/view_cart') }}">
+            <i class="topg glyphicon glyphicon-shopping-cart"></i>
+        </a>
+
+        {% if logged_in %}
+        <a href="{{ site_url('secure/logout') }}">
+            <i class="topg fa fa-sign-out"></i>
+        </a>
+        {% endif %}
+
+        <a href="{{ site_url('secure/my_account') }}">
+            <i class="topg fa fa-user"></i>
+        </a>
+
+        <nav class="mean-nav"></nav>
+    </div>
+</div>
+
+<header>
+    <nav style="display: none;">
+        <ul>
+            {% for page in get_children_of_page('topo-esquerda') %}
+            <li>
+                <a href="{{ page.url is empty ? site_url(page.slug) : page.url }}" {{ page.new_window ? 'target="_blank"':''}}>
+                    {{ page.title }}
+                </a>
+            </li>
+            {% endfor %}
+
+            {% for cat in categories %}
+                {% if cat.category.slug != 'home' %}
+                    {% if cat.children|count > 0  %}
+                        <li>
+                            <a href="{{ site_url(cat.category.slug) }}">
+                                {{ cat.category.name }}
+                            </a>
+
+                            <ul>
+                                {% set limiter = 0 %}
+                                {% for child in cat.children %}
+                                    {% if child.children|count > 0 %}
+                                        <li>
+                                            <a href="{{ site_url(cat.category.slug ~ '/' ~ child.category.slug) }}">
+                                                {{ child.category.name }}
+                                            </a>
+                                            <ul>
+                                            {% for newChild in child.children %}
+                                                <li>
+                                                    <a href="{{ site_url(cat.category.slug ~ '/' ~ child.category.slug ~'/'~ newChild.category.slug) }}">
+                                                        {{ newChild.category.name }}
+                                                    </a>
+                                                </li>
+                                            {% endfor %}
+                                            </ul>
+                                        </li>
+                                    {% elseif template_settings('text:quantity_dropdown') > 2 %}
+                                        {% set limiter = limiter + 1 %}
+                                        <li>
+                                            <a href="{{ site_url(cat.category.slug ~ '/' ~ child.category.slug) }}">
+                                                {{ child.category.name }}
+                                            </a>
+                                        </li>
+
+                                        {% if limiter ==  cat.children|length == loop.index %}
+                                            {% set limiter = 0 %}
+                                        {% endif %}
+                                    {% else %}
+                                        <li>
+                                            <a href="{{ site_url(cat.category.slug ~ '/' ~ child.category.slug) }}">
+                                                {{ child.category.name }}
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a href="{{ site_url(cat.category.slug) }}">
+                                {{ cat.category.name }}
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+
+            {% for page in get_children_of_page('topo-direita') %}
+                <li>
+                    <a href="{{ page.url is empty ? site_url(page.slug) : page.url }}" {{ page.new_window ? 'target="_blank"':''}}>
+                        {{ page.title }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </nav>
+</header>

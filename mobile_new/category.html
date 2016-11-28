@@ -1,0 +1,107 @@
+{% extends _layout %}
+
+{% block content %}
+    {% set type = request.get.type %}
+    {% import 'mobile_new/product_listing.html' as product_listing %}
+
+    <div class="row">
+        <div class="col-xs-12">
+            {# Titulo da Página #}
+            {% if term is not empty %}
+                <h2 class="category-header" style="margin-top: 0px;">
+                    {{ "Resultado da busca por"|trans({'en':'Results with'}) }} {{ term }}
+                </h2>
+            {% else %}
+                <h2 class="category-header" style="margin-top: 0px;">
+                    {{ category.name }}
+                </h2>
+                {% if category.description is not empty %}
+                <h4>
+                    {{ category.description }}
+                </h4>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+
+    {% if category.image is not empty %}
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="category-img">
+                {{ category_img(category, 'full', true) }}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="filter-widget">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <link rel="stylesheet" type="text/css" href="{{ base_url('loja/twig/mobile_new/assets/css/filters.css') }}">
+                        <script type="text/javascript" src="{{ base_url('loja/twig/mobile_new/assets/js/filters.js') }}"></script>
+
+                        <nav class="cat_options">
+                            <ul class="filters order">
+                                <li>{{ "Organizar por"|trans({'en':'Order by'}) }}</li></br>
+                                <li><a class="sub" href="#order_price">{{"Menor Preço"|trans({'en':'Cheapest'})}}</a></li>
+                                <li><a class="sub" href="#order_bestseller">{{"Mais Vendidas"|trans({'en':'Most Sold'})}}</a></li>
+                                <li><a class="sub" href="#order_rating">{{"Melhor Nota"|trans({'en':'Best Rating'})}}</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        {{ form_open(site_url(category.slug), {'id': 'filter_form', 'style': 'display:none;', 'method': 'get'}) }}
+                        {% for prop in properties %}
+                            {% for child in prop.children %}
+                                <input type="checkbox" name="properties[]" value="{{ child.category.id }}" id="filter_property{{ child.category.id }}" {{ selected_properties and child.category.id in selected_properties ? ' checked' : '' }}/>
+                            {% endfor %}
+                        {% endfor %}
+
+                        {% for option in global_options %}
+                            {% for value in option.values %}
+                                <input type="checkbox" name="options[]" value="{{ value.id }}" id="filter_option{{ value.id }}" {{ selected_options and value.id in selected_options ? ' checked' : '' }}/>
+                            {% endfor %}
+                        {% endfor %}
+
+                        <input type="checkbox" name="price_max" value="{{ price_max ? price_max : '' }}"{{ price_max ? ' checked' : '' }} />
+                        <input type="checkbox" name="price_min" value="{{ price_min ? price_min : '' }}"{{ price_min ? ' checked' : '' }} />
+                        <input class="order_by_hidden" type="checkbox" name="by" value="price/asc" id="order_price" {{ sort_by == 'sort_price' ? 'checked' : '' }}/>
+                        <input class="order_by_hidden" type="checkbox" name="by" value="bestsellers/asc" id="order_bestseller" {{ sort_by == 'quantity_order' ? 'checked' : '' }}/>
+                        <input class="order_by_hidden" type="checkbox" name="by" value="rating/desc" id="order_rating" {{ sort_by == 'rating' ? 'checked' : '' }}/>
+                        {{ form_close() }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% for product in products %}
+    <div class="row">
+        {{ product_listing.item(product, category, 12) }}
+    </div>
+    {% else %}
+    <div class="row">
+        <div class="col-xs-12">
+            <p class="no-prod">
+                {% if term is not empty %}
+                    {{ 'Não foram encontrados resultados para sua busca.'|trans({'en':'No results found using this terms.'}) }}
+                {% else %}
+                    {{ lang('no_products') }}
+                {% endif %}
+            </p>
+        </div>
+    </div>
+    {% endfor %}
+
+    {# Paginacao #}
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            {{ pagination() }}
+        </div>
+    </div>
+{% endblock %}

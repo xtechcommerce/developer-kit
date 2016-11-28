@@ -1,0 +1,29 @@
+{% extends _layout %}
+
+{% block content %}
+	<div class="campaign">
+		<div class="row">
+			<div class="col-xs-12">
+				{% if campaign.landing_config['image:banner'] %}
+				<div class="banner">
+					{{ host_img(campaign.landing_config['image:banner'], 'full', {'class': 'img-responsive'}) }}
+				</div>
+				{% else %}
+				<h1 class="jumbotron text-center">
+					{{ campaign.mission }}
+				</h1>
+				{% endif %}
+			</div>
+		</div>
+
+		<div id="products" class="products clearfix">
+			{% import 'mobile_new/product_listing.html' as product_listing %}
+
+			{% for product in products %}
+				<div class="row">
+					{{ product_listing.item(product, category, 12) }}
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+{% endblock %}

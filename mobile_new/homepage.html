@@ -1,0 +1,46 @@
+{% extends _layout %}
+
+{% block banner %}
+<section id="main-banners">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12">
+				<div id="slider" class="slider flexslider">
+					<ul class="slides">
+						{% for banner in banners %}
+						<li>
+							{{ linked_banner(banner) }}
+						</li>
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<script type="text/javascript">
+	$(window).load(function(){
+		$('#slider').flexslider({
+			animation: "fade",
+			slideshow: true,
+			slideshowSpeed: 5000,
+			controlNav: true,
+			directionNav: false,
+			start: function(slider){
+				$('body').removeClass('loading');
+			}
+		});
+	});
+</script>
+{% endblock %}
+
+{% block content %}
+	{% import 'mobile_new/product_listing.html' as product_listing %}
+
+	{% for product in products %}
+		<div class="row">
+			{{ product_listing.item(product, category, 12) }}
+		</div>
+	{% endfor %}
+{% endblock %}

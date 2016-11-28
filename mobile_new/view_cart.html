@@ -1,0 +1,650 @@
+{% extends _layout %}
+
+{% block content %}
+
+{{ global_js('shop-v11.js', true) }}
+
+<script type="text/javascript">
+	var checkoutCallbacks = $.Callbacks();
+	var checkoutErrors = false;
+	var checkoutNoSubmit = false;
+	var checkoutCart = {total: {{ cart('total')|default('0.00') }}, shipping_cost: {{ cart('shipping_cost')|default('0.00') }}, subtotal: {{ cart('discounted_subtotal')|default('0.00') }}};
+
+	var CartSettings = {
+		zonesMap: {{ zones_map|json_encode }},
+		addresses: {{ logged_in ? customer_addresses_keyed|json_encode : '[]' }},
+		defaultAddress: {{ logged_in ? customer.default_shipping_address|default('false') : 'false' }},
+		installments: {{ shop_config('max_installments')|default('0') }},
+		currency_symbol: '{{ shop_config('currency_symbol') }}',
+		total: {{ cart('total')|default('0.00') }},
+		{% if current_lang() == 'english' %}
+			validate: ['email'{{ logged_in ? "" : ", 'password', 'confirm'" }}, 'firstname', 'lastname', 'birthday', 'sex', 'phone', 'zip', 'zone_id', 'city', 'district', 'address1', 'anumber', 'module', 'shipping_method']
+		{% else %}
+			validate: ['email'{{ logged_in ? "" : ", 'password', 'confirm'" }}, 'firstname', 'lastname', 'birthday', 'sex', 'cpf', 'phone', 'zip', 'zone_id', 'city', 'district', 'address1', 'anumber', 'module', 'shipping_method']
+		{% endif %}
+	}
+	var Cart;
+
+	$(document).ready(function(){
+		Cart = new Checkout(CartSettings);
+	});
+</script>
+
+{% set country_id = set_value('country_id', (customer.ship_address.country_id ? customer.ship_address.country_id : shop_config('default_country_id'))) %}
+
+{% import 'mobile_new/inputgroup.html' as inputgroup %}
+
+<div id="cart">
+	<div class="row">
+		<div class="col-xs-12">
+			{% if cart.total_items == 0 %}
+				<div class="alert alert-danger no-margin text-center">
+					{{ lang('empty_view_cart') }}
+				</div>
+			{% else %}
+				{% if validation_errors() %}
+				<div class="alert alert-danger">
+					{{ validation_errors() }}
+				</div>
+				{% endif %}
+			{% endif %}
+		</div>
+	</div>
+
+	{% if flashdata.error %}
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="alert alert-danger">
+				{{ flashdata.error }}
+			</div>
+		</div>
+	</div>
+	{% endif %}
+
+
+	{% if flashdata.message %}
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="alert alert-info">
+				{{ flashdata.message }}
+			</div>
+		</div>
+	</div>
+	{% endif %}
+
+	{% if error %}
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="alert alert-danger">
+				{{ error }}
+			</div>
+		</div>
+	</div>
+	{% endif %}
+
+	{% if cart.total_items > 0 %}
+	<div class="row">
+		<div class="col-xs-12">
+			{{ form_open('cart/update_cart', {'id': 'update_cart_form'}) }}
+			<table class="table summary">
+				<thead>
+					<tr>
+						<th>{{ lang('name') }}</th>
+						<th>{{ lang('price') }}</th>
+						<th>{{ lang('quantity') }}</th>
+						<th>&nbsp;</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					{% for cartkey, product in cart('contents') %}
+					<tr>
+						<td class="description">
+							<strong>{{ product.name }}{{ product.sku ? ' (' ~ product.sku ~ ')' : '' }}</strong>
+
+							{% for name, value in product.options %}
+								<div>
+									<small>{{ name }}: {{ value }}</small>
+								</div>
+							{% endfor %}
+						</td>
+
+						<td class="price">
+						{% if current_lang() == 'english' %}
+							{{ shop_config('currency_symbol') }}
+							{{ product.price|number_format(2, '.', ',') }}
+						{% else %}
+							{{ product.price|format_currency }}
+						{% endif %}
+						</td>
+
+						<td class="quantity">
+							<input type="number" class="form-control" onchange="$(this).parents('form:first').submit(); return false;" name="cartkey[{{ cartkey }}]" value="{{ product.quantity }}" {{ product.fixed_quantity ? ' readonly="true"' : '' }} />
+						</td>
+
+						<td class="delete">
+							<a href="{{ site_url('cart/remove_item/' ~ cartkey) }}" class="close">
+								<span class="fa fa-times"></span>
+							</a>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+
+			<table class="table total-data">
+				{% if cart('group_discount') > 0 %}
+				<tr>
+					<td>
+						<strong>
+							{{ lang('group_discount') }}
+						</strong>
+					</td>
+
+					<td>
+						{% if current_lang() == 'english' %}
+							{{ shop_config('currency_symbol') }}
+							{{ (0 - cart('group_discount'))|number_format(2, '.', ',') }}
+						{% else %}
+							{{ (0 - cart('group_discount'))|format_currency }}
+						{% endif %}
+					</td>
+				</tr>
+				{% endif %}
+
+				<tr>
+					<td>
+						<strong>
+							{{ lang('subtotal') }}
+						</strong>
+					</td>
+
+					<td>
+						{% if current_lang() == 'english' %}
+							{{ shop_config('currency_symbol') }}
+							{{ cart('subtotal')|number_format(2, '.', ',') }}
+						{% else %}
+							{{ cart('subtotal')|format_currency }}
+						{% endif %}
+					</td>
+				</tr>
+
+				{% if cart('look_discount') > 0 %}
+				<tr>
+					<td>
+						<strong>
+							{{ lang('look_discount') }}
+						</strong>
+					</td>
+
+					<td>
+						{% if current_lang() == 'english' %}
+							-{{ shop_config('currency_symbol') }}
+							{{ cart('look_discount')|number_format(2, '.', ',') }}
+						{% else %}
+							-{{ cart('look_discount')|format_currency }}
+						{% endif %}
+					</td>
+				</tr>
+				{% endif %}
+
+				{% if cart('coupon_discount') > 0 %}
+					<tr>
+						<td>
+							<strong>
+								{{ lang('coupon_discount') }}
+							</strong>
+						</td>
+
+						<td>
+							{% if current_lang() == 'english' %}
+								-{{ shop_config('currency_symbol') }}
+								{{ cart('coupon_discount')|number_format(2, '.', ',') }}
+							{% else %}
+								-{{ cart('coupon_discount')|format_currency }}
+							{% endif %}
+						</td>
+					</tr>
+
+					{% if cart('order_tax') > 0 %}
+					<tr>
+						<td>
+							<strong>
+								{{ lang('discounted_subtotal') }}
+							</strong>
+						</td>
+
+						<td>
+							{% if current_lang() == 'english' %}
+								{{ shop_config('currency_symbol') }}
+								{{ cart('discounted_subtotal')|number_format(2, '.', ',') }}
+							{% else %}
+								{{ cart('discounted_subtotal')|format_currency }}
+							{% endif %}
+						</td>
+					</tr>
+					{% endif %}
+				{% endif %}
+
+				{% if cart('get_custom_charges')|count > 0 %}
+					{% for name, price in cart('get_custom_charges') %}
+					<tr>
+						<td>
+							<strong>
+								{{ name }}
+							</strong>
+						</td>
+						<td>
+							{% if current_lang() == 'english' %}
+								{{ shop_config('currency_symbol') }}
+								{{ (price)|number_format(2, '.', ',') }}
+							{% else %}
+								{{ (price)|format_currency }}
+							{% endif %}
+						</td>
+					</tr>
+					{% endfor %}
+				{% endif %}
+
+				{% if shop_config('tax_shipping') and cart('shipping_cost') > 0 %}
+				<tr>
+					<td>
+						<strong>
+							{{ lang('shipping') }}
+						</strong>
+					</td>
+					<td>
+						{% if current_lang() == 'english' %}
+							{{ shop_config('currency_symbol') }}
+							{{ cart('shipping_cost')|number_format(2, '.', ',') }}
+						{% else %}
+							{{ cart('shipping_cost')|format_currency }}
+						{% endif %}
+					</td>
+				</tr>
+				{% endif %}
+
+				{% if cart('order_tax') > 0 %}
+				<tr>
+					<td>
+						<strong>
+							{{ lang('total_before_tax') }}
+						</strong>
+					</td>
+
+					<td>
+						{% if current_lang() == 'english' %}
+							{{ shop_config('currency_symbol') }}
+							{{ cart('total_before_tax')|number_format(2, '.', ',') }}
+						{% else %}
+							{{ cart('total_before_tax')|format_currency }}
+						{% endif %}
+					</td>
+				</tr>
+				{% endif %}
+
+				{% if cart('order_tax') > 0 %}
+				<tr>
+					<td>
+						<strong>
+							{{ lang('tax') }} ({{ shop_config('default_tax') }} %)
+						</strong>
+					</td>
+
+					<td>
+						{% if current_lang() == 'english' %}
+							{{ shop_config('currency_symbol') }}
+							{{ cart('order_tax')|number_format(2, '.', ',') }}
+						{% else %}
+							{{ cart('order_tax')|format_currency }}
+						{% endif %}
+					</td>
+				</tr>
+				{% endif %}
+
+				{% if not shop_config('tax_shipping') and cart('shipping_cost') > 0 %}
+				<tr>
+					<td>
+						<strong>
+							{{ lang('shipping') }}
+						</strong>
+					</td>
+
+					<td>
+						{% if current_lang() == 'english' %}
+							{{ shop_config('currency_symbol') }}
+							{{ cart('shipping_cost')|number_format(2, '.', ',') }}
+						{% else %}
+							{{ cart('shipping_cost')|format_currency }}
+						{% endif %}
+					</td>
+				</tr>
+				{% endif %}
+
+				{% if cart('gift_card_discount') > 0 %}
+				<tr>
+					<td>
+						<strong>
+							{{ lang('gift_card_discount') }}
+						</strong>
+					</td>
+
+					<td>
+						{% if current_lang() == 'english' %}
+							-{{ shop_config('currency_symbol') }}
+							{{ cart('gift_card_discount')|number_format(2, '.', ',') }}
+						{% else %}
+							-{{ cart('gift_card_discount')|format_currency }}
+						{% endif %}
+					</td>
+				</tr>
+				{% endif %}
+
+				<tr>
+					<td>
+						<strong>
+							{{ lang('grand_total') }}
+						</strong>
+					</td>
+
+					<td>
+						{% if current_lang() == 'english' %}
+							{{ shop_config('currency_symbol') }}
+							{{ cart('total')|number_format(2, '.', ',') }}
+						{% else %}
+							{{ cart('total')|format_currency }}
+						{% endif %}
+					</td>
+				</tr>
+			</table>
+
+			<div class="coupon">
+				<div class="input-group">
+					<input type="text" placeholder="{{ lang('coupon_label_short') }}" name="coupon_code" id="checkout_coupon_code" class="form-control" />
+					<div class="input-group-btn">
+						<input type="submit" class="btn btn-default submit alternate" value="{{ lang('apply_coupon') }}" />
+					</div>
+				</div>
+			</div>
+			{{ form_close() }}
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-xs-12">
+			{{ form_open('checkout/create', 'id="onepage_checkoutform" data-validate-on-load="true"') }}
+				<div class="row">
+					<div class="col-xs-12">
+						{% if shop_config('international') %}
+						<div class="cart-bottom-buffer cart-preselect-header">
+							{{ inputgroup.dropdown('country_id', 'country_id', countries, country_id, lang('address_country'), 4) }}
+						</div>
+						{% else %}
+						<input type="hidden" name="country_id" value="{{ country_id }}" id="country_id" />
+						{% endif %}
+					</div>
+				</div>
+
+				{% if not logged_in %}
+				<hr>
+
+				<div class="row">
+					<div class="col-xs-12">
+						{{ inputgroup.input('a_email', 'email', set_value('email', customer.email), lang('address_email'), 4, 'email') }}
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-12">
+						{{ inputgroup.input('a_password', 'password', '', lang('account_password'), 4, 'password') }}
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-12">
+						{{ inputgroup.input('a_confirm', 'confirm', '', lang('account_confirm'), 4, 'password') }}
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-12">
+						<label class="checkbox">
+							<input type="checkbox" name="email_subscribe" value="1" checked="checked" />
+							{{ lang('account_newsletter_subscribe') }}
+						</label>
+					</div>
+				</div>
+				{% else %}
+					{{ form_hidden('email', customer.email) }}
+				{% endif %}
+
+				<hr>
+
+				<div class="row">
+					<div class="col-xs-12">
+						{{ inputgroup.input('a_firstname', 'firstname', set_value('firstname', customer.firstname), lang('account_firstname'), 2) }}
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-12">
+						{{ inputgroup.input('a_lastname', 'lastname', set_value('lastname', customer.lastname), lang('account_lastname'), 2) }}
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-12">
+						{{ inputgroup.input('a_birthday', 'birthday', set_value('birthday', customer.birthday)|to_formated_date, lang('account_birthday'), 2, 'text', '', '', '\d*') }}
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-12">
+						{{ inputgroup.dropdown('a_sex', 'sex', {0: 'Masculino', 1: 'Feminino'}, set_value('sex', customer.sex), lang('account_sex'), 2) }}
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="brasil-only{{ country_id != 30 ? ' hide' : '' }}">
+							{{ inputgroup.input('a_cpf', 'cpf', set_value('cpf', customer.cpf), lang('account_cpf'), 2, 'tel', '', '', '\d*') }}
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-12">
+						{{ inputgroup.input('phone', 'phone', set_value('phone', customer.phone), lang('address_phone'), 2, 'tel') }}
+					</div>
+				</div>
+
+				<hr>
+
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="brasil-only{{ country_id != 30 ? ' hide' : '' }} form-group">
+							<label>
+								{{ lang('address_postcode') }}
+								<sup>*</sup>
+							</label>
+
+							<div class="input-group">
+								{{ form_input({'id': 'zip_code', 'class': 'form-control address input-block-level', 'value': set_value('zip', zipvalue), 'pattern': "\d*"}) }}
+
+								<div class="input-group-btn">
+									<a href="#" class="btn btn-default btn-search-address">{{ lang('do_search') }}</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="other-countries{{ country_id == 30 ? ' hide' : '' }}">
+							{{ inputgroup.input('a_zip', 'zip', set_value('zip', zipvalue), lang('address_zip'), 4) }}
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-12">
+						{{ inputgroup.dropdown('zone_id', 'zone_id', zones_menu, set_value('zone_id', customer.ship_address.zone_id), lang('address_state'), 3) }}
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-12">
+						{{ inputgroup.input('a_city', 'city', set_value('city', customer.ship_address.city), lang('address_city'), 2) }}
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-12">
+						{{ inputgroup.input('a_district', 'district', set_value('district', customer.ship_address.district), lang('district'), 3) }}
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-12">
+						{{ inputgroup.input('a_address1', 'address1', set_value('address1', customer.ship_address.address1), lang('address1'), 7) }}
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-12">
+						{{ inputgroup.input('a_anumber', 'anumber', set_value('anumber', customer.ship_address.anumber), lang('anumber'), 2) }}
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-12">
+						{{ inputgroup.input('a_address2', 'address2', set_value('address2', customer.ship_address.address2), lang('address2'), 3, 'text', 'noValidate', true) }}
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-12">
+						{{ form_hidden('country_id', country_id) }}
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-12">
+						{{ form_hidden('address_id', address_id) }}
+					</div>
+				</div>
+
+				<hr>
+
+				<div class="row">
+					<div class="col-xs-12">
+						<h3>{{ lang('shipping_method') }}</h3>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-12">
+						<table id="shipping_table" class="table">
+							<tr>
+								<td>
+									<i class="glyphicon glyphicon-refresh hide"></i>
+									{{ 'Por favor informe seu CEP primeiro.'|trans({'en':'Please tell your ZIP Code first.'}) }}
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+
+				<hr>
+
+				<div class="row">
+					<div class="col-xs-12">
+						<h3>{{ lang('payment_method') }}</h3>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-12">
+						{% if payment_method.module %}
+						<input type="hidden" name="module" value="{{ payment_method.module }}" />
+						{% else %}
+						<input type="hidden" name="module" value="{{ payment_methods|key }}" />
+						{% endif %}
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-12">
+						<div id="payment_tabs">
+							<ul class="nav nav-tabs">
+								{% for method, info in payment_methods %}
+								<li class="{{ loop.first ? 'active' : 'inactive' }}">
+									<a class="payment-method-nav" data-toggle="data" href="#payment-{{ method }}">
+										{{ info.name }}
+									</a>
+								</li>
+								{% endfor %}
+							</ul>
+
+							<div class="tab-content">
+								{% for method, info in payment_methods %}
+								<div id="payment-{{ method }}" class="tab-pane payment-method{{ loop.first ? ' active' : '' }}">
+									{{ info.form|raw }}
+								</div>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-xs-12">
+						<h3 class="center shipping_cost">
+							<span class="total">
+								{{ lang('grand_total') }}:
+
+								{% if current_lang() == 'english' %}
+									{{ shop_config('currency_symbol') }}
+									{{ cart('total')|number_format(2, '.', ',') }}
+								{% else %}
+									{{ cart('total')|format_currency }}
+								{% endif %}
+							</span>
+
+							{% if cart('shipping_cost') > 0 %}
+							<span class="shipping">
+								(
+									{% if current_lang() == 'english' %}
+										{{ shop_config('currency_symbol') }}
+										{{ cart('subtotal')|number_format(2, '.', ',') }} + {{ lang('shipping') }}:
+										{{ shop_config('currency_symbol') }}
+										{{ cart('shipping_cost')|number_format(2, '.', ',') }}
+									{% else %}
+										{{ cart('subtotal')|format_currency }} + {{ lang('shipping') }}:
+										{{ cart('shipping_cost')|format_currency }}
+									{% endif %}
+								)
+							</span>
+							{% endif %}
+						</h3>
+					</div>
+				</div>
+				<hr>
+				<div class="row">
+					<div class="col-xs-12">
+						<button type="submit" class="btn btn-primary btn-lg buy-btn btn-block">
+							<i class="fa fa-check"></i> {{ lang('submit_order') }}
+						</button>
+					</div>
+				</div>
+			</div>
+			{{ form_close() }}
+		</div>
+	</div>
+
+		{% if not logged_in %}
+			{% include 'bs3/checkout/login_modal.html' %}
+		{% endif %}
+	{% endif %}
+{% endblock %}

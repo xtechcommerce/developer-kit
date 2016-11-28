@@ -1,0 +1,72 @@
+{% macro item(product, category, cols) %}
+	<div class="col-xs-{{ cols }}">
+		<div class="product-list-item">
+			<a href="{{ site_url((category.slug ~ '/') | default('') ~ product.slug ) }}">
+				<div class="row">
+					<div class="col-xs-4">
+						<div class="product-img">
+							<img class="img-responsive" src="{{ product_img(product, 'medium', {'only_link': true}) }}" alt="{{ product.name }}" />
+
+							{# Flags #}
+							{% if product.track_stock == 1 and product.quantity <= 0 %}
+								<div class="product-flag-red product-flag">{{ lang('out_of_stock') }}</div>
+							{% else %}
+								{% set sale = false %}
+
+								{% for category in product.categories %}
+									{% if categories_flatten[category.id].slug == 'sale' %}
+										<div class="product-flag-dark-green product-flag">
+											Promoção
+										</div>
+
+										{% set sale = true %}
+									{% endif %}
+								{% endfor %}
+
+								{% if product.saleprice > 0 %}
+									<div class="product-flag-dark-green product-flag">
+										{{ (((product.saleprice - product.price) / product.price) * 100)|round }}%
+									</div>
+								{% endif %}
+							{% endif %}
+						</div>
+					</div>
+
+					<div class="col-xs-8">
+						<div class="product-description">
+							<div class="row">
+								<div class="col-xs-12">
+									<h4 class="title">
+										{{ product.name }}
+									</h4>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-xs-12">
+									<span class="price">
+										{% set product_price = product.saleprice > 0 ? product.saleprice : product.price %}
+
+										<p class="product-saleprice">
+											{{ (product.saleprice > 0 ? '<span class="title-price line-through">' ~ product.price|format_currency ~ '</span>' : '')|raw }}
+
+											{{ product_price|format_currency }}
+										</p>
+
+										{% if product.installments > 0 %}
+										<p class="installments-price">
+											<span>{{ product.installments }}x</span>
+											<span>{{ (product_price/product.installments)|format_currency }}</span>
+											<span>{{ 'S/ JUROS'|trans({'en':''}) }}</span>
+										</p>
+										{% endif %}
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</a>
+	   </div>
+   </div>
+{% endmacro %}

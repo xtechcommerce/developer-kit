@@ -1,0 +1,36 @@
+<div class="logo">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <center>
+                    <div class="logo-base">
+                        <a href="{{ base_url() }}">
+                            <img src="{{ logo_url('dark') }}" alt="{{ shop_config('company_name') }}">
+                        </a>
+                    </div>
+                </center>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if not payment_methods %}
+<div class="search">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                {{ form_open('cart/search', {id: "form-search"}) }}
+                <div class="input-group">
+                    <input type="text" name="term" id="search-engine" class="form-control" placeholder="{{ lang('do_search') }}" autocomplete="off" />
+                    <span class="input-group-btn">
+                        <button class="btn" type="submit">
+                            <i class="fa fa-fw fa-search"></i>
+                        </button>
+                    </span>
+                </div>
+                {{ form_close() }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}

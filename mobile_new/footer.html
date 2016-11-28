@@ -1,0 +1,201 @@
+{% if not payment_methods %}
+<div class="subscribe">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h3>Assine nossa <strong>newsletter</strong></h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                {{ form_open('contact/newsletter_signup') }}
+                <div class="input-group">
+                    <input name="email" class="form-control" placeholder="{{ 'Insira seu e-mail aqui'|trans({'en':'Your email'}) }}" type="text">
+
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn-default">
+                            Assinar
+                        </button>
+                    </span>
+                </div>
+                {{ form_close() }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<footer class="footer">
+    <div class="container">
+        {% if not payment_methods %}
+            {% if get_children_of_page('institucional')|length > 0 %}
+            <!-- Institucional -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="links">
+                        <h2 class="thumb-headline">{{ "Institucional"|trans({'en':'Institutional'}) }}</h2>
+
+                        <ul class="list-unstyled simple-list margin-bottom-20">
+                            {% for page in get_children_of_page('institucional') %}
+                            <li>
+                                <a href="{{ page.url is empty ? site_url(page.slug) : page.url }}" {{ page.new_window ? 'target="_blank"':''}}>{{ page.title }}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if get_children_of_page('ajuda-e-suporte')|length > 0 %}
+            <!-- Ajuda & Suporte -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="links">
+                        <h2 class="thumb-headline">{{ "Ajuda & Suporte"|trans({'en':'Support'}) }}</h2>
+
+                        <ul class="list-unstyled simple-list margin-bottom-20">
+                            {% for page in get_children_of_page('ajuda-e-suporte') %}
+                            <li>
+                                <a href="{{ page.url is empty ? site_url(page.slug) : page.url }}" {{ page.new_window ? 'target="_blank"':''}}>{{ page.title }}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {%  set socials = {
+                facebook: {link: social_link('facebook'), alt: "Curta nossa página no Facebook"},
+                twitter: {link: social_link('twitter'), alt: "Siga-nos no Twitter"},
+                instagram: {link: social_link('instagram'), alt: "Siga-nos no Instagram"},
+                google: {link: social_link('google'), alt: "Siga-nos no Google"},
+                pinterest: {link: social_link('pinterest'), alt: "Siga-nos no Pinterest"},
+                youtube: {link: social_link('youtube'), alt: "Inscreva-se no Youtube"},
+            } %}
+
+            {% if
+                (social_link('facebook') != "") or
+                (social_link('twitter') != "") or
+                (social_link('instagram') != "") or
+                (social_link('google') != "") or
+                (social_link('pinterest') != "") or
+                (social_link('youtube') != "")
+            %}
+            <!-- Redes Sociais -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="socials">
+                        <h2 class="thumb-headline">{{ "Redes Sociais"|trans({'en':'Social Media'}) }}</h2>
+
+                        <div class="social">
+                            {% for social, attr in socials %}
+                                {% if attr.link %}
+                                <a class="social-icons" href="{{ attr.link }}" target="_blank">
+                                    <i class="fa fa-xs fa-fw fa-{{social}}"></i>
+                                </a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        {% endif %}
+
+        {% if payment_methods %}
+            <!-- Site Seguro -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="secure">
+                        <i class="fa fa-lock"></i>
+                        Site 100% Seguro
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Métodos de pagamento -->
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="payment-methods text-center">
+                    <p><img src="/loja/themes/default/assets/img/f-visa.png"></p>
+                    <p><img src="/loja/themes/default/assets/img/f-mastercard.png"></p>
+                    <p><img src="/loja/themes/default/assets/img/f-amex.png"></p>
+                    <p><img src="/loja/themes/default/assets/img/f-elo.png"></p>
+                    <p><img src="/loja/themes/default/assets/img/f-boleto.png"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="copy text-center">
+                    {% if shop_config('cnpj') or shop_config('company_registration') or shop_config('address1') %}
+                    <p>
+                        <small>
+                            {% if shop_config('cnpj') %}
+                            <strong>CNPJ:</strong> {{ shop_config('cnpj') }}<br>
+                            {% endif %}
+
+                            {% if shop_config('company_registration') %}
+                            <strong>Razão Social:</strong> {{ shop_config('company_registration') }}<br>
+                            {% endif %}
+
+                            {% if shop_config('address1') %}
+                            <strong>Endereço:</strong>
+                            {{ shop_config('address1') }}
+                            {{ shop_config('address2') }} -
+                            {{ shop_config('district') }},
+                            {{ shop_config('city') }} -
+                            {{ shop_config('state') }}
+                            {% endif %}
+                        </small>
+                    </p>
+                    {% endif %}
+
+                    <p>
+                        <small>
+                            <strong>
+                                &copy; {{ "now"|date('Y') }} {{ shop_config('company_name') }}.
+                                <br>
+                                {{ "Todos os direitos reservados."|trans({'en':'All rights reserved.'}) }}
+                            </strong>
+                        </small>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="powered text-center">
+                    <p>
+                        <small>
+                            Powered by
+                            <br>
+                            <a href="http://xtechcommerce.com.br" target="_blank">
+                                Xtech Commerce
+                            </a>
+                        </small>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <p class="text-center">
+                    <small>
+                        <a href="/?view=desktop">
+                            Versão Desktop
+                        </a>
+                    </small>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>

@@ -1,0 +1,31 @@
+<ol class="breadcrumb">
+    <li>
+        <a href="{{ site_url() }}">
+            {{ "Página Principal"|trans({'en':'Home'}) }}
+        </a>
+    </li>
+
+    {% if term is not empty %}
+    <li class="active">{{ "Busca"|trans({'en':'Search'}) }}</li>
+    {% endif %}
+
+    {% for path in base_url %}
+        {% set path_title = '' %}
+
+        {% for category in categories_flatten %}
+            {% if category.slug == path %}
+                {% set path_title = category.name %}
+            {% endif %}
+        {% endfor %}
+
+        {% if loop.last %}
+            <li class="active">{{ product.slug == path ? product.name : path_title }}</li>
+        {% else %}
+            <li>
+                <a href="{{ site_url(path) }}">
+                    {{ path_title }}
+                </a>
+            </li>
+        {% endif %}
+    {% endfor %}
+</ol>

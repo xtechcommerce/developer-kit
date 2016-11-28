@@ -1,0 +1,152 @@
+{% extends _layout %}
+
+{% block content %}
+	<div id="order">
+		<div class="row">
+			<div class="col-xs-12">
+				<h1 class="title text-center">{{ 'Compra realizada com successo!'|trans({'en':'Purchase made with success!'}) }}</h1>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-xs-12">
+				<hr>
+				<h2>{{ 'O número do seu pedido é'|trans({'en':'Your order number is'}) }} #{{ order.order_number }}</h2>
+				<p >{{ 'Enviamos os detalhes do seu pedido para'|trans({'en':'We sent the details from your order to'}) }} {{ order.email }}.</p>
+				<hr>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-xs-12">
+				{% if payment.info.boletourl %}
+					<p>Agora, resta imprimir o boleto. Ele pode ser pago em qualquer agência ou pelo site do seu banco.</p>
+					<p class="text-center"><a class="btn btn-default btn-lg" target="_blank" href="{{ payment.info.boletourl }}">Imprimir boleto</a></p>
+					<p>Como o banco leva um dia para processar o boleto, o prazo de entrega começa a valer um dia após o seu pagamento.</p>
+				{% elseif payment.info.paymenturl %}
+					<p>Agora, resta completar o pagamento. Clique no link abaixo para efetuar o pagamento do seu pedido.</p>
+					<p class="text-center"><a class="btn btn-default btn-lg" target="_blank" href="{{ payment.info.paymenturl }}">Efetuar o Pagamento</a></p>
+				{% endif %}
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-xs-12">
+				{% if shop_config('ebit_id') is not empty %}
+					<a id="bannerEbit">
+						<img src="https://www.ebitempresa.com.br/bitrate/banners/b1{{ shop_config('ebit_id') }}5.gif">
+					</a>
+
+					{% if shop_config('buscape_id') is not empty %}
+						{% set birthday = order.customer_birthday|split('-') %}
+						{% set values = '' %}
+						{% set quantities = '' %}
+						{% set names = '' %}
+						{% set skus = '' %}
+
+						{% for product in order.contents %}
+							{% set values = values ~ (product.price|number_format(2, ".", "") ~ (loop.index > 0 and not loop.last ? '|' : '')) %}
+							{% set quantities = quantities ~ product.quantity ~ (loop.index > 0 and not loop.last ? '|' : '') %}
+							{% set names = names ~ product.name ~ (loop.index > 0 and not loop.last ? '|' : '') %}
+							{% set skus = skus ~ product.sku ~ (loop.index > 0 and not loop.last ? '|' : '') %}
+						{% endfor %}
+
+						<param id="ebitParam" value="email={{ order.email }}&gender={{ order.customer_sex ? 'F' : 'M' }}&birthDay={{ birthday[2] ~ '-' ~ birthday[1] ~ '-' ~ birthday[0] }}&zipCode={{ order.ship_zip|replace({'-':''}) }}&deliveryTax={{ order.shipping }}&deliveryTime={{ order.delivery_time }}&totalSpent={{ order.total }}&value={{ values }}&quantity={{ quantities }}&productName={{ names }}&transactionId={{ order.order_number }}&sku={{ skus }}&buscapeId={{ shop_config('buscape_id') }}&storeId={{ shop_config('ebit_id') }}" />
+					{% endif %}
+
+					<script type="text/javascript" id="getSelo" src="https://imgs.ebit.com.br/ebitBR/selo-ebit/js/getSelo.js?{{ shop_config('ebit_id') }}&lightbox=true"></script>
+				{% endif %}
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-xs-12">
+				<a class="btn btn-default" href="{{ site_url('/') }}">
+					<i class="fa fa-fw fa-angle-left"></i>
+					{{ lang('form_back') }}
+				</a>
+			</div>
+		</div>
+
+		{% if not is_local() %}
+			<script>
+				ga('require', 'ecommerce');
+
+				var gaTransaction = {
+					'id': '{{ order.order_number }}',                                    // Transaction ID. Required.
+					'affiliation': '{{ shop_config('company_name')|e('html') }}',        // Affiliation or store name.
+					'revenue': '{{ order.total|number_format(2, ".", "") }}',            // Grand Total.
+					'shipping': '{{ order.shipping|number_format(2, ".", "") }}',        // Shipping.
+					'tax': '0',                                                          // Tax.
+					'currency': '{{ shop_config('currency') }}'
+				};
+
+				ga('ecommerce:addTransaction', gaTransaction);
+
+				{% for product in order.contents %}
+				ga('ecommerce:addItem', {
+					'id': '{{ order.order_number }}',                                    // Transaction ID. Required.
+					'name': '{{ product.name|e('html') }}',                              // Product name. Required.
+					'sku': '{{ product.sku|e('html') }}',                                // SKU/code.
+					'category': '{{ get_product_category(product.id)|e('html') }}',      // Category or variation.
+					'price': '{{ product.price|number_format(2, ".", "") }}',            // Unit price.
+					'quantity': '{{ product.quantity }}'                                 // Quantity.
+				});
+				{% endfor %}
+
+				ga('ecommerce:send');
+
+				{% if shop_config('google_analytics') %}
+				ga('customTracker.require', 'ecommerce');
+				ga('customTracker.ecommerce:addTransaction', gaTransaction);
+
+				{% for product in order.contents %}
+				ga('customTracker.ecommerce:addItem', {
+					'id': '{{ order.order_number }}',                                    // Transaction ID. Required.
+					'name': '{{ product.name|e('html') }}',                              // Product name. Required.
+					'sku': '{{ product.sku|e('html') }}',                                // SKU/code.
+					'category': '{{ get_product_category(product.id)|e('html') }}',      // Category or variation.
+					'price': '{{ product.price|number_format(2, ".", "") }}',            // Unit price.
+					'quantity': '{{ product.quantity }}'                                 // Quantity.
+				});
+				{% endfor %}
+
+				ga('customTracker.ecommerce:send');
+				{% endif %}
+			</script>
+
+			{% if shop_config('instaby_url') %}
+				<script type="text/javascript" charset="utf-8">
+					var orderInfo = {
+						nome_loja: '{{ shop_config('company_name')|e('html') }}',
+						orderID: '{{ order.order_number }}',
+						total: '{{ (order.total - order.shipping)|number_format(2, ".", "") }}'
+					};
+					(function () {
+					var ss = document.createElement('script');
+					ss.type = 'text/javascript';
+					ss.async = true;
+					ss.src = '//s3-sa-east-1.amazonaws.com/instaby/pixel/IBY-send.js'; var sc = document.getElementsByTagName('script')[0]; sc.parentNode.insertBefore(ss, sc);
+					})();
+				</script>
+			{% endif %}
+
+			{% if shop_config('rakuten_marketing_id') %}
+				{% set r_sku = '' %} {% set r_name = '' %} {% set r_qty = '' %} {% set r_price = '' %}
+				{% for product in order.contents %}
+					{% set r_sku = r_sku ~ product.id %}
+					{% set r_name = r_name ~ (product.name|e('html')) %}
+					{% set r_qty = r_qty ~ product.quantity %}
+					{% set r_price = r_price ~ (product.price|number_format(2, ".", "") * product.quantity * 100) %}
+					{% if not loop.last %}
+						{% set r_sku = r_sku ~ '|' %}
+						{% set r_name = r_name ~ '|' %}
+						{% set r_qty = r_qty ~  '|' %}
+						{% set r_price = r_price ~ '|' %}
+					{% endif %}
+				{% endfor %}
+				<img src="https://track.linksynergy.com/ep?mid={{ shop_config('rakuten_marketing_id') }}&ord={{ order.order_number }}&skulist={{ r_sku }}&qlist={{ r_qty }}&amtlist={{ r_price }}&cur={{ shop_config('currency') }}&img=1&namelist={{ r_name }}">
+			{% endif %}
+		{% endif %}
+	</div>
+{% endblock %}

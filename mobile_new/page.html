@@ -1,0 +1,59 @@
+{% extends _layout %}
+
+{% block content %}
+
+<div class="page">
+	{% if page.slug == 'contato' %}
+	<div class="row">
+		<div class="col-xs-12">
+			<h3 class="page-header">
+				{{ page.title }}
+			</h3>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-xs-12">
+			{{ form_open('contact/emailsender', '', {'subject': 'Contato - Loja Xtech Commerce', 'referrer': current_url()}) }}
+				<div class="form-group">
+					<label for="sender_name">{{ 'Nome'|trans({'en':'Name'}) }}</label>
+					<input type="text" name="sender_name" class="form-control" />
+				</div>
+
+				<div class="form-group">
+					<label for="sender_email">{{ 'Email'|trans({'en':'Email'}) }}</label>
+					<input type="text" name="sender_email" class="form-control" />
+				</div>
+
+				<div class="form-group">
+					<label for="message">{{ 'Mensagem'|trans({'en':'Message'}) }}</label>
+					<textarea name="message" cols="80" rows="10" class="form-control"></textarea>
+				</div>
+
+				<div class="form-group">
+					<input type="submit" class="btn btn-primary btn-bck" value="{{ 'ENVIAR'|trans({'en':'SEND'}) }}" />
+				</div>
+			{{ form_close() }}
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-xs-12">
+			{{ page.content|raw }}
+		</div>
+	</div>
+	{% else %}
+	<div class="row">
+		<div class="col-xs-12">
+			<h3 class="page-header">{{ page.title }}</h3>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-xs-12">
+			{{ page.content|raw }}
+		</div>
+	</div>
+	{% endif %}
+</div>
+{% endblock %}
