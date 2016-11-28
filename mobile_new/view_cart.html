@@ -434,7 +434,7 @@
 
 				<div class="row">
 					<div class="col-xs-12">
-						{{ inputgroup.input('a_birthday', 'birthday', set_value('birthday', customer.birthday)|to_formated_date, lang('account_birthday'), 2, 'text', '', '', '\d*') }}
+						{{ inputgroup.input('a_birthday', 'birthday', set_value('birthday', customer.birthday)|to_formated_date, lang('account_birthday'), 2, 'tel') }}
 					</div>
 				</div>
 
@@ -447,7 +447,7 @@
 				<div class="row">
 					<div class="col-xs-12">
 						<div class="brasil-only{{ country_id != 30 ? ' hide' : '' }}">
-							{{ inputgroup.input('a_cpf', 'cpf', set_value('cpf', customer.cpf), lang('account_cpf'), 2, 'tel', '', '', '\d*') }}
+							{{ inputgroup.input('a_cpf', 'cpf', set_value('cpf', customer.cpf), lang('account_cpf'), 2, 'tel') }}
 						</div>
 					</div>
 				</div>
@@ -469,7 +469,7 @@
 							</label>
 
 							<div class="input-group">
-								{{ form_input({'id': 'zip_code', 'class': 'form-control address input-block-level', 'value': set_value('zip', zipvalue), 'pattern': "\d*"}) }}
+								{{ form_input({'id': 'zip_code', 'class': 'form-control address input-block-level', 'value': set_value('zip', zipvalue)}) }}
 
 								<div class="input-group-btn">
 									<a href="#" class="btn btn-default btn-search-address">{{ lang('do_search') }}</a>
