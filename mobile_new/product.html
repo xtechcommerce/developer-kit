@@ -423,7 +423,7 @@
                                         </div>
                                     </div>
 
-                                    {% for related_product in related %}
+                                    {% for related_product in related|slice(0,3) %}
                                         <div class="row">
                                             {{ product_listing.item(related_product, category, 12) }}
                                         </div>
