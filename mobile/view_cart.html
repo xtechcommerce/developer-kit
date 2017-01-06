@@ -51,6 +51,24 @@
 		</div>
 		{% endif %}
 
+		{% if flashdata.error %}
+		<div class="alert alert-danger">
+			{{ flashdata.error }}
+		</div>
+		{% endif %}
+		
+		{% if flashdata.message %}
+		<div class="alert alert-info">
+			{{ flashdata.message }}
+		</div>
+		{% endif %}
+		
+		{% if error %}
+		<div class="alert alert-danger">
+			{{ error }}
+		</div>
+		{% endif %}
+
 		{{ form_open('cart/update_cart', {'id': 'update_cart_form'}) }}
 		<table class="table">
 			<thead>
@@ -360,7 +378,10 @@
 						{{ lang('address_postcode') }}
 						<sup>*</sup>
 					</label>
-					{{ form_input({'id': 'zip_code', 'class': 'address input-block-level', 'value': set_value('zip', zipvalue)}) }}
+					<div class="input-append">
+						{{ form_input({'id': 'zip_code', 'style': 'width: 60%;', 'class': 'address input-block-level', 'value': set_value('zip', zipvalue)}) }}
+						<a href="#" class="btn btn-default btn-search-address" style="width: 30%;">{{ lang('do_search') }}</a>
+					</div>
 				</div>
 				<div class="other-countries{{ country_id == 30 ? ' hide' : '' }}">
 					{{ inputgroup.input('a_zip', 'zip', set_value('zip', zipvalue), lang('address_zip'), 4) }}
@@ -374,7 +395,6 @@
 
 				{{ form_hidden('country_id', country_id) }}
 				{{ form_hidden('address_id', address_id) }}
-
 			</div>
 			<hr>
 			<div class="shippingwrap">

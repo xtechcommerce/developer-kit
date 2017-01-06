@@ -4,7 +4,7 @@
 
 	<div class="body">
 		<div id="order" class="clearfix side-pad">
-			<h1 class="title">{{ 'Compra realizada com successo!'|trans({'en':'Purchase made with success!'}) }}</h1>
+			<h1 class="title">{{ 'Compra realizada com sucesso!'|trans({'en':'Purchase made with success!'}) }}</h1>
 			<h2>{{ 'O número do seu pedido é'|trans({'en':'Your order number is'}) }} #{{ order.order_number }}</h2>
 			<p>{{ 'Enviamos os detalhes do seu pedido para'|trans({'en':'We sent the details from your order to'}) }} {{ order.email }}.</p>
 
@@ -22,7 +22,7 @@
 				<p><a class="btn btn-primary btn-lg" target="_blank" href="{{ payment.info.paymenturl }}">Efetuar o Pagamento</a></p>
 
 			{% endif %}
-			
+
 			{% if shop_config('ebit_id') is not empty %}
 				<br>
 				<a id="bannerEbit"><img src="https://www.ebitempresa.com.br/bitrate/banners/b1{{ shop_config('ebit_id') }}5.gif"></a>
@@ -92,6 +92,39 @@
 				ga('customTracker.ecommerce:send');
 				{% endif %}
 			</script>
+
+			{% if shop_config('instaby_url') %}
+				<script type="text/javascript" charset="utf-8">
+					var orderInfo = {
+						nome_loja: '{{ shop_config('company_name')|e('html') }}',
+						orderID: '{{ order.order_number }}',
+						total: '{{ (order.total - order.shipping)|number_format(2, ".", "") }}'
+					};
+					(function () {
+					var ss = document.createElement('script');
+					ss.type = 'text/javascript';
+					ss.async = true;
+					ss.src = '//s3-sa-east-1.amazonaws.com/instaby/pixel/IBY-send.js'; var sc = document.getElementsByTagName('script')[0]; sc.parentNode.insertBefore(ss, sc);
+					})();
+				</script>
+			{% endif %}
+
+			{% if shop_config('rakuten_marketing_id') %}
+				{% set r_sku = '' %} {% set r_name = '' %} {% set r_qty = '' %} {% set r_price = '' %}
+				{% for product in order.contents %}
+					{% set r_sku = r_sku ~ product.id %}
+					{% set r_name = r_name ~ (product.name|e('html')) %}
+					{% set r_qty = r_qty ~ product.quantity %}
+					{% set r_price = r_price ~ (product.price|number_format(2, ".", "") * product.quantity * 100) %}
+					{% if not loop.last %}
+						{% set r_sku = r_sku ~ '|' %}
+						{% set r_name = r_name ~ '|' %}
+						{% set r_qty = r_qty ~  '|' %}
+						{% set r_price = r_price ~ '|' %}
+					{% endif %}
+				{% endfor %}
+				<img src="https://track.linksynergy.com/ep?mid={{ shop_config('rakuten_marketing_id') }}&ord={{ order.order_number }}&skulist={{ r_sku }}&qlist={{ r_qty }}&amtlist={{ r_price }}&cur={{ shop_config('currency') }}&img=1&namelist={{ r_name }}">
+			{% endif %}
 		{% endif %}
 	</div>
 

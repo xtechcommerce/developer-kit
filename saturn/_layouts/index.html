@@ -4,12 +4,12 @@
     {{ header_code() }}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ shop_config('company_name') }} | {{ document_title(seo_title|default(page_title)) }}</title>
-  
+
     {# CSS #}
     {{ theme_css('bootstrap.css', true) }}
     {{ theme_css('main.css', true) }}
     {{ global_css('jquery.jqzoom.css', true) }}
-    
+
     {# Global JS #}
     {{ global_js('jquery.js', true) }}
     {{ global_js('jquery-migrate.min.js', true) }}
@@ -25,7 +25,6 @@
     {% if design_mode %}
        {{ template_navigator() }}
     {% endif %}
-    
     <div id="search" style="display:none;">
       <div class="container">
         {{ form_open('cart/search') }}
@@ -115,14 +114,14 @@
             {% endfor %}
           </ul>
         </div>
-        
+
       </div>
     </div>
 
     {% block banner %}
-    
+
     {% endblock %}
-  
+
     <div class="container">
       <div class="row">
         <div class="col-xs-12">
@@ -138,18 +137,18 @@
         </div>
       </div>
     </div>
-  
+
     <section id="store-content">
       <div class="container">
         {% block content %}
 
-        {% endblock %}  
+        {% endblock %}
       </div>
     </section>
 
     <section id="boxes">
       <ul class="list-inline">
-        {% 
+        {%
           set boxes = [
             {active: ts('if:box_1'), title: ts('text:box_1_title'), icon: "glyphicon glyphicon-send", link: ts('text:box_1_link')},
             {active: ts('if:box_2'), title: ts('text:box_2_title'), icon: "glyphicon glyphicon-transfer", link: ts('text:box_2_link')},
@@ -174,7 +173,7 @@
 
             </li>
           {% endif %}
-        {% endfor %}          
+        {% endfor %}
       </ul>
     </section>
 
@@ -182,7 +181,7 @@
       <div class="container">
         <div class="row">
           <div class="col-md-7">
-            {% 
+            {%
               set socials = {
                 b: {link: social_link('facebook'), alt: "Curta nossa página no Facebook"},
                 a: {link: social_link('twitter'), alt: "Siga-nos no Twitter"},

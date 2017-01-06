@@ -29,8 +29,12 @@
 			{% for product in products %}
 				<div class="product">
 					<a href="{{ site_url(product.slug) }}" class="rel bl">
-					{% if product.saleprice > 0 %}
-						<span class="abs sale">Sale</span>
+					{% if product.quantity <= 0 %}
+						<span class="abs outofstock">Esgotado</span>
+					{% else %}
+						{% if product.saleprice > 0 %}
+							<span class="abs sale">Oferta</span>
+						{% endif %}
 					{% endif %}
 					{{ product_img(product, 'small') }}
 					</a>
@@ -38,7 +42,7 @@
 						<p class="desc"><a href="{{ site_url(product.slug) }}"><strong>{{ product.name }}</strong></a></p>
 						<p class="price">
 							<em>
-							{% if product.saleprice > 0 %}						
+							{% if product.saleprice > 0 %}
 								{% if current_lang() == 'english' %}
 									{{ shop_config('currency_symbol') }}
 									{{ product.saleprice|number_format(2, '.', ',') }}
@@ -64,7 +68,7 @@
 							<p class="installments-price">
 								{% set product_price = product.saleprice > 0 ? product.saleprice : product.price %}
 								<strong>{{ product.installments }}x</strong>
-								{{ 'de'|trans({'en':'of'}) }} 
+								{{ 'de'|trans({'en':'of'}) }}
 								{% if current_lang() == 'english' %}
 									<strong>
 										{{ shop_config('currency_symbol') }}

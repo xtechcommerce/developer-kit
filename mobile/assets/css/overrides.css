@@ -452,3 +452,12 @@ footer a:link, footer a:visited, footer a.icon:link, footer a.icon:visited  {
   width: 100%;
   border: none;
 }
+
+.buy-message{
+  background: #ca6363;
+  color: #fff;
+  font-weight: bold;
+  margin-top: 20px;
+  padding: 10px;
+  text-align: center;
+}

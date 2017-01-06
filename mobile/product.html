@@ -2,44 +2,44 @@
 
 {% block content %}
 
-	<div class="body">
+    <div class="body">
 
-		<div id="product">
+        <div id="product">
 
-			{% if product.images|count > 1 %}
+            {% if product.images|count > 1 %}
 
-				<section class="slider">
-					<div id="slider" class="product-flexslider">
-						<ul class="slides">
-							{% for image in product.images %}
-								<li>
-									<img src="{{ host_url('uploads/images/medium/' ~ image.filename) }}" alt="{{ image.alt }}" title="{{ product.name }}" />
-								</li>
-							{% endfor %}
-						</ul>
-					</div>
-					<div id="carousel" class="product-flexslider">
-						<ul class="slides">
-							{% for image in product.images %}
-								<li>
-									<img src="{{ host_url('uploads/images/thumbnails/' ~ image.filename) }}" alt="{{ image.alt }}" title="{{ product.name }}" />
-								</li>
-							{% endfor %}
-						</ul>
-					</div>
-				</section>
+                <section class="slider">
+                    <div id="slider" class="product-flexslider">
+                        <ul class="slides">
+                            {% for image in product.images %}
+                                <li>
+                                    <img src="{{ host_url('uploads/images/medium/' ~ image.filename) }}" alt="{{ image.alt }}" title="{{ product.name }}" />
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div id="carousel" class="product-flexslider">
+                        <ul class="slides">
+                            {% for image in product.images %}
+                                <li>
+                                    <img src="{{ host_url('uploads/images/thumbnails/' ~ image.filename) }}" alt="{{ image.alt }}" title="{{ product.name }}" />
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </section>
 
             {% else %}
 
-				<section class="single-img btm-margin center">
-					{{ product_img(product, 'medium') }}
-				</section>
+                <section class="single-img btm-margin center">
+                    {{ product_img(product, 'medium') }}
+                </section>
 
-			{% endif %}
+            {% endif %}
 
-			<div class="details side-pad btm-margin">
+            <div class="details side-pad btm-margin">
 
-				<h1>{{ product.name }}</h1>
+                <h1>{{ product.name }}</h1>
 
                 {% if product.lookable %}
 
@@ -54,9 +54,9 @@
 
                             <div class="variants-wrapper clearfix">
                                 {{ variation_select(product) }}
-        		          		
-        		          		{% if product.options|count > 0 %}
-									{% for option in options %}
+
+                                {% if product.options|count > 0 %}
+                                    {% for option in options %}
                                         {% if option.id in product.available_options %}
                                             {% if option.type == 'textarea' %}
                                                 <label>{{ option.name }}</label>
@@ -67,45 +67,45 @@
                                             {% endif %}
                                         {% endif %}
                                     {% endfor %}
-								{% endif %}
+                                {% endif %}
 
                             </div>
 
                             <div id="purchase">
                                 <p class="price">
                                     {% if product.saleprice > 0 %}
-            							{% if current_lang() == 'english' %}
-											<del class="slash product_price">
-												{{ shop_config('currency_symbol') }}
-												{{ product.price|number_format(2, '.', ',') }}
-											</del>
-	                                        <span class="sale product_price">
-												{{ shop_config('currency_symbol') }}
-	                                        	{{ product.saleprice|number_format(2, '.', ',') }}
-                                        	</span>
-	                                        <span class="sale color variant_price" style="display: none;">
-	                                        	{{ shop_config('currency_symbol') }}
-	                                        	{{ product.saleprice|number_format(2, '.', ',') }}
-                                        	</span>
-										{% else %}
-	                                        <del class="slash product_price">{{ product.price|format_currency }}</del>
-	                                        <span class="sale product_price">{{ product.saleprice|format_currency }}</span>
-	                                        <span class="sale color variant_price" style="display: none;">{{ product.saleprice|format_currency }}</span>
-										{% endif %}
+                                        {% if current_lang() == 'english' %}
+                                            <del class="slash product_price">
+                                                {{ shop_config('currency_symbol') }}
+                                                {{ product.price|number_format(2, '.', ',') }}
+                                            </del>
+                                            <span class="sale product_price">
+                                                {{ shop_config('currency_symbol') }}
+                                                {{ product.saleprice|number_format(2, '.', ',') }}
+                                            </span>
+                                            <span class="sale variant_price" style="display: none;">
+                                                {{ shop_config('currency_symbol') }}
+                                                {{ product.saleprice|number_format(2, '.', ',') }}
+                                            </span>
+                                        {% else %}
+                                            <del class="slash product_price">{{ product.price|format_currency }}</del>
+                                            <span class="sale product_price">{{ product.saleprice|format_currency }}</span>
+                                            <span class="sale variant_price" style="display: none;">{{ product.saleprice|format_currency }}</span>
+                                        {% endif %}
                                     {% else %}
-            							{% if current_lang() == 'english' %}
-	                                        <span class="sale product_price">
-												{{ shop_config('currency_symbol') }}
-	                                        	{{ product.price|number_format(2, '.', ',') }}
-                                        	</span>
-	                                        <span class="sale color variant_price" style="display: none;">
-		                                        {{ shop_config('currency_symbol') }}
-		                                        {{ product.price|number_format(2, '.', ',') }}
-	                                        </span>
-										{% else %}
-	                                        <span class="sale product_price">{{ product.price|format_currency }}</span>
-	                                        <span class="sale color variant_price" style="display: none;">{{ product.price|format_currency }}</span>
-										{% endif %}
+                                        {% if current_lang() == 'english' %}
+                                            <span class="sale product_price">
+                                                {{ shop_config('currency_symbol') }}
+                                                {{ product.price|number_format(2, '.', ',') }}
+                                            </span>
+                                            <span class="sale variant_price" style="display: none;">
+                                                {{ shop_config('currency_symbol') }}
+                                                {{ product.price|number_format(2, '.', ',') }}
+                                            </span>
+                                        {% else %}
+                                            <span class="sale product_price">{{ product.price|format_currency }}</span>
+                                            <span class="sale variant_price" style="display: none;">{{ product.price|format_currency }}</span>
+                                        {% endif %}
                                     {% endif %}
                                 </p>
                                 <button class="btn buy-btn" type="submit" value="submit">{{ lang('form_buy') }}</button>
@@ -117,125 +117,222 @@
                     {% endif %}
                 {% endif %}
 
-				<div class="description">
-					<p>{{ product.description|raw }}</p>
-				</div>
+                <!-- Calculo de frete -->
+                {% if current_lang() == 'portugues' %}
+                <div class="prod-frete">
+                    <div class="col-xs-12">
+                        <div class="frete">
+                            {{ form_open('/shipping/get_frete?format=json', 'id="form-shipping"') }}
+                            <fieldset>
+                                <label for="cep"><strong>Frete e Prazo</strong></label>
+                                <div class="input-append">
+                                    <input type="text" id="zip_code" name="zip" style="width:50%;" maxlength="8" placeholder="CEP" />
+                                    <span class="input-group-btn">
+                                        <input type="submit" value="Calcular" name="submit" class="btn alternate"/>
+                                    </span>
+                                </div>
+                            </fieldset>
+                            <input type="hidden" name="product_price" value="{{ product.saleprice > 0 ? product.saleprice : product.price }}" />
+                            <input type="hidden" name="product_weight" value="{{ product.weight }}" />
+                            <input type="hidden" name="product_height" value="{{ product.height }}" />
+                            <input type="hidden" name="product_width" value="{{ product.width }}" />
+                            <input type="hidden" name="product_depth" value="{{ product.depth }}" />
+                            <input type="hidden" name="processing_days" value="{{ product.processing_days }}" />
+                            {{ form_close() }}
+                            <div class="frete_results"></div>
+                            <script>
+                                // $('#zip_code').mask('99999-999');
+                                $('#zip_code').on('keyup', function(){
+                                    var zipTest = $('#zip_code').val().search('_');
+                                    if(zipTest == -1){
+                                        $('#form-shipping input[type=submit]').removeAttr('disabled');
+                                    }else{
+                                        $('#form-shipping input[type=submit]').attr('disabled', 'disabled');
+                                    };
+                                });
+
+                                $('#form-shipping').on('submit', function(e){
+                                    e.preventDefault();
+                                    $('#form-shipping input[type=submit]').attr('disabled', 'disabled').val('Calculando...');
+
+                                    {% if not product.shippable %}
+                                        $shipping = '<p><strong>Frete Grátis</strong></p>';
+                                        $('.frete_results').removeClass('error').fadeIn().html($shipping);
+                                        $('#form-shipping input[type=submit]').removeAttr('disabled').val('Calcular');
+                                    {% else %}
+                                        var action = $(this).attr('action');
+                                        var zip = $('#zip_code').val().replace("-", "");
+                                        var product_price = $('input[name=product_price]').val();
+                                        var product_weight = $('input[name=product_weight]').val();
+                                        var product_height = $('input[name=product_height]').val();
+                                        var product_width = $('input[name=product_width]').val();
+                                        var product_depth = $('input[name=product_depth]').val();
+                                        var processing_days = $('input[name=processing_days]').val();
+
+                                        $.getJSON(site_url.base + 'shipping/busca_cep', {zip: zip}, function(data) {
+                                            $shipping = '';
+                                            var serialized = {country: 30, product_price: product_price, product_weight: product_weight, product_height: product_height, product_width: product_width, product_depth: product_depth, processing_days: processing_days, zip: zip, address: data};
+
+                                            if(data['resultado'] == 0){
+                                                $shipping = '<p><strong>Endereço não encontrado. Corrija seu CEP...</strong></p>';
+                                                $('.frete_results').removeClass('error').fadeIn().html($shipping);
+                                                $('#form-shipping input[type=submit]').removeClass('disabled').val('Calcular');
+                                            }else{
+                                                $.post(action, serialized, function(fdata){
+                                                    $('#form-shipping input[type=submit]').removeClass('disabled').val('Calcular');
+
+                                                    $.each(fdata["shipping_rates"], function(i, curr){
+                                                        if (curr['num'] > 0) {
+                                                             i += ': ';
+                                                        }
+
+                                                        if(typeof fdata['shipping_rates']['A cobrar'] == 'undefined') {
+                                                            if(curr['hide_price'] == 1) {
+                                                                curr['str'] = i;
+                                                                i = '';
+                                                            } else if(curr['num'] == 0){
+                                                                curr['str'] = 'Frete Grátis';
+                                                                i = '';
+                                                            }
+                                                        } else {
+                                                            curr['str'] = 'O valor e o prazo do frete serão informados após a compra.';
+                                                        }
+
+                                                        $shipping = $shipping + '<p>'+i+'<strong>'+curr['str']+'</strong><br>Prazo de Entrega: <strong> '+curr['time']+' dias úteis</strong></p>';
+                                                    });
+
+                                                    $('.frete_results').removeClass('error').fadeIn().html('<div class="alert alert-success">' + $shipping + '</div>');
+                                                });
+                                            }
+                                        });
+                                    {% endif %}
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                {% endif %}
+
+                <div class="description">
+                    <p>{{ product.description|raw }}</p>
+                </div>
 
 
-			</div>
+            </div>
 
-			{% if product.properties|count > 0 %}
-				<aside class="more-info side-pad">
-					<dl>
-						<div class="tab-pane clearfix" id="tab-properties">
-							{{ product_properties(product.properties, '<dt class="detail">{key}:</dt><dd>{value}</dd>') }}
-						</div>
-					</dl>
-				</aside>
-			{% endif %}
+            {% if product.properties|count > 0 %}
+                <aside class="more-info side-pad">
+                    <dl>
+                        <div class="tab-pane clearfix" id="tab-properties">
+                            {{ product_properties(product.properties, '<dt class="detail">{key}:</dt><dd>{value}</dd>') }}
+                        </div>
+                    </dl>
+                </aside>
+            {% endif %}
 
-			<hr>
+            <hr>
 
-			<div id="product-social-media" class="side-pad clearfix">
+            <div id="product-social-media" class="side-pad clearfix">
 
-				<!-- AddThis Button BEGIN -->
-				<div class="addthis_toolbox addthis_default_style ">
-					<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
-					<a class="addthis_button_tweet"></a>
-					<a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
-				</div>
-				<script type="text/javascript">var addthis_config = {"data_track_addressbar":true, ui_language: "pt"};</script>
-				<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51343c292a608814"></script>
-				<!-- AddThis Button END -->
+                <!-- AddThis Button BEGIN -->
+                <div class="addthis_toolbox addthis_default_style ">
+                    <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+                    <a class="addthis_button_tweet"></a>
+                    <a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+                </div>
+                <script type="text/javascript">var addthis_config = {"data_track_addressbar":false, ui_language: "pt"};</script>
+                <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51343c292a608814"></script>
+                <!-- AddThis Button END -->
 
-			</div>
+            </div>
 
-			<hr>
+            <hr>
 
-			{% if related|count > 0 %}
+            {% if related|count > 0 %}
 
-				<div id="products" class="products clearfix">
-					<h3 class="title top-border side-pad"><a href="/collections/beds">{{ 'Aproveite também'|trans({'en':'Enjoy also'}) }}</a></h3>
+                <div id="products" class="products clearfix">
+                    <h3 class="title top-border side-pad"><a href="/collections/beds">{{ 'Aproveite também'|trans({'en':'Enjoy also'}) }}</a></h3>
 
-					{% for product in related|slice(0, 3) %}
+                    {% for product in related|slice(0, 3) %}
 
-						<div class="product">
-							<a href="{{ site_url(product.slug) }}" class="rel bl">
-								{% if product.saleprice > 0 %}
-									<span class="abs sale">Sale</span>
-								{% endif %}
-								{{ product_img(product, 'small') }}
-							</a>
-							<div class="product-info">
-								<p class="desc"><a href="{{ site_url(product.slug) }}"><strong>{{ product.name }}</strong></a></p>
-								<p class="price">
-									<em>
-										{% if product.saleprice > 0 %}
-            								{% if current_lang() == 'english' %}
-            									{{ shop_config('currency_symbol') }}
-												{{ product.saleprice|number_format(2, '.', ',') }} 
-												<del>
-													{{ shop_config('currency_symbol') }}
-													{{ product.price|number_format(2, '.', ',') }}
-												</del>
-											{% else %}
-												{{ product.saleprice|format_currency }} <del>{{ product.price|format_currency }}</del>
-											{% endif %}
-										{% else %}
-            								{% if current_lang() == 'english' %}
-            									{{ shop_config('currency_symbol') }}
-												{{ product.price|number_format(2, '.', ',') }}
-											{% else %}
-												{{ product.price|format_currency }}
-											{% endif %}
-										{% endif %}
-									</em>
-								</p>
-							</div>
-						</div>
+                        <div class="product">
+                            <a href="{{ site_url(product.slug) }}" class="rel bl">
+                                {% if product.saleprice > 0 %}
+                                    <span class="abs sale">Sale</span>
+                                {% endif %}
+                                {{ product_img(product, 'small') }}
+                            </a>
+                            <div class="product-info">
+                                <p class="desc"><a href="{{ site_url(product.slug) }}"><strong>{{ product.name }}</strong></a></p>
+                                <p class="price">
+                                    <em>
+                                        {% if product.saleprice > 0 %}
+                                            {% if current_lang() == 'english' %}
+                                                {{ shop_config('currency_symbol') }}
+                                                {{ product.saleprice|number_format(2, '.', ',') }}
+                                                <del>
+                                                    {{ shop_config('currency_symbol') }}
+                                                    {{ product.price|number_format(2, '.', ',') }}
+                                                </del>
+                                            {% else %}
+                                                {{ product.saleprice|format_currency }} <del>{{ product.price|format_currency }}</del>
+                                            {% endif %}
+                                        {% else %}
+                                            {% if current_lang() == 'english' %}
+                                                {{ shop_config('currency_symbol') }}
+                                                {{ product.price|number_format(2, '.', ',') }}
+                                            {% else %}
+                                                {{ product.price|format_currency }}
+                                            {% endif %}
+                                        {% endif %}
+                                    </em>
+                                </p>
+                            </div>
+                        </div>
 
-						{% if loop.index % 2 == 0 %}
-							<div class="break btm-border"></div>
-						{% endif %}
+                        {% if loop.index % 2 == 0 %}
+                            <div class="break btm-border"></div>
+                        {% endif %}
 
-					{% endfor %}
+                    {% endfor %}
 
-				</div>
+                </div>
 
-			{% endif %}
-
-
-		</div> <!-- /#product -->
+            {% endif %}
 
 
-	<script type="text/javascript">
-	$(window).load(function() {
-	// The slider being synced must be initialized first
-	$('#carousel').flexslider({
-		animation: "slide",
-		controlNav: false,
-		directionNav: true,
-		animationLoop: false,
-		slideshow: false,
-		itemWidth: 100,
-		itemMargin: 10,
-		asNavFor: '#slider'
-	});
+        </div> <!-- /#product -->
 
-	$('#slider').flexslider({
-			animation: "slide",
-			controlNav: false,
-			directionNav: false,
-			smoothHeight: true,
-			animationLoop: false,
-			slideshow: false,
-			sync: "#carousel",
-			start: function(slider){
-				$('body').removeClass('loading');
-			}
-		});
-	});
-	</script>
+
+    <script type="text/javascript">
+    $(window).load(function() {
+    // The slider being synced must be initialized first
+    $('#carousel').flexslider({
+        animation: "slide",
+        controlNav: false,
+        directionNav: true,
+        animationLoop: false,
+        slideshow: false,
+        itemWidth: 100,
+        itemMargin: 10,
+        asNavFor: '#slider'
+    });
+
+    $('#slider').flexslider({
+            animation: "slide",
+            controlNav: false,
+            directionNav: false,
+            smoothHeight: true,
+            animationLoop: false,
+            slideshow: false,
+            sync: "#carousel",
+            start: function(slider){
+                $('body').removeClass('loading');
+            }
+        });
+    });
+    </script>
 
 
 {% endblock %}

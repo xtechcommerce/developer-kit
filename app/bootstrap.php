@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $data['request'] = array('get' => $_GET);
 
@@ -38,7 +38,7 @@ $data['country_id'] = 30;
 
 $data['categories'] = array(
         array('category'=>array('id'=>1, 'name'=>'Novidades', 'slug'=>'#')),
-        array('category'=>array('id'=>2, 'name'=>'Sandalias', 'slug'=>'#'), 
+        array('category'=>array('id'=>2, 'name'=>'Sandalias', 'slug'=>'#'),
                 'children'=>array(
                     array('category'=>array('id'=>3, 'name'=>'Sandalias verão', 'slug'=>'#'), 'children'=>array()),
                     array('category'=>array('id'=>4, 'name'=>'Sandalias inverno', 'slug'=>'#'), 'children'=>array()),
@@ -86,6 +86,8 @@ $data['pages'] = array(
 
 if ($page == 'homepage') {
     $data['homepage'] = true;
+} else {
+    $data['homepage'] = false;
 }
 
 if ($page == 'product' || $page == 'order_detail') {
@@ -93,12 +95,12 @@ if ($page == 'product' || $page == 'order_detail') {
 };
 
 $data['product'] = array(
-    'name' => 'Python Dourado', 
-    'sku' => 'OFDSA', 
-    'saleprice'=>20, 
-    'price' => 20.99, 
-    'installments' => 6, 
-    'quantity' => 2, 
+    'name' => 'Python Dourado',
+    'sku' => 'OFDSA',
+    'saleprice'=>20,
+    'price' => 20.99,
+    'installments' => 6,
+    'quantity' => 2,
     'description' => '<p>Lorem ipsum dolor sit amet dolorem proident utilitatis magnus agris. Abutebatur architecto propter ut materia. Quam quo aliquip, officii voluptatem. Qui pariatur officii eos. </p>',
     'excerpt' => 'Lorem ipsum dolor sit amet dolorem proident utilitatis magnus agris. Abutebatur architecto propter ut materia. Quam quo aliquip, officii voluptatem. Qui pariatur officii eos. ',
     'images' => array(
@@ -268,7 +270,7 @@ if ($page == 'order_detail') {
     $data['shipping']['method'] = 'PAC';
     $data['payment']['description'] = 'Pagseguro';
     $data['payment_method'] = 'Pagseguro';
-    
+
     $data['boletourl'] = 'http://www.example.com';
 
     $data['product']['options'] = array('Color'=>'Black');
