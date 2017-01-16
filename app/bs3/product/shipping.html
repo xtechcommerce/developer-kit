@@ -1,3 +1,4 @@
+{% if current_lang() == 'portugues' %}
 <div class="prod-frete">
     <div class="row">
         <div class="col-xs-12">
@@ -5,12 +6,19 @@
                 {{ form_open('/shipping/get_frete?format=json', 'id="form-shipping"') }}
                 <fieldset>
                     <label for="cep">Frete e Prazo</label>
+                    {% if is_mobile %}
+                    <div class="input-group" style="width:100%">
+                        <input style="width: 60% !important;" type="tel" id="zip_code" name="zip" class="form-control" placeholder="CEP" />
+                        <input style=" width:38%;" type="submit" value="Calcular" name="submit" class="btn btn-primary"/>
+                    </div>
+                    {% else %}
 				    <div class="input-group">
 				        <input type="text" id="zip_code" name="zip" class="form-control" placeholder="CEP" />
 				        <span class="input-group-btn">
 					        <input type="submit" value="Calcular" name="submit" class="btn btn-primary disabled"/>
 					    </span>
 				    </div>
+                    {% endif %}
                 </fieldset>
                 <input type="hidden" name="product_price" value="{{ product.saleprice > 0 ? product.saleprice : product.price }}" />
                 <input type="hidden" name="product_weight" value="{{ product.weight }}" />
@@ -100,3 +108,4 @@
         </div>
     </div>
 </div>
+{% endif %}

@@ -1,4 +1,4 @@
-{% set country_id = set_value('country_id', (customer.ship_address.country_id ? customer.ship_address.country_id : shop_config('default_country_id'))) %}
+{% set country_id = set_value('country_id', (a_country_id ? a_country_id : shop_config('default_country_id'))) %}
 
 {% import 'bs3/checkout/inputgroup.html' as inputgroup %}
 
@@ -6,7 +6,7 @@
 
 	{# Address form #}
 
-	{% if shop_config('international') %}
+	{% if shop_config('international') and current_lang() == 'english' %}
 		<div class="cart-bottom-buffer cart-preselect-header">
 			<h2>{{ lang('choose_your_country') }}</h2>
 			<div class="row">
@@ -16,6 +16,7 @@
 		<hr class="cart-seperator">
 	{% else %}
 		<input type="hidden" name="country_id" value="{{ country_id }}" id="country_id" />
+		<br>
 	{% endif %}
 
 	<div class="row cart-bottom-buffer cart-account-header">
@@ -103,33 +104,43 @@
 
 	<div class="row cart-bottom-buffer cart-address-fields">
 		<div class="col-md-4 brasil-only{{ country_id != 30 ? ' hide' : '' }}">
-				<a href="http://www.buscacep.correios.com.br/servicos/dnec/menuAction.do?Metodo=menuEndereco" class="pull-right link-consult-cep" target="_blank">
-						{{ lang('consulting_zip') }}
+				<a href="http://www.buscacep.correios.com.br/sistemas/buscacep/" class="pull-right link-consult-cep" target="_blank">
+					{{ lang('consulting_zip') }}
 				</a>
 				<label>
-						{{ lang('address_postcode') }}
-						<sup>*</sup>
+					{{ lang('address_postcode') }}
+					<sup>*</sup>
 				</label>
 				<div class="input-group">
-						{{ form_input({'id': 'zip_code', 'class': 'address form-control', 'value': set_value('zip', zipvalue)}) }}
-						<span class="input-group-btn input-group-search-address">
-								<a href="#" class="btn btn-default btn-search-address">{{ lang('search_address') }}</a>
-						</span>
+					{{ form_input({'id': 'zip_code', 'class': 'address form-control', 'value': set_value('zip', zipvalue)}) }}
+					<span class="input-group-btn input-group-search-address">
+						<a href="#" class="btn btn-default btn-search-address">{{ lang('search_address') }}</a>
+					</span>
 				</div>
 		</div>
 
 		<div class="other-countries{{ country_id == 30 ? ' hide' : '' }}">
-			{{ inputgroup.input('a_zip', 'zip', set_value('zip', zipvalue), lang('address_zip'), 4) }}
+			<div class="col-md-4">
+				<label style="white-space:nowrap">
+					{{ lang('address_zip') }} <sup>*</sup>
+				</label>
+				<!-- <div class="input-group"> -->
+					{{ form_input({'autocomplete': 'off', 'id': 'a_zip', 'type': 'text', 'class': 'address form-control', 'name': 'zip', 'value': set_value('zip', zipvalue)}) }}
+					<!-- <span class="input-group-btn input-group-search-address">
+						<a href="#" class="btn btn-default btn-search-address-int">{{ lang('calculating_shipping') }}</a>
+					</span> -->
+				<!-- </div> -->
+			</div>
 		</div>
-		{{ inputgroup.dropdown('zone_id', 'zone_id', zones_menu, set_value('zone_id', customer.ship_address.zone_id), lang('address_state'), 3) }}
-		{{ inputgroup.input('a_city', 'city', set_value('city', customer.ship_address.city), lang('address_city'), 2) }}
-		{{ inputgroup.input('a_district', 'district', set_value('district', customer.ship_address.district), lang('district'), 3) }}
+		{{ inputgroup.dropdown('zone_id', 'zone_id', zones_menu, set_value('zone_id', a_zone_id), lang('address_state'), 3) }}
+		{{ inputgroup.input('a_city', 'city', set_value('city', a_city), lang('address_city'), 2) }}
+		{{ inputgroup.input('a_district', 'district', set_value('district', a_district), lang('district'), 3) }}
 	</div>
 
 	<div class="row cart-bottom-buffer cart-address-fields-two">
-		{{ inputgroup.input('a_address1', 'address1', set_value('address1', customer.ship_address.address1), lang('address1'), 7) }}
-		{{ inputgroup.input('a_anumber', 'anumber', set_value('anumber', customer.ship_address.anumber), lang('anumber'), 2) }}
-		{{ inputgroup.input('a_address2', 'address2', set_value('address2', customer.ship_address.address2), lang('address2'), 3, 'text', true) }}
+		{{ inputgroup.input('a_address1', 'address1', set_value('address1', a_address1), lang('address1'), 7) }}
+		{{ inputgroup.input('a_anumber', 'anumber', set_value('anumber', a_number), lang('anumber'), 2) }}
+		{{ inputgroup.input('a_address2', 'address2', set_value('address2', a_address2), lang('address2'), 3, 'text', true) }}
 	</div>
 
 	{{ form_hidden('address_id', address_id) }}

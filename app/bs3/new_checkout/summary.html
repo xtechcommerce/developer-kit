@@ -50,7 +50,7 @@
                                         <button type="button" class="btn-quantity btn-plus" onclick="calcQuantity(this,'plus')">
                                             <span class="glyphicon glyphicon-chevron-up"></span>
                                         </button>
-                                        <input class="form-control text-center" name="cartkey[{{ cartkey }}]" value="{{ product.quantity }}" style="width: 50%;" type="number" {{ product.fixed_quantity ? ' readonly="true"' : '' }} />
+                                        <input class="form-control text-center" name="cartkey[{{ cartkey }}]" value="{{ product.quantity }}" style="width: 50% !important;" type="number" {{ product.fixed_quantity ? ' readonly="true"' : '' }} />
                                         {#<button class="btn btn-danger" type="button" onclick="if(confirm('{{ lang('remove_item') }}')){ window.location='{{ site_url('cart/remove_item/' ~ cartkey) }}'; }">#}
                                             {#<span class="glyphicon glyphicon-remove"></span>#}
                                         {#</button>#}
@@ -133,9 +133,20 @@
                         </td>
                     </tr>
                 {% endif %}
-                
-                
-                
+
+                {% if cart('referral_discount') > 0 %}
+                    <tr>
+                        <td colspan="4" class="text-right">
+                            <strong>
+                                {{ lang('referral_discount') }}
+                            </strong>
+                        </td>
+                        <td>
+                         -{{ cart('referral_discount')|format_currency }}
+                        </td>
+                    </tr>
+                {% endif %}
+
                 {% if cart('order_tax') > 0 %}
                     <tr>
                         <td colspan="4" class="text-right">
@@ -148,7 +159,6 @@
                         </td>
                     </tr>
                 {% endif %}
-                
 
                 {% if cart('get_custom_charges')|count > 0 %}
                     {% for name, price in cart('get_custom_charges') %}
@@ -168,7 +178,7 @@
                 {% if (shop_config('tax_shipping') and cart('shipping_cost') > 0) or (not shop_config('tax_shipping') and cart('shipping_cost') > 0) %}
                     <tr>
                         <td colspan="2" class="vertical-cart text-left">
-                            
+
                         </td>
                         <td colspan="2" class="text-right vertical-cart">
                             <strong>
@@ -239,9 +249,9 @@
 <script>
     function calcQuantity(oObj,type){
         var input = $(oObj).closest('.input-group').find('input');
-        if (type == "minus"){ 
+        if (type == "minus"){
             var final = parseFloat(input.val()) - 1;
-        }else if  (type == "plus"){ 
+        }else if  (type == "plus"){
             var final = parseFloat(input.val()) + 1;
         }
         if (final < 1){ final = 1; }

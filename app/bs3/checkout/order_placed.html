@@ -177,6 +177,28 @@
 				</script>
 			{% endif %}
 
+			{% if shop_config('leadgrid_site_id') %}
+			<!-- www.LeadGrid.io-->
+			<script type='text/javascript'>
+				var jqlg, ws;
+				ws = {
+					//Configurações do Widget
+					OrderId: '{{ order.order_number }}',
+					CustomerEmail: '{{ order.email }}',
+					OrderValue: '{{ order.total|number_format(2, "", "") }}',
+					OrderCurrency: '{{ shop_config('currency') }}',
+					OrderZipCode: '{{ order.ship_zip|replace({'-':''}) }}',
+					OrderCountry: '{{ order.ship_country_code }}',
+					CustomerAge: '{{ time_diff('today', order.customer_birthday) }}',
+					CustomerGender: '{{ order.customer_sex ? 'F' : 'M' }}',
+					WidgetLanguage: '{{ current_lang() == 'portugues' ? 'pt-BR' : 'en' }}'
+				};
+				function al() {(function (d, si, w, ws, sv, ep) {
+				var h = d.getElementsByTagName('head')[0], p = d.location.protocol, s, lgs; s = d.createElement('script'); s.type = 'text/javascript'; s.charset = 'utf-8'; s.async = 1; lgs = '?SiteId=' + si + '&WidgetId=' + w + '&ScriptVersion=' + sv + '&EcommercePlatformId=' + ep + '&' + Object.keys(ws).map(function (key) { return key + '=' + encodeURIComponent(ws[key]); }).join('&'); s.src = 'https://widgets.leadgrid.io/' + ws.WidgetLanguage + '/v1.1/widget/show/' + lgs; h.appendChild(s);
+				})(document, '{{ shop_config('leadgrid_site_id') }}', '', ws, '1.1', '8c632d96-e9ad-41d8-a164-615590224b64');} (function () { if (window.attachEvent) window.attachEvent('onload', al); else window.addEventListener('load', al, false); })();
+			</script>
+			{% endif %}
+
 			<!-- BEGIN - Rakuten -->
 			{% if shop_config('rakuten_marketing_id') %}
 				{% set r_sku = '' %} {% set r_name = '' %} {% set r_qty = '' %} {% set r_price = '' %}
