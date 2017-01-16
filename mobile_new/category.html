@@ -8,11 +8,11 @@
         <div class="col-xs-12">
             {# Titulo da Página #}
             {% if term is not empty %}
-                <h2 class="category-header" style="margin-top: 0px;">
+                <h2 class="category-header">
                     {{ "Resultado da busca por"|trans({'en':'Results with'}) }} {{ term }}
                 </h2>
             {% else %}
-                <h2 class="category-header" style="margin-top: 0px;">
+                <h2 class="category-header">
                     {{ category.name }}
                 </h2>
                 {% if category.description is not empty %}
@@ -80,23 +80,49 @@
         </div>
     </div>
 
-    {% for product in products %}
-    <div class="row">
-        {{ product_listing.item(product, category, 12) }}
+    <div class="product-list clearfix">
+        {% if products | length > 0 %}
+            <div class="loading">
+                <div class="fa fa-fw fa-5x fa-spin fa-spinner"></div>
+        		<p>{{ 'Carregando produtos' | trans({'en':'Loading Products'}) }}</p>
+            </div>
+
+            <div class="products" style="display:none;">
+                {% for product in products %}
+                    {{ product_listing.item(product, category, 6) }}
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="row">
+                <div class="col-xs-12">
+                    <p class="no-prod">
+                        {% if term is not empty %}
+                            {{ 'Não foram encontrados resultados para sua busca.'|trans({'en':'No results found using this terms.'}) }}
+                        {% else %}
+                            {{ lang('no_products') }}
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        {% endif %}
     </div>
-    {% else %}
-    <div class="row">
-        <div class="col-xs-12">
-            <p class="no-prod">
-                {% if term is not empty %}
-                    {{ 'Não foram encontrados resultados para sua busca.'|trans({'en':'No results found using this terms.'}) }}
-                {% else %}
-                    {{ lang('no_products') }}
-                {% endif %}
-            </p>
-        </div>
-    </div>
-    {% endfor %}
+
+	<script>
+		$(window).load(function () {
+			$('.product-list .loading').fadeOut();
+			$('.product-list .products').fadeIn();
+
+			if ($('.product-list-item').length > 0) {
+				$('.product-list-item .product-img').equalHeights();
+				$('.product-list-item .product-saleprice').equalHeights();
+				$('.product-list-item .installments-price').equalHeights();
+				$('.product-list-item .title').equalHeights();
+				$('.product-list-item .price').equalHeights();
+				$('.product-list-item .product-description').equalHeights();
+				$('.product-list-item').equalHeights();
+			}
+		});
+	</script>
 
     {# Paginacao #}
     <div class="row">

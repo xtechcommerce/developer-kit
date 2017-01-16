@@ -41,6 +41,16 @@ a.meanmenu-reveal {
     z-index: 999999;
 }
 
+.mean-container .mean-bar .to-right{
+    color: #666;
+    float: right;
+    padding: 11px;
+}
+
+.mean-container .mean-bar .to-right small{
+    font-weight: bold;
+}
+
 .mean-container a.meanmenu-reveal {
     width: 22px;
     height: 22px;
@@ -268,10 +278,31 @@ a.meanmenu-reveal {
 }
 
 /* Product List */
+.products-list{
+    margin-left: -10px;
+    margin-top: -10px;
+}
+
+.product-list .loading {
+    text-align: center;
+}
+
+.product-list .loading .i {
+    font-size: 70px;
+}
+
+.product-list .loading p {
+    margin-top: 40px;
+    font-size: 20px;
+    text-transform: uppercase;
+    color: #999;
+}
+
 .product-list-item {
-    border-bottom: 1px solid #eee;
-    margin-bottom: 10px;
-    padding-bottom: 10px;
+    width: calc(50% - 10px);
+    float: left;
+    margin-left: 10px;
+    margin-top: 10px;
 }
 
 .product-list-item .prod-action{
@@ -295,14 +326,20 @@ a.meanmenu-reveal {
 
 .product-list-item .product-description .title {
     color: #666;
+    font-size: 12px;
+    line-height: 18px;
+    font-family: sans-serif;
+    letter-spacing: 1px;
+    text-align: center;
 }
 
 .product-list-item .product-description .price .line-through {
-    color: #888;
+    color: #bbb;
     display: block;
     font-size: 16px;
-    font-weight: normal;
-    margin-bottom: 10px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-align: center;
     text-decoration: line-through;
 }
 
@@ -310,10 +347,17 @@ a.meanmenu-reveal {
     color: #666;
     font-size: 22px;
     font-weight: bold;
+    text-align: center;
 }
 
 .product-list-item .product-description .installments-price {
     color: #999;
+    font-size: 12px;
+    text-align: center;
+    background: #fafafa;
+    border: 1px solid #eee;
+    padding: 10px 0;
+    margin: 0;
 }
 
 .product-list-item .product-img {
@@ -430,7 +474,8 @@ img.block-header {
 
 .category-header {
     margin: 15px 0;
-    padding: 0 0 10px
+    padding: 0 0 10px;
+    font-family: sans-serif;
 }
 
 .page-header {
@@ -3068,7 +3113,7 @@ img.block-header {
 .footer {
     background: #f9f9f9;
     border-top: solid 0px;
-    padding: 15px 0;
+    padding: 15px 0 45px;
     text-align: center;
 }
 

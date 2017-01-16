@@ -3,21 +3,22 @@
         <a href="#nav" class="meanmenu-reveal">Show Navigation</a>
 
         <a href="#nav" class="meanmenu-revseal">
-            <div class="topgs"  style="float: left">Menu</div>
+            <div class="topgs" style="float: left">Menu</div>
         </a>
 
-        <a href="{{ site_url('cart/view_cart') }}">
-            <i class="topg glyphicon glyphicon-shopping-cart"></i>
+        <a class="to-right" href="{{ site_url('cart/view_cart') }}">
+            <i class="fa fa-fw fa-shopping-cart"></i>
+            <small class="badge">{{ items_in_cart() }}</small>
         </a>
 
         {% if logged_in %}
-        <a href="{{ site_url('secure/logout') }}">
-            <i class="topg fa fa-sign-out"></i>
+        <a class="to-right" href="{{ site_url('secure/logout') }}">
+            <i class="fa f-fw fa-sign-out"></i>
         </a>
         {% endif %}
 
-        <a href="{{ site_url('secure/my_account') }}">
-            <i class="topg fa fa-user"></i>
+        <a class="to-right" href="{{ site_url('secure/my_account') }}">
+            <i class="fa fa-fw fa-user"></i>
         </a>
 
         <nav class="mean-nav"></nav>

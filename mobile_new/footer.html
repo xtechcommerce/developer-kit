@@ -38,9 +38,11 @@
 
                         <ul class="list-unstyled simple-list margin-bottom-20">
                             {% for page in get_children_of_page('institucional') %}
-                            <li>
-                                <a href="{{ page.url is empty ? site_url(page.slug) : page.url }}" {{ page.new_window ? 'target="_blank"':''}}>{{ page.title }}</a>
-                            </li>
+                                {% if page.slug != 'blog' %}
+                                    <li>
+                                        <a href="{{ page.url is empty ? site_url(page.slug) : page.url }}" {{ page.new_window ? 'target="_blank"':''}}>{{ page.title }}</a>
+                                    </li>
+                                {% endif %}
                             {% endfor %}
                         </ul>
                     </div>
@@ -57,9 +59,11 @@
 
                         <ul class="list-unstyled simple-list margin-bottom-20">
                             {% for page in get_children_of_page('ajuda-e-suporte') %}
-                            <li>
-                                <a href="{{ page.url is empty ? site_url(page.slug) : page.url }}" {{ page.new_window ? 'target="_blank"':''}}>{{ page.title }}</a>
-                            </li>
+                                {% if page.slug != 'blog' %}
+                                    <li>
+                                        <a href="{{ page.url is empty ? site_url(page.slug) : page.url }}" {{ page.new_window ? 'target="_blank"':''}}>{{ page.title }}</a>
+                                    </li>
+                                {% endif %}
                             {% endfor %}
                         </ul>
                     </div>

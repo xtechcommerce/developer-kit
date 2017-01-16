@@ -42,6 +42,10 @@
 			{{ page.content|raw }}
 		</div>
 	</div>
+	{% elseif (page.slug == 'blog')%}
+		<script>
+			window.location = "/";
+		</script>
 	{% else %}
 	<div class="row">
 		<div class="col-xs-12">
