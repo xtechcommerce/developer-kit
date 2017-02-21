@@ -2,32 +2,32 @@ if("undefined"==typeof jQuery)throw new Error("Bootstrap's JavaScript requires j
 
 // Add Brazilian Phone Supporte
 $.fn.extend({
-	mask_brazilian_phone: function(){
-		$(this[0]).focusout(function(){
-			var phone, element;
-			element = $(this);
-			element.unmask();
-			phone = element.val().replace(/\D/g, '');
-			if(phone.length > 10){
-				element.mask("(99) 99999-999?9");
-			} else{
-				element.mask("(99) 9999-9999?9");
-			}
-		}).trigger('focusout');
-	},
-	delayKeyup: function(callback, ms) {
-	  var timer = 0;
-	  var el = $(this);
+    mask_brazilian_phone: function(){
+        $(this[0]).focusout(function(){
+            var phone, element;
+            element = $(this);
+            element.unmask();
+            phone = element.val().replace(/\D/g, '');
+            if(phone.length > 10){
+                element.mask("(99) 99999-999?9");
+            } else{
+                element.mask("(99) 9999-9999?9");
+            }
+        }).trigger('focusout');
+    },
+    delayKeyup: function(callback, ms) {
+      var timer = 0;
+      var el = $(this);
 
-	  $(this).keyup(function(){
-	  	clearTimeout (timer);
-	  	timer = setTimeout(function(){
-			callback(el);
-      	}, ms);
-	  });
+      $(this).keyup(function(){
+        clearTimeout (timer);
+        timer = setTimeout(function(){
+            callback(el);
+        }, ms);
+      });
 
-	  return $(this);
-	}
+      return $(this);
+    }
 
 });
 // Resize Function
@@ -42,7 +42,7 @@ $(window).resize(function(){
 
 // Ready Function
 $(document).ready(function(){
-	$('header nav').meanmenu();
+    $('header nav').meanmenu();
 
     $('.formAddCart').on('submit', function(e){
         e.preventDefault();
@@ -75,15 +75,15 @@ $(document).ready(function(){
        $(this).closest('.alert').slideUp();
     });
 
-	// Link na tab do My Account
-	tabs_hash();
-	$(window).on('hashchange', tabs_hash);
+    // Link na tab do My Account
+    tabs_hash();
+    $(window).on('hashchange', tabs_hash);
 
-	$('.imgLiquidFill').imgLiquid({
-		fill: false,
-		horizontalAlign: "center",
-		verticalAlign: "center"
-	});
+    $('.imgLiquidFill').imgLiquid({
+        fill: false,
+        horizontalAlign: "center",
+        verticalAlign: "center"
+    });
 });
 
 popupRes = function(el){
@@ -120,10 +120,10 @@ del_real_cookie = function(cookie,name){
 }
 
 tabs_hash = function(){
-	if(window.location.hash){
-		var url = window.location.hash;
-		$('#mytabs a[href="'+url+'"]').tab('show')
-	};
+    if(window.location.hash){
+        var url = window.location.hash;
+        $('#mytabs a[href="'+url+'"]').tab('show')
+    };
 };
 
 function isEmail(email){
@@ -155,13 +155,13 @@ var cusid_ele = document.getElementsByClassName('product-description');
 var maior = 0;
 
 for (var i = 0; i < cusid_ele.length; ++i) {
-	var item = cusid_ele[i];
-	if (item.offsetHeight > maior){
-		maior = item.offsetHeight;
-	}
+    var item = cusid_ele[i];
+    if (item.offsetHeight > maior){
+        maior = item.offsetHeight;
+    }
 }
 
 for (var i = 0; i < cusid_ele.length; ++i) {
-	var item = cusid_ele[i];
-	item.style.height  = maior + 'px';
+    var item = cusid_ele[i];
+    item.style.height  = maior + 'px';
 }

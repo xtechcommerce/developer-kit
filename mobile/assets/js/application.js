@@ -35,10 +35,10 @@ $.fn.extend({
 
 $(document).ready(function(){
 
-	$('.tag-filter').change(function(e){
-		if ($(this).val() != '') {
-			window.location.href = $(this).val();
-		};
-	});
+    $('.tag-filter').change(function(e){
+        if ($(this).val() != '') {
+            window.location.href = $(this).val();
+        };
+    });
 
 });

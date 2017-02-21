@@ -39,32 +39,14 @@
 	{% import 'mobile_new/product_listing.html' as product_listing %}
 
 	<div class="product-list clearfix">
-        <div class="loading">
-            <div class="fa fa-fw fa-5x fa-spin fa-spinner"></div>
-			<p>{{ 'Carregando produtos' | trans({'en':'Loading Products'}) }}</p>
-        </div>
-
-		<div class="products" style="display:none;">
+		<div class="products">
 			{% for product in products %}
 				{{ product_listing.item(product, category, 6) }}
+
+				{% if loop.index % 2 == 0 %}
+				<div class="break btm-border"></div>
+				{% endif %}
 			{% endfor %}
 		</div>
 	</div>
-
-	<script>
-		$(window).load(function () {
-			$('.product-list .loading').fadeOut();
-			$('.product-list .products').fadeIn();
-
-			if ($('.product-list-item').length > 0) {
-				$('.product-list-item .product-img').equalHeights();
-				$('.product-list-item .product-saleprice').equalHeights();
-				$('.product-list-item .installments-price').equalHeights();
-				$('.product-list-item .title').equalHeights();
-				$('.product-list-item .price').equalHeights();
-				$('.product-list-item .product-description').equalHeights();
-				$('.product-list-item').equalHeights();
-			}
-		});
-	</script>
 {% endblock %}

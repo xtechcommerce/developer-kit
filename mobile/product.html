@@ -198,7 +198,7 @@
                                                             curr['str'] = 'O valor e o prazo do frete serão informados após a compra.';
                                                         }
 
-                                                        $shipping = $shipping + '<p>'+i+'<strong>'+curr['str']+'</strong><br>Prazo de Entrega: <strong> '+curr['time']+' dias úteis</strong></p>';
+                                                        $shipping = $shipping + '<p>'+i+'<strong>'+curr['str']+'</strong><br>Prazo de Entrega: <strong>até '+curr['time']+' dias úteis</strong></p>';
                                                     });
 
                                                     $('.frete_results').removeClass('error').fadeIn().html('<div class="alert alert-success">' + $shipping + '</div>');

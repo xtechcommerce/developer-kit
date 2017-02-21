@@ -1,13 +1,13 @@
 /* @override 
-	https://demo15.securelocalhost.com/loja/twig/mobile/assets/css/overrides.css
-	https://demo18.securelocalhost.com/loja/twig/mobile/assets/css/overrides.css */
+  https://demo15.securelocalhost.com/loja/twig/mobile/assets/css/overrides.css
+  https://demo18.securelocalhost.com/loja/twig/mobile/assets/css/overrides.css */
 
 
 body {
   color: #555555;
   font-size: 13px;  
   
-  	font-family: Helvetica, Arial, sans-serif;
+    font-family: Helvetica, Arial, sans-serif;
   
    line-height: 150%;
 }
@@ -23,11 +23,11 @@ body {
     
 }
 .wrapper .body {
-	border-top: 1px solid #eeeeee;
+  border-top: 1px solid #eeeeee;
 }
 
 .wrapper .body.index {
-	border-top: none;
+  border-top: none;
 }
 
 .tab-content{
@@ -50,7 +50,7 @@ table td.price{
 }
 h1, h2, h3, h4, h5, h6 {
   
-  	font-family: 'Raleway';
+    font-family: 'Raleway';
   
   font-weight: 400;
   text-transform: uppercase;
@@ -77,14 +77,14 @@ h4 {
 
 
 .alert-info{
-	background-color:#dddddd;
-	border-color:#eeeeee;
-	color: #555555;
+  background-color:#dddddd;
+  border-color:#eeeeee;
+  color: #555555;
 }
 
 .header #logo {
   
-  	font-family: 'Raleway';
+    font-family: 'Raleway';
   
   font-weight: 400;
   text-transform: none;
@@ -100,8 +100,8 @@ h4 {
   background-color: #fcfcfc;
 }
 #toolbar .cart-total-items .badge{
-	background-color: #666666;
-	color: #fcfcfc;
+  background-color: #666666;
+  color: #fcfcfc;
 } 
 .flexslider {
   margin-bottom: 40px;
@@ -131,7 +131,7 @@ h4 {
   font-weight: 400;
   text-transform: uppercase;
   
-  	font-family: 'PT Sans Narrow';
+    font-family: 'PT Sans Narrow';
   
 }
 .pulldown li a,
@@ -184,19 +184,19 @@ footer a:link, footer a:visited, footer a.icon:link, footer a.icon:visited  {
   color: #666666;
 }
 #products .product{
-	float: left;
-	width: 46%;
-	margin: 0 2%;
+  float: left;
+  width: 46%;
+  margin: 0 2%;
 }
 #products{
-	margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 .break{
-	clear: both;
-	margin: 10px 0;
+  clear: both;
+  margin: 10px 0;
 }
 .product-info{
-	margin-top: 8px;
+  margin-top: 8px;
 }
 
 @media only screen and (min-width : 1280px) {
@@ -336,7 +336,7 @@ footer a:link, footer a:visited, footer a.icon:link, footer a.icon:visited  {
   clear: both;
 }
 .modal-content .row{
-	margin: 0;
+  margin: 0;
 }
 
 .text-right,
