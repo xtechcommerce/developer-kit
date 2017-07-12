@@ -13,6 +13,7 @@
 			var checkoutErrors = false;
 			var checkoutNoSubmit = false;
 			var checkoutCart = {total: {{ cart('total')|default('0.00') }}, shipping_cost: {{ cart('shipping_cost')|default('0.00') }}, subtotal: {{ cart('discounted_subtotal')|default('0.00') }}, discount: {{ (cart('subtotal') - cart('discounted_subtotal'))|default('0.00') }}};
+			var is_mobile_r = {{ is_mobile }}; // Responsive
 
 			var CartSettings = {
 				zonesMap: {{ zones_map|json_encode }},

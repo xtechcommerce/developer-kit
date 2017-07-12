@@ -19,6 +19,10 @@
 		<br>
 	{% endif %}
 
+    {% if buyer_type %}
+        <input id="buyer_type" value="{{ buyer_type }}" name="buyer_type" type="hidden">
+    {% endif %}
+
 	<div class="row cart-bottom-buffer cart-account-header">
 		<div class="col-md-6">
 			<h2>
@@ -68,10 +72,17 @@
 	</div>
 
 	{% if shop_config('company_fields') %}
-	<div id="company_fields" class="row cart-bottom-buffer cart-account-fields{{ customer.cnpj ? '' : ' hide' }}">
+	<div class="row company_fields cart-bottom-buffer cart-account-fields{{ customer.cnpj ? '' : ' hide' }}">
 		{{ inputgroup.input('a_company', 'company', set_value('company', customer.company), lang('account_company'), 6, 'text', true) }}
 		{{ inputgroup.input('a_cnpj', 'cnpj', set_value('cnpj', customer.cnpj), lang('account_cnpj'), '6 brasil-only', 'text', true) }}
 	</div>
+    <div class="row company_fields cart-bottom-buffer cart-account-fields{{ customer.cnpj ? '' : ' hide' }}">
+        {{ inputgroup.input('a_company_alt', 'company_alt', set_value('company_alt', customer.company_alt), lang('account_company_alt'), '6', 'text', true) }}
+        {{ inputgroup.input('a_company_registration_alt', 'company_registration_alt', set_value('company_registration_alt', customer.company_registration_alt), lang('account_company_registration_alt'), '6', 'text', true) }}
+    </div>
+    <div class="row company_fields cart-bottom-buffer cart-account-fields{{ customer.cnpj ? '' : ' hide' }}">
+    	{{ inputgroup.input('a_company_registration', 'company_registration', set_value('company_registration', customer.company_registration), lang('account_company_registration'), '6', 'text', true) }}
+    </div>
 	{% endif %}
 
 	{% if not logged_in %}
@@ -242,6 +253,27 @@
 			</div>
 		</div>
 	</div>
+
+    {% if shop_config('default_country_id') == 30 %}
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="cart-bottom-buffer-md text-right cart-country">
+				{{ 'Esta compra está sendo feita no' | trans({'en' : 'This purchase is being made at'}) }}
+				<strong>{{ 'Brasil' | trans({'en' : 'Brazil'}) }}</strong>
+                <span class="country-flag">
+					<img src="{{ base_url('/loja/themes/default/assets/img/br.png') }}" alt="{{ 'Brasil' | trans({'en' : 'Brazil'}) }}">
+                </span>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+	{% if captcha_check %}
+	    <div class="row ">
+			<div class="col-md-offset-4 col-md-4 g-recaptcha" data-sitekey="{{ captcha_public_key }}"></div>
+		</div>
+		<br>
+	{% endif %}
 
 	<div class="row cart-bottom-buffer-md text-center cart-actions">
 		<button type="submit" class="btn btn-lg btn-primary">

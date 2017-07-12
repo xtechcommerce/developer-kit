@@ -115,7 +115,7 @@
 					'name': '{{ product.name|e('html') }}',                              // Product name. Required.
 					'sku': '{{ product.sku|e('html') }}',                                // SKU/code.
 					'category': '{{ get_product_category(product.id)|e('html') }}',      // Category or variation.
-					'price': '{{ product.price|number_format(2, ".", "") }}',            // Unit price.
+					'price': '{{ (product.saleprice and product.saleprice != 0.00 ? product.saleprice : product.price)|number_format(2, ".", "") }}', // Unit price.
 					'quantity': '{{ product.quantity }}'                                 // Quantity.
 				});
 				{% endfor %}
@@ -132,7 +132,7 @@
 					'name': '{{ product.name|e('html') }}',                              // Product name. Required.
 					'sku': '{{ product.sku|e('html') }}',                                // SKU/code.
 					'category': '{{ get_product_category(product.id)|e('html') }}',      // Category or variation.
-					'price': '{{ product.price|number_format(2, ".", "") }}',            // Unit price.
+					'price': '{{ (product.saleprice and product.saleprice != 0.00 ? product.saleprice : product.price)|number_format(2, ".", "") }}', // Unit price.
 					'quantity': '{{ product.quantity }}'                                 // Quantity.
 				});
 				{% endfor %}
@@ -206,7 +206,7 @@
 					{% set r_sku = r_sku ~ product.id %}
 					{% set r_name = r_name ~ (product.name|e('html')) %}
 					{% set r_qty = r_qty ~ product.quantity %}
-					{% set r_price = r_price ~ (product.price|number_format(2, ".", "") * product.quantity * 100) %}
+					{% set r_price = r_price ~ ((product.saleprice and product.saleprice != 0.00 ? product.saleprice : product.price)|number_format(2, ".", "") * product.quantity * 100) %}
 					{% if not loop.last %}
 						{% set r_sku = r_sku ~ '|' %}
 						{% set r_name = r_name ~ '|' %}

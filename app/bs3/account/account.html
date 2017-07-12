@@ -5,7 +5,7 @@
         </div>
         <ul id="mytabs">
 			<li class="active"><a href="#dashboard" data-toggle="tab">{{ lang('dashboard') }}</a></li>
-			
+
 			<li><a href="#myaccount" data-toggle="tab">{{ lang('personal_info') }}</a></li>
 
 			<li><a href="#addresses" data-toggle="tab">{{ lang('addresses') }}</a></li>
@@ -15,9 +15,11 @@
 			<li><a href="#mytestimonials" data-toggle="tab">{{ lang('my_testimonials') }}</a></li>
 
 			<li><a href="#mywishlist" data-toggle="tab">{{ lang('my_wishlist') }}</a></li>
+
+            <li><a href="#saved-credit-cards" data-toggle="tab">{{ lang('saved_creditcard') }}</a></li>
 		</ul>
 	</div>
-	<div class="col-xs-9 main">	
+	<div class="col-xs-9 main">
         {% if validation_errors() %}
         <div class="col-xs-12">
             <div class="alert alert-danger">
@@ -45,7 +47,7 @@
 						</div>
 						<div class="panel panel-default">
 							<div class="panel-body">
-                                <ul>    
+                                <ul>
 									{% if customer.cnpj %}
 										{{ customer.company }}<br />
 										{% else %}
@@ -71,7 +73,7 @@
 						</div>
 						<div class="panel panel-default">
 							<div class="panel-body">
-                                <ul>    
+                                <ul>
                                     {% if default_address %}
                                     <li>{{ default_address.field_data|format_address_nl2br }}</li>
                                     {% else %}
@@ -96,10 +98,10 @@
 						<div class="panel panel-default">
 							<div class="panel-body">
                                 <div class="alert alert-info">
-                                	<i class="glyphicon glyphicon-info-sign"></i> 
+                                	<i class="glyphicon glyphicon-info-sign"></i>
                                 	{{ lang('account_password_instructions') }}
                                 </div>
-                                
+
 								<div class="form-group">
 									<label for="email" class="col-xs-3 control-label">
 										{{ lang('account_email') }} *
@@ -240,7 +242,7 @@
 
 			<div class="tab-pane" id="addresses">
                 <h2 class="category-header">{{ lang('your_addresses') }}</h2>
-				
+
 				<div class="row">
                     <div class="col-xs-12">
                         <div class="inbox">
@@ -275,8 +277,8 @@
                                             </td>
                                         </tr>
 									{% endfor %}
-                            	</table> 
-                            {% else %} 
+                            	</table>
+                            {% else %}
                                 <div class="panel-body">
                                     <div class="alert alert-danger"><i class="glyphicon glyphicon-warning-sign"></i>&nbsp; {{ lang('no_addresses') }}</div>
                                 </div>
@@ -377,7 +379,7 @@
 								<label for="message">{{ lang('testimonial_message') }}</label>
 
 								{{ form_textarea({'name': 'message', 'class': 'form-control', 'rows': '5'}) }}
-								
+
 								<p class="help-block">{{ lang('testimonial_message_help') }}</p>
 
 								{{ form_hidden('sender_email', customer.email)  }}
@@ -409,18 +411,18 @@
             					}else{
             						e.preventDefault();
             						alert('{{ lang('required_fields_testimonial') }}');
-            						return false; 
+            						return false;
             					};
             				});
             			});
-            		</script>   
+            		</script>
                	</div>
     		</div>
 		</div>
 
 		<div class="tab-pane" id="mywishlist">
 			<h2 class="category-header">{{ lang('my_wishlist') }}</h2>
-            
+
             <div class="row">
                 <div class="col-xs-12">
 					{% for product in wishes %}
@@ -448,6 +450,42 @@
 				</div>
 			</div>
 		</div>
+
+        <div class="tab-pane" id="saved-credit-cards">
+            <h2 class="category-header">{{ lang('saved_creditcard') }}</h2>
+            <div class="row">
+                <div class="col-xs-12">
+                    {% if credit_cards|count > 0 %}
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>{{ lang('payment_method') }}</th>
+                                    <th>{{ lang('creditcard_data') }}</th>
+                                    <th>{{ lang('remove') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                        {% for credit_card in credit_cards %}
+                                <tr>
+                                    <th>{{ credit_card.payment_method }}</th>
+                                    <th>{{ credit_card.data }}</th>
+                                    <th>
+                                        <a href="{{ site_url('secure/remove_credit_card/' ~ credit_card.id ~ '/' ~ credit_card.payment_method) }}" class="btn btn-sm btn-success">
+                                            {{ lang('remove') }}
+                                        </a>
+                                    </th>
+                                </tr>
+                        {% endfor %}
+                            </tbody>
+                    {% else %}
+                        <div class="alert alert-danger"><i class="glyphicon glyphicon-warning-sign"></i>&nbsp; {{ lang('no_credit_cards') }}</div>
+                    {% endif %}
+                        </table>
+                </div>
+            </div>
+
+
+        </div>
 	</div>
 </div>
 
@@ -482,7 +520,7 @@
                     }
                 } else{
                     alert('{{ lang('error_must_have_address') }}');
-                }   
+                }
             });
             $('.edit_address').click(function(e){
                 e.preventDefault();
@@ -492,7 +530,7 @@
                     }
                 );
             });
-            
+
             function set_default(address_id, type){
                 $.post('{{ site_url('secure/set_default_address') }}/',{id:address_id, type:type});
             }

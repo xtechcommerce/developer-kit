@@ -15,7 +15,7 @@
             <div class="col-xs-4">
                 <div class="checkout-box">
                     {# Address form #}
-                    {% if shop_config('international') %}
+                    {% if shop_config('international') and current_lang() == 'english' %}
                         <div class="cart-bottom-buffer cart-preselect-header">
                             <h2>{{ lang('choose_your_country') }}</h2>
                             <div class="row">
@@ -26,7 +26,11 @@
                     {% else %}
                         <input type="hidden" name="country_id" value="{{ country_id }}" id="country_id" />
                     {% endif %}
-                    
+
+                    {% if buyer_type %}
+                        <input id="buyer_type" value="{{ buyer_type }}" name="buyer_type" type="hidden">
+                    {% endif %}
+
                     <div class="row cart-bottom-buffer cart-account-header">
                         <div class="col-md-12 header">
                             <h2>
@@ -44,7 +48,7 @@
                                         {{ lang('account_iam') }} {{ lang('account_am_person') }}
                                     </button>
                                 {% endif %}
-                
+
                                 <button class="btn btn-default btn-open-login" type="button">
                                     <i class="glyphicon glyphicon-user"></i>
                                     {{ lang('login_button') }}
@@ -53,7 +57,7 @@
                         </div>
                         {% endif %}
                     </div>
-                
+
                     {% if not logged_in %}
                         <div class="row cart-bottom-buffer cart-account-email-fields">
                             {{ inputgroup.input('a_email', 'email', set_value('email', customer.email), lang('address_email'), 12) }}
@@ -62,11 +66,11 @@
                         </div>
                         <p class="password_alert">{{ lang('account_password_alert') }}</p>
                     {% else %}
-                
+
                         {{ form_hidden('email', customer.email) }}
-                
+
                     {% endif %}
-                
+
                     <div id="person_fields" class="row cart-bottom-buffer cart-account-fields">
                         {{ inputgroup.input('a_firstname', 'firstname', set_value('firstname', customer.firstname), lang('account_firstname'), '6 nopad-right') }}
                         {{ inputgroup.input('a_lastname', 'lastname', set_value('lastname', customer.lastname), lang('account_lastname'), '6 nopad-left') }}
@@ -75,14 +79,21 @@
                         {{ inputgroup.input('a_cpf', 'cpf', set_value('cpf', customer.cpf), lang('account_cpf'), '6 brasil-only nopad-right') }}
                         {{ inputgroup.input('phone', 'phone', set_value('phone', customer.phone), lang('address_phone'), '6 nopad-left') }}
                     </div>
-                
+
                     {% if shop_config('company_fields') %}
-                    <div id="company_fields" class="row cart-bottom-buffer cart-account-fields{{ customer.cnpj ? '' : ' hide' }}">
+                    <div class="row company_fields cart-bottom-buffer cart-account-fields{{ customer.cnpj ? '' : ' hide' }}">
                         {{ inputgroup.input('a_company', 'company', set_value('company', customer.company), lang('account_company'), '6 nopad-right', 'text', true) }}
                         {{ inputgroup.input('a_cnpj', 'cnpj', set_value('cnpj', customer.cnpj), lang('account_cnpj'), '6 brasil-only nopad-left', 'text', true) }}
                     </div>
+                    <div class="row company_fields cart-bottom-buffer cart-account-fields{{ customer.cnpj ? '' : ' hide' }}">
+                        {{ inputgroup.input('a_company_alt', 'company_alt', set_value('company_alt', customer.company_alt), lang('account_company_alt'), '6', 'text', true) }}
+                        {{ inputgroup.input('a_company_registration_alt', 'company_registration_alt', set_value('company_registration_alt', customer.company_registration_alt), lang('account_company_registration_alt'), '6', 'text', true) }}
+                    </div>
+                    <div class="row company_fields cart-bottom-buffer cart-account-fields{{ customer.cnpj ? '' : ' hide' }}">
+                        {{ inputgroup.input('a_company_registration', 'company_registration', set_value('company_registration', customer.company_registration), lang('account_company_registration'), '6', 'text', true) }}
+                    </div>
                     {% endif %}
-                
+
                     {% if not logged_in %}
                         <div class="col-lg-12 cart-newsletter">
                             <label class="checkbox">
@@ -93,7 +104,7 @@
                     {% endif %}
                 </div>
             </div>
-            
+
             <div class="col-xs-4">
                 <div class="checkout-box">
                     <div class="row cart-address-header">
@@ -112,7 +123,7 @@
                             {% endif %}
                         </div>
                     </div>
-                
+
                     <div class="row cart-bottom-buffer cart-address-fields">
                         {% if logged_in and customer_addresses|count > 1 %}
                             <div class="col-md-12 brasil-only{{ country_id != 30 ? ' hide' : '' }}">
@@ -133,7 +144,7 @@
                                 </span>
                             </div>
                         </div>
-                
+
                         <div class="other-countries{{ country_id == 30 ? ' hide' : '' }}">
                             {{ inputgroup.input('a_zip', 'zip', set_value('zip', zipvalue), lang('address_zip'), 12) }}
                         </div>
@@ -141,13 +152,13 @@
                         {{ inputgroup.input('a_city', 'city', set_value('city', customer.ship_address.city), lang('address_city'), '6 nopad-right') }}
                         {{ inputgroup.input('a_district', 'district', set_value('district', customer.ship_address.district), lang('district'), '6 nopad-left') }}
                     </div>
-                
+
                     <div class="row cart-bottom-buffer cart-address-fields-two">
                         {{ inputgroup.input('a_address1', 'address1', set_value('address1', customer.ship_address.address1), lang('address1'), 12) }}
                         {{ inputgroup.input('a_anumber', 'anumber', set_value('anumber', customer.ship_address.anumber), lang('anumber'), '6 nopad-right') }}
                         {{ inputgroup.input('a_address2', 'address2', set_value('address2', customer.ship_address.address2), lang('address2'), '6 nopad-left', 'text', true) }}
                     </div>
-                
+
                     {{ form_hidden('address_id', address_id) }}
                 </div>
             </div>
@@ -159,7 +170,7 @@
                             <h2>
                                 3. {{ lang('shipping_method') }}
                             </h2>
-                
+
                             <table id="shipping_table" class="table">
                                 <tr>
                                     <td>
@@ -169,7 +180,7 @@
                                 </tr>
                             </table>
                         </div>
-                
+
                         <div class="col-md-12">
                             <h2>
                                 {{ lang('shipping_notes') }}
@@ -178,7 +189,7 @@
                         </div>
                     </div>
                     <input id="curr_shipping_code" value="{{ shipping_code }}" type="hidden" />
-                </div>  
+                </div>
             </div>
         </div>
         <div class="row">
@@ -190,7 +201,7 @@
                             <h2>
                                 4. {{ lang('payment_method') }}
                             </h2>
-                            
+
                             <div id="payment_tabs">
                                 <div class="shipping_cost pull-right">
                                     <span class="total">
@@ -218,7 +229,7 @@
                                             </li>
                                         {% endfor %}
                                     </ul>
-                
+
                                     <div class="tab-content">
                                         {% for method, info in payment_methods %}
                                             <div id="payment-{{ method }}" class="tab-pane payment-method{{ current_module == method ? ' active' : ' inactive' }}">
@@ -228,7 +239,7 @@
                                     </div>
 
                                 {% else %}
-                
+
                                     <ul class="nav nav-tabs">
                                         <li class="active">
                                             <a class="payment-method-nav" data-toggle="data" href="#payment-undefined">
@@ -236,19 +247,41 @@
                                             </a>
                                         </li>
                                     </ul>
-                
+
                                     <div class="tab-content">
                                         <div id="payment-undefined" class="tab-pane payment-method active">
                                             {{ lang('payment_method_undefined') }}
                                         </div>
                                     </div>
-                                    
+
                                 {% endif %}
                             </div>
                         </div>
                     </div>
-                </div>  
-                <div class="row cart-bottom-buffer-md text-center cart-actions" style="margin-top:20px;">
+                </div>
+
+                {% if shop_config('default_country_id') == 30 %}
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="cart-bottom-buffer-md text-right cart-country">
+            				{{ 'Esta compra está sendo feita no' | trans({'en' : 'This purchase is being made at'}) }}
+            				<strong>{{ 'Brasil' | trans({'en' : 'Brazil'}) }}</strong>
+                            <span class="country-flag">
+                                <img src="{{ base_url('/loja/themes/default/assets/img/br.png') }}" alt="{{ 'Brasil' | trans({'en' : 'Brazil'}) }}">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if captcha_check %}
+                    <div class="row ">
+                        <div class="col-md-offset-4 col-md-4 g-recaptcha" data-sitekey="{{ captcha_public_key }}"></div>
+                    </div>
+                    <br>
+                {% endif %}
+
+                <div class="row cart-bottom-buffer-md text-center cart-actions">
                     <button type="submit" class="btn btn-lg btn-primary">
                         <i class="glyphicon glyphicon-ok"></i> {{ lang('submit_order') }}
                     </button>

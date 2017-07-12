@@ -1,4 +1,5 @@
 {{ form_open('cart/update_cart', {'id': 'update_cart_form'}) }}
+    <input type="hidden" name="step" value="{{ step ? step : request.get.step }}" />
     <div class="table-responsive">
         <table class="table table-striped table-condensed">
             <thead>
