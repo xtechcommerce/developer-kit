@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 // Functions only for template-designer
 
@@ -38,7 +38,7 @@ function host_img($file, $size = 'full', $options = array())
     if (empty($file)) {
         return '';
     }
-    
+
     $options = array_merge(array('src' => host_url('uploads/images/' . $size . '/' . $file)), $options);
     return '<img' . _parse_options($options) . '>';
 }
@@ -89,14 +89,14 @@ function get_collection_pagination()
 }
 
 function humanize($str) {
- 
+
     $str = trim(strtolower($str));
     $str = preg_replace('/[^a-z0-9\s+]/', ' ', $str);
     $str = preg_replace('/\s+/', ' ', $str);
     $str = explode(' ', $str);
- 
+
     $str = array_map('ucwords', $str);
- 
+
     return implode(' ', $str);
 }
 
@@ -143,7 +143,7 @@ function cart($key){
         case 'contents':
             return cart_contents();
             break;
-        
+
         default:
             if (isset($data['cart'][$key])) {
                 return $data['cart'][$key];
@@ -486,7 +486,7 @@ function shop_config($key){
         case 'default_country_id':
             return 30;
             break;
-        
+
         default:
             return 'Lorem ipsum';
             break;
@@ -588,6 +588,10 @@ function current_lang(){
 }
 
 function body_code(){
+    return '';
+}
+
+function get_products_by_category_slug(){
     return '';
 }
 
