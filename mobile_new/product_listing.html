@@ -22,7 +22,7 @@
 								{% endif %}
 							{% endfor %}
 
-							{% if product.saleprice > 0 %}
+							{% if product.saleprice > 0 and not sale %}
 								<div class="product-flag-dark-green product-flag">
 									{{ (((product.saleprice - product.price) / product.price) * 100)|round }}%
 								</div>

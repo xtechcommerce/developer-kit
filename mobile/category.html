@@ -28,7 +28,7 @@
 		<div id="products" class="products clearfix">
 			{% for product in products %}
 				<div class="product">
-					<a href="{{ site_url(product.slug) }}" class="rel bl">
+					<a href="{{ site_url((category.slug ~ '/') | default('') ~ product.slug ) }}" class="rel bl">
 					{% if product.quantity <= 0 %}
 						<span class="abs outofstock">Esgotado</span>
 					{% else %}
@@ -39,7 +39,11 @@
 					{{ product_img(product, 'small') }}
 					</a>
 					<div class="product-info">
-						<p class="desc"><a href="{{ site_url(product.slug) }}"><strong>{{ product.name }}</strong></a></p>
+						<p class="desc">
+							<a href="{{ site_url((category.slug ~ '/') | default('') ~ product.slug ) }}">
+								<strong>{{ product.name }}</strong>
+							</a>
+						</p>
 						<p class="price">
 							<em>
 							{% if product.saleprice > 0 %}

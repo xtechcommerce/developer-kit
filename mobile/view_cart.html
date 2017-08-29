@@ -7,7 +7,8 @@
 	var checkoutCallbacks = $.Callbacks();
 	var checkoutErrors = false;
 	var checkoutNoSubmit = false;
-	var checkoutCart = {total: {{ cart('total')|default('0.00') }}, shipping_cost: {{ cart('shipping_cost')|default('0.00') }}, subtotal: {{ cart('discounted_subtotal')|default('0.00') }}};
+	var checkoutCart = {total: {{ cart('total')|default('0.00') }}, shipping_cost: {{ cart('shipping_cost')|default('0.00') }}, subtotal: {{ cart('discounted_subtotal')|default('0.00') }}, discount: {{ (cart('subtotal') - cart('discounted_subtotal'))|default('0.00') }}};
+	var is_mobile = true;
 
 	var CartSettings = {
 		zonesMap: {{ zones_map|json_encode }},
@@ -56,13 +57,13 @@
 			{{ flashdata.error }}
 		</div>
 		{% endif %}
-		
+
 		{% if flashdata.message %}
 		<div class="alert alert-info">
 			{{ flashdata.message }}
 		</div>
 		{% endif %}
-		
+
 		{% if error %}
 		<div class="alert alert-danger">
 			{{ error }}
@@ -470,8 +471,15 @@
 					{% endif %}
 				</span>
 			</h3>
-
 			<hr>
+			{% if captcha_check %}
+			    <div class="row ">
+					<div class="col-xs-12 ">
+						<div class="g-recaptcha" data-sitekey="{{ captcha_public_key }}" data-size="compact"></div>
+					</div>
+				</div>
+				<br>
+			{% endif %}
 
 			<button type="submit" class="btn btn-large btn-block">
 				<i class="glyphicon glyphicon-ok"></i> {{ lang('submit_order') }}
