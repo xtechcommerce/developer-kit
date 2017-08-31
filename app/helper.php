@@ -133,6 +133,18 @@ function global_css($uri, $tag=false)
     }
 }
 
+function global_img($uri, $tag=false)
+{
+    if($tag)
+    {
+        return '<img src="app/global_assets/css/'.$uri.'" alt="" />';
+    }
+    else
+    {
+        return 'app/global_assets/img/'.$uri;
+    }
+}
+
 function global_asset($uri)
 {
     return 'app/global_assets/'.$uri;
