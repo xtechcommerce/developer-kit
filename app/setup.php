@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 date_default_timezone_set('America/Sao_Paulo');
 
@@ -13,17 +13,17 @@ $settings_file         = './' . $GLOBALS['template'] . '/settings.json';
 if (file_exists($settings_file)) {
     $settings_file_content = file_get_contents($settings_file);
     $settings_json         = json_decode($settings_file_content, true);
-    
+
     if ($settings_json != null) {
-    
+
         if (isset($settings_json['template_settings'])) {
             $template_settings = $settings_json['template_settings'];
         }
-    
+
         if (isset($settings_json['collections'])) {
             $collections = $settings_json['collections'];
         }
-    
+
     }
 }
 
@@ -34,10 +34,10 @@ $loader3 = new Twig_Loader_Filesystem('./app/global_templates');
 $twig = new Twig_Environment(new Twig_Loader_Chain(array($loader1, $loader2, $loader3)));
 
 $functions = array(
-    'site_url', 
-    'base_url', 
-    'uri_string', 
-    'anchor', 
+    'site_url',
+    'base_url',
+    'uri_string',
+    'anchor',
     'url_title',
     'customer_name',
     'banner_img',
@@ -81,6 +81,7 @@ $functions = array(
     'validation_errors',
     'global_js',
     'global_css',
+    'global_img',
     'cart',
     'form_input',
     'form_dropdown',
@@ -163,7 +164,7 @@ if (isset($_GET['ajax'])) {
               echo '{"count":0}';
             }
             break;
-        
+
         default:
             echo '';
             break;
