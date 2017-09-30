@@ -17,7 +17,7 @@
 				</div>
 				<div class="panel-body">
 					<div class="form-group">
-						<label for="email" class="col-md-3 control-label">	
+						<label for="email" class="col-md-3 control-label">
 							{{ lang('address_email') }}
 							<sup>*</sup>
 						</label>
@@ -99,7 +99,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="phone" class="col-md-3 control-label">			
+						<label for="phone" class="col-md-3 control-label">
 							{{ lang('account_phone') }}
 							<sup>*</sup>
 						</label>
@@ -110,6 +110,7 @@
 					<div class="form-group">
 						<label for="cpf" class="col-md-3 control-label">
 							{{ lang('account_cpf') }}
+							<sup>*</sup>
 						</label>
 						<div class="col-md-5">
 							{{ form_input({'name': 'cpf', 'placeholder': '000.000.000-00', 'class': 'form-control', 'value': set_value('cpf')}) }}
@@ -165,7 +166,7 @@
 				$('input[name=birthday]').mask('99/99/9999');
 
 				if ($('input[name=cnpj]').val().length > 0) {
-					show_company();		
+					show_company();
 				}
 
 				$('#company_fields_btn').click(function(){

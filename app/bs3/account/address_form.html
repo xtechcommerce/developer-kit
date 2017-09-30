@@ -1,3 +1,5 @@
+{% set country_id = set_value('country_id', (country_id ? country_id : shop_config('default_country_id'))) %}
+
 <form id="address_modal_form">
 {{ form_input({'name': 'id', 'type': 'hidden', 'value': set_value('id', id)}) }}
 <div class="modal-dialog">
@@ -48,14 +50,44 @@
 					{{ form_input({'name': 'phone', 'placeholder': lang('address_phone'), 'class': 'form-control', 'value': set_value('phone', phone)}) }}
 				</div>
 			</div>
+			{% if shop_config('international') %}
 			<div class="row margin-bottom buffer-bottom-sm">
 				<div class="col-md-6">
 					<label>
-						{{ lang('address_postcode') }}
+						{{ lang('address_country') }}
 					</label>
-					{{ form_input({'name': 'zip', 'placeholder': lang('address_zip'), 'class': 'form-control', 'value': set_value('zip', zip)}) }}
+					{{ form_dropdown('country_id', countries_menu, set_value('country_id', country_id), 'class="form-control" id="country_id"') }}
 				</div>
+			</div>
+			{% else %}
+			{{ form_input({'name': 'country_id', 'id': 'country_id', 'type': 'hidden', 'value': set_value('country_id', country_id)}) }}
+			{% endif %}
+			<div class="row margin-bottom buffer-bottom-sm">
 				<div class="col-md-6">
+
+					<div class="brasil-only{{ country_id != 30 ? ' hide' : '' }}">
+						<label>
+							{{ lang('address_postcode') }}
+						</label>
+						<div class="input-group">
+							{{ form_input({'id': 'zip_code', 'placeholder': lang('address_zip'), 'class': 'address form-control', 'value': set_value('zip', zip)}) }}
+							<span class="input-group-btn input-group-search-address">
+								<a href="#" class="btn btn-default btn-search-address">
+									{{ lang('search_address') }}
+								</a>
+							</span>
+						</div>
+					</div>
+
+					<div class="other-countries{{ country_id == 30 ? ' hide' : '' }}">
+						<label style="white-space:nowrap">
+							{{ lang('address_zip') }}
+						</label>
+						{{ form_input({'autocomplete': 'off', 'id': 'a_zip', 'type': 'text', 'class': 'address form-control', 'name': 'zip', 'value': set_value('zip', zip)}) }}
+					</div>
+
+				</div>
+				<div class="col-md-6 consultaCEP">
 					<label>&nbsp;</label>
 					<a href="http://www.buscacep.correios.com.br/sistemas/buscacep/" target="_blank" class="btn btn-default" style="display: block;">
 						{{ lang('consulting_zip') }}
@@ -134,5 +166,94 @@
 				}
 			});
 	}
+
+    zonesMap =  {{ zones_map|json_encode }};
+    $(document).ready(function(){
+        $('input[name=phone]').mask_brazilian_phone();
+        $('input[name=cpf]').mask('999.999.999-99');
+        $('input[name=cnpj]').mask('99.999.999/9999-99');
+        $('input[name=birthday]').mask('99/99/9999');
+        $('#zip_code').mask("99999-999");
+        $('#zip_code_val').mask("99999-999");
+
+    });
+
+    var searchAddress = function(focus, update_address, event) {
+        var address = {country: $('#country_id').val(), zip: $('#zip_code').val()};
+
+        if (address.country == 30) {
+            $('input[name=zip]').val(address.zip);
+
+            if (address.zip.length == 9 && address.zip.indexOf('_') == -1) {
+
+                $('#shipping_table').html('<tr><td><div class="loading"><i class="icon-refresh"></i> Calculando o frete</div></td></tr>');
+                address.zip = address.zip.replace("-", "");
+                var last_btn_address_text = $('.btn-search-address').text();
+                $('.btn-search-address').addClass('disabled');
+                $('.btn-search-address').text('Buscando...');
+
+                $.getJSON(site_url.base + 'shipping/busca_cep', {zip: address.zip}, function (data) {
+                    $('.btn-search-address').removeClass('disabled');
+                    $('.btn-search-address').text(last_btn_address_text);
+
+                    if (data["resultado"] == "1" && update_address) {
+
+                        $("input[name=district]").val(unescape(data["bairro"]));
+                        $("input[name=city]").val(unescape(data["cidade"]));
+                        $("input[name=address1]").val(unescape(data["logradouro"]));
+                        $("select[name=zone_id]").val(unescape(zonesMap[data["uf"]]));
+                        if (focus) {
+                            $("input[name=anumber]").focus();
+                        }
+                    }
+
+                    data["country"] = address.country;
+                });
+            }
+        }
+    };
+
+    $('.btn-search-address').on('click', function () {
+        searchAddress(true, true)
+    });
+
+    $('#zip_code').on('blur', function () {
+        searchAddress(true, true)
+    });
+
+    $('select[name=country_id]').on('change', function () {
+        if($(this).val() != 30){
+            $('.brasil-only').hide();
+            $('.consultaCEP').hide();
+            $('.other-countries').removeClass('hide').show();
+        } else {
+            $('.other-countries').hide();
+            $('.consultaCEP').show();
+            $('.brasil-only').removeClass('hide').show();
+        }
+
+        repopulateZonesMap($(this).val());
+    });
+
+    var repopulateZonesMap = function (country_id) {
+        $.ajax({
+            url: "{{ site_url('secure/get_zones_map') }}",
+            type: 'GET',
+            dataType: 'json',
+            data: { 'country_id' : country_id },
+            success: function(data){
+                if (data.success) {
+                    $('select[name=zone_id]').empty();
+                    options = $('select[name=zone_id]');
+                    $.each(data.zones.menu, function (index, value) {
+                        options.append($("<option />").val(index).text(value));
+                    });
+                    $('select[name=zone_id]').val(data.zones.menu);
+                    zonesMap =  data.zones.map;
+                }
+            }
+        });
+    };
+
 //-->
 </script>
