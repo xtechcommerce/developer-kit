@@ -18,7 +18,7 @@
             <div class="col-xs-8">
                 <label>
                     {{ form_input({'name': 'product[' ~ product.id ~ '][variant_id]', 'value': '', 'type': 'hidden', 'id': 'lookitem-variant-' ~ product.id}) }}
-                    Incluir este produto? {{ form_input({'name': 'product[' ~ product.id ~ '][id]', 'value': product.id, 'type': 'checkbox', 'checked': 'checked'}) }}
+                    {{ form_input({'name': 'product[' ~ product.id ~ '][id]', 'value': product.id, 'type': 'hidden'}) }}
                 </label>
 
                 <div class="options clearfix">

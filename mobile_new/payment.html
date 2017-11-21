@@ -1,0 +1,75 @@
+{% extends _layout %}
+
+{% block content %}
+
+<div class="row">
+	<div class="col-lg-12">
+		{% if validation_errors() %}
+		<div class="alert alert-info">
+			{{ validation_errors() }}
+		</div>
+		{% endif %}
+
+		<h1>Pedido #{{ order.order_number }}</h1>
+		<hr>
+
+		<div class="well">
+			<h2 class="text-center" style="margin-bottom:25px">
+				Valor: {{ shop_config('currency_symbol') }} {{ order.total }}
+			</h2>
+		</div>
+
+		{{ form_open('payment/order/' ~ order.order_number, {id:'onepage_checkoutform'}, {'module': module}) }}
+
+				<div id="payment_tabs">
+					<ul class="nav nav-tabs">
+						{% for method, info in payment_methods %}
+							<li class="{{ module == method ? 'active' : 'inactive' }}">
+								<a class="payment-method-nav" data-toggle="data" href="#payment-{{ method }}">
+									{{ info.name }}
+								</a>
+							</li>
+						{% endfor %}
+					</ul>
+					<div class="tab-content">
+						{% for method, info in payment_methods %}
+							<div id="payment-{{ method }}" class="tab-pane payment-method{{ module == method ? ' active' : '' }}">
+								{{ info.form|raw }}
+							</div>
+						{% endfor %}
+					</div>
+				</div>
+				<hr>
+				<div class="row cart-bottom-buffer-md text-center cart-actions">
+					<button type="submit" class="btn btn-lg btn-primary">
+						<i class="glyphicon glyphicon-ok"></i> Finalizar compra
+					</button>
+				</div>
+
+		{{ form_close() }}
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('#payment_tabs a.payment-method-nav').each(function(){
+			var $this = $(this);
+			$this.click(function (e){
+				e.preventDefault();
+				$this.tab('show');
+				var id = $('#payment_tabs div.payment-method.active').attr('id');
+				var method = id.split('-')[1];
+				$('input[name=module]').val(method);
+			});
+		});
+
+		$('#onepage_checkoutform').on('submit', function(e){
+			$('.cart-actions button[type="submit"]').addClass('disabled');
+			$('.cart-actions button[type="submit"]').text('Carregando...');
+		});
+	});
+</script>
+
+
+{% endblock %}
+

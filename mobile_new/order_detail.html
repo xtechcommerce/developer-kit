@@ -11,6 +11,28 @@
 
 	<div class="row">
 		<div class="col-xs-12">
+			<div class="pull-right">
+				<a href="{{ site_url('secure/duplicate_cart/' ~ order_id) }}" class="btn btn-default">
+					<i class="glyphicon glyphicon-repeat"></i>
+				</a>
+				{% if boletourl %}
+				<a class="btn" target="_blank" href="{{ boletourl }}" class="btn btn-primary">
+					<i class="glyphicon glyphicon-barcode"></i>
+				</a>
+				{% elseif paymenturl %}
+				<a class="btn" target="_blank" href="{{ paymenturl }}" class="btn btn-primary">
+					<i class="glyphicon glyphicon-barcode"></i>
+				</a>
+				{% endif %}
+				<a href="{{ site_url('secure/print_order/' ~ order_id) }}" class="btn btn-primary" target="_blank">
+					<i class="glyphicon glyphicon-print"></i>
+				</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-xs-12">
 			<div class="panel panel-default">
 				<div class="panel-body">
 					<span>
