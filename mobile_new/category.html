@@ -8,17 +8,17 @@
         <div class="col-xs-12">
             {# Titulo da Página #}
             {% if term is not empty %}
-                <h2 class="category-header">
+                <h1 class="category-header">
                     {{ "Resultado da busca por"|trans({'en':'Results with'}) }} {{ term }}
-                </h2>
+                </h1>
             {% else %}
-                <h2 class="category-header">
+                <h1 class="category-header">
                     {{ category.name }}
-                </h2>
+                </h1>
                 {% if category.description is not empty %}
-                <h4>
+
                     {{ category.description }}
-                </h4>
+
                 {% endif %}
             {% endif %}
         </div>

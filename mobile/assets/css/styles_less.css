@@ -910,6 +910,7 @@ small.date{margin-top:5px;font-size:70%;}
 .note-wrap{margin-bottom:10px;}
 #search-results .search-item{padding:15px 0;}#search-results .search-item h3{margin-top:0;}
 footer{padding-top:20px;padding-bottom:20px;background-color:#444444;text-align:center;}footer #sign-up{margin-bottom:25px;}footer #sign-up h4{margin-top:0;}
+.footer-title{margin-top:0;line-height:150%;font-family:'Raleway';font-weight: 400;text-transform:uppercase; }
 footer .credits{opacity:.6;font-size:90%;}footer .credits p{margin-bottom:.5em;}
 footer a:link{text-decoration:underline;}
 footer h2,footer h3,footer h4,footer p,footer label{color:#fff;text-shadow:none;}

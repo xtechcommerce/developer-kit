@@ -322,6 +322,7 @@ a.meanmenu-reveal {
 
 .product-list-item .product-description {
     margin: 0;
+    text-align: center;
 }
 
 .product-list-item .product-description .title {
@@ -330,7 +331,13 @@ a.meanmenu-reveal {
     line-height: 18px;
     font-family: sans-serif;
     letter-spacing: 1px;
-    text-align: center;
+}
+
+.product-list-item .product-description .product-title {
+    font-weight: 400;
+    text-transform: uppercase;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .product-list-item .product-description .price .line-through {
