@@ -349,6 +349,12 @@ function onepage_checkout(){
     return $twig->render('bs3/checkout/view_cart.html', $data);
 }
 
+function multipages_checkout()
+{
+    global $twig, $data;
+    return $twig->render('bs3/new_checkout/view_cart.html', $data);
+}
+
 function testimonials_widget(){
     global $twig, $data;
     return $twig->render('bs3/product/testimonials.html', $data);
@@ -600,6 +606,10 @@ function current_lang(){
 }
 
 function body_code(){
+    return '';
+}
+
+function bodyend_code(){
     return '';
 }
 
