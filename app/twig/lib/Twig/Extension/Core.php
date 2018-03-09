@@ -215,6 +215,11 @@ class Twig_Extension_Core extends Twig_Extension
             new Twig_SimpleFunction('random', 'twig_random', array('needs_environment' => true)),
             new Twig_SimpleFunction('date', 'twig_date_converter', array('needs_environment' => true)),
             new Twig_SimpleFunction('include', 'twig_include', array('needs_environment' => true, 'needs_context' => true, 'is_safe' => array('all'))),
+            new Twig_SimpleFunction('time_diff', function ($from, $to) {
+                $from = new DateTime($from);
+                $to   = new DateTime($to);
+                return $from->diff($to)->y;
+            }),
         );
     }
 
