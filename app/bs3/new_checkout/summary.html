@@ -122,6 +122,33 @@
                     </tr>
                 {% endif %}
 
+                {% if cart('mercadopago_discount') > 0 %}
+                    <tr>
+                        <td colspan="4" class="text-right">
+                            <strong>
+                                {{ lang('mercadopago_discount') }}
+                            </strong>
+                        </td>
+                        <td>
+                            -{{ cart('mercadopago_discount')|format_currency }}
+                        </td>
+                    </tr>
+                {% endif %}
+
+
+                {% if cart('campaign_discount') > 0 %}
+                    <tr>
+                        <td colspan="4" class="text-right">
+                            <strong>
+                                {{ lang('campaign_discount') }}
+                            </strong>
+                        </td>
+                        <td>
+                            -{{ cart('campaign_discount')|format_currency }}
+                        </td>
+                    </tr>
+                {% endif %}
+
                 {% if cart('coupon_discount') > 0 %}
                     <tr>
                         <td colspan="4" class="text-right">

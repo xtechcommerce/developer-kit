@@ -53,20 +53,19 @@
                                     </li>
                                 {% endfor %}
                                 </ul>
-
-                                {% for option in product.options %}
-                                    {% if option.id in product.available_options %}
-                                        {% if option.type == 'textarea' %}
-                                        <label>{{ option.name }}</label>
-                                        <textarea class="form-control" name="option[{{ option.id }}]"></textarea>
-                                        {% elseif option.type == 'textfield' %}
-                                        <label>{{ option.name }}</label>
-                                        <input class="form-control" name="option[{{ option.id }}]">
-                                        {% endif %}
-                                    {% endif %}
-                                {% endfor %}
                             </div>
                         {% endif %}
+                        {% for option in options %}
+                            {% if option.id in product.available_options %}
+                                {% if option.type == 'textarea' %}
+                                <label>{{ option.name }}</label>
+                                <textarea class="form-control" name="option[{{ option.id }}]"></textarea>
+                                {% elseif option.type == 'textfield' %}
+                                <label>{{ option.name }}</label>
+                                <input class="form-control" name="option[{{ option.id }}]">
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
 
                         <script type="text/javascript">
                         $(document).ready(function(){

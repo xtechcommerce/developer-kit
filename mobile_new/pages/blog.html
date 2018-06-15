@@ -1,0 +1,37 @@
+<div class="row">
+	<div class="col-xs-12">
+		<h2>Blog</h2>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12">
+		{% if request.get.single %} {# Single #} {% set single = get_element(request.get.single) %}
+		<div class="blog-item">
+			{% if single['image:cover'] %}
+			<div class="single-photo">
+				<img src="{{ host_url('uploads/images/full/' ~ single['image:cover']) }}" alt="">
+			</div>
+			{% endif %}
+			<div class="single-title">{{ single['text:title'] }}</div>
+			<div class="single-published">Publicado:
+				<span>{{ single.created_at|to_formatted_date }}</span>
+			</div>
+			<div class="single-resume">{{ single['textarea:resume']|raw }}</div>
+			<div class="single-body">{{ single['textarea:body']|raw }}</div>
+		</div>
+		<a class="btn btn-primary" href="{{ site_url('blog') }}" class="button blue">Voltar</a>
+		{% else %} {# Listagem #}
+		<ul id="blog-posts">
+			{% for item in get_collection('blog', {'paginate': true, 'limit': 10, 'month': request.get.month, 'year': request.get.year})
+			%}
+			<li class="blog-item">
+				<div class="item-date">{{ item.created_at|to_formatted_date }}</div>
+				<div class="item-title">
+					<a href="{{ site_url('blog?single=' ~ item.slug) }}">{{ item['text:title'] }}</a>
+				</div>
+			</li>
+			{% endfor %}
+		</ul>
+		{% if get_collection_pagination() %} {{ get_collection_pagination() }} {% endif %} {% endif %}
+	</div>
+</div>
