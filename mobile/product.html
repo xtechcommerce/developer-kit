@@ -136,7 +136,10 @@
                                 <input type="hidden" name="product_height" value="{{ product.height }}" />
                                 <input type="hidden" name="product_width" value="{{ product.width }}" />
                                 <input type="hidden" name="product_depth" value="{{ product.depth }}" />
+                                <input type="hidden" name="product_sku" value="{{ product.sku }}" />
+                                <input type="hidden" name="product_category" value="{{ product.product_main_category_text }}" />
                                 <input type="hidden" name="processing_days" value="{{ product.processing_days }}" />
+                                <input type="hidden" name="product_page" value="true" />
                                 {{ form_close() }}
                                 <div class="frete_results"></div>
                                 <script>
@@ -167,10 +170,12 @@
                                             var product_width = $('input[name=product_width]').val();
                                             var product_depth = $('input[name=product_depth]').val();
                                             var processing_days = $('input[name=processing_days]').val();
+                                            var product_category = $('input[name=product_category]').val();
+                                            var product_sku = $('input[name=product_sku]').val();
 
                                             $.getJSON(site_url.base + 'shipping/busca_cep', {zip: zip}, function(data) {
-                                                $shipping = '';
-                                                var serialized = {country: 30, product_price: product_price, product_weight: product_weight, product_height: product_height, product_width: product_width, product_depth: product_depth, processing_days: processing_days, zip: zip, address: data};
+                                                $shipping = ''; $block_sale = '';
+                                                var serialized = {country: 30, product_price: product_price, product_weight: product_weight, product_height: product_height, product_width: product_width, product_depth: product_depth, processing_days: processing_days, product_category: product_category, product_sku: product_sku, zip: zip, address: data};
 
                                                 if(data['resultado'] == 0){
                                                     $shipping = '<p><strong>Endereço não encontrado. Corrija seu CEP...</strong></p>';
@@ -179,25 +184,44 @@
                                                 }else{
                                                     $.post(action, serialized, function(fdata){
                                                         $('#form-shipping input[type=submit]').removeClass('disabled').val('Calcular');
-
                                                         $.each(fdata["shipping_rates"], function(i, curr){
-                                                            if (curr['num'] > 0) {
-                                                                 i += ': ';
+                                                            if (typeof curr['error'] != 'undefined' && curr['error'] != null) {
+                                                                shipping_method_error = '<br><span class="frete_result_msg">' + curr['error'] + '</span>';
+                                                            } else {
+                                                                shipping_method_error = '';
                                                             }
 
-                                                            if(typeof fdata['shipping_rates']['A cobrar'] == 'undefined') {
+                                                            if (typeof curr['name'] != 'undefined') {
+                                                                $name = curr['name'];
+                                                            } else {
+                                                                $name = i;
+                                                            }
+                                                            $name += ': ';
+
+                                                            if (typeof fdata['shipping_rates']['A cobrar'] == 'undefined') {
                                                                 if(curr['hide_price'] == 1) {
-                                                                    curr['str'] = i;
-                                                                    i = '';
-                                                                } else if(curr['num'] == 0){
+                                                                    curr['str'] = $name;
+                                                                    $name = '';
+                                                                } else if(curr['num'] == 0 || curr['num'] == 'FREE'){
                                                                     curr['str'] = 'Frete Grátis';
-                                                                    i = '';
                                                                 }
                                                             } else {
-                                                                curr['str'] = 'O valor e o prazo do frete serão informados após a compra.';
+                                                                if(typeof fdata['shipping_rates']['A cobrar']['block_sale'] == 'undefined') {
+                                                                    curr['str'] = 'O valor e o prazo do frete serão informados após a compra.';
+                                                                } else {
+                                                                    $block_sale = fdata['shipping_rates']['A cobrar']['block_sale'];
+                                                                }
                                                             }
 
-                                                            $shipping = $shipping + '<p>'+i+'<strong>'+curr['str']+'</strong><br>Prazo de Entrega: <strong>até '+curr['time']+' dias úteis</strong></p>';
+                                                            if ($block_sale != '') {
+                                                                $shipping = $block_sale;
+                                                            } else {
+                                                                $time_text = '';
+                                                                if (curr['time'] > 0) {
+                                                                    $time_text = 'Prazo de Entrega: <strong>até '+curr['time']+' dias úteis</strong>';
+                                                                }
+                                                                $shipping = $shipping + '<p class="frete_result">'+$name+'<strong>'+curr['str']+'</strong><br><span>'+$time_text+'</span>'+shipping_method_error+'</p>';
+                                                            }
                                                         });
 
                                                         $('.frete_results').removeClass('error').fadeIn().html('<div class="alert alert-success">' + $shipping + '</div>');

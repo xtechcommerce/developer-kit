@@ -42,10 +42,8 @@
 			{{ page.content|raw }}
 		</div>
 	</div>
-	{% elseif (page.slug == 'blog')%}
-		<script>
-			window.location = "/";
-		</script>
+	{% elseif page.slug in ['blog'] %}
+		{% include 'mobile_new/pages/' ~ page.slug ~ '.html' %}
 	{% else %}
 	<div class="row">
 		<div class="col-xs-12">

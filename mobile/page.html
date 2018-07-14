@@ -1,7 +1,6 @@
 {% extends _layout %}
 
 {% block content %}
-
 	<div class="body">
 		<div id="page" class="clearfix side-pad">
 			<h1 class="title">{{ page.title }}</h1>
@@ -25,6 +24,8 @@
 					</div>
 				{{ form_close() }}
 				<br>
+			{% elseif page.slug in ['blog'] %}
+				{% include 'mobile/pages/' ~ page.slug ~ '.html' %}
 			{% endif %}
 
 			<div class="description">

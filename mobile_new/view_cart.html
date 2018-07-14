@@ -189,6 +189,25 @@
 				</tr>
 				{% endif %}
 
+				{% if cart('campaign_discount') > 0 %}
+				<tr>
+					<td>
+						<strong>
+							{{ lang('campaign_discount') }}
+						</strong>
+					</td>
+
+					<td>
+						{% if current_lang() == 'english' %}
+							-{{ shop_config('currency_symbol') }}
+							{{ cart('campaign_discount')|number_format(2, '.', ',') }}
+						{% else %}
+							-{{ cart('campaign_discount')|format_currency }}
+						{% endif %}
+					</td>
+				</tr>
+				{% endif %}
+
 				{% if cart('coupon_discount') > 0 %}
 					<tr>
 						<td>
