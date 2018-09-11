@@ -55,6 +55,26 @@
                             <div class="variants-wrapper clearfix">
                                 {{ variation_select(product) }}
 
+                                <script type="text/javascript">
+
+                                    s_weight = {
+                                        {% for variant in product.variants %}
+                                            {{ variant.id }}: {{ variant.weight }},
+                                        {% endfor %}
+                                    }
+
+                                    productvariants_settings_{{ product.id }}.validationSuccess = function() {
+                                        var s_id = this['selected_variant']['id'];
+                                        var c_weight = s_weight[s_id];
+
+                                        if (c_weight > 0) {
+                                            $('input[name=product_weight]').val(c_weight);
+                                        }
+                                    }
+
+
+                                </script>
+
                                 {% if product.options|count > 0 %}
                                     {% for option in options %}
                                         {% if option.id in product.available_options %}
@@ -131,6 +151,7 @@
                                         </span>
                                     </div>
                                 </fieldset>
+
                                 <input type="hidden" name="product_price" value="{{ product.saleprice > 0 ? product.saleprice : product.price }}" />
                                 <input type="hidden" name="product_weight" value="{{ product.weight }}" />
                                 <input type="hidden" name="product_height" value="{{ product.height }}" />
@@ -138,6 +159,7 @@
                                 <input type="hidden" name="product_depth" value="{{ product.depth }}" />
                                 <input type="hidden" name="product_sku" value="{{ product.sku }}" />
                                 <input type="hidden" name="product_category" value="{{ product.product_main_category_text }}" />
+                                <input type="hidden" name="product_all_categories" value="{{ product.all_categories }}" />
                                 <input type="hidden" name="processing_days" value="{{ product.processing_days }}" />
                                 <input type="hidden" name="product_page" value="true" />
                                 {{ form_close() }}
@@ -171,11 +193,12 @@
                                             var product_depth = $('input[name=product_depth]').val();
                                             var processing_days = $('input[name=processing_days]').val();
                                             var product_category = $('input[name=product_category]').val();
+                                            var product_all_categories = $('input[name=product_all_categories]').val();
                                             var product_sku = $('input[name=product_sku]').val();
 
                                             $.getJSON(site_url.base + 'shipping/busca_cep', {zip: zip}, function(data) {
                                                 $shipping = ''; $block_sale = '';
-                                                var serialized = {country: 30, product_price: product_price, product_weight: product_weight, product_height: product_height, product_width: product_width, product_depth: product_depth, processing_days: processing_days, product_category: product_category, product_sku: product_sku, zip: zip, address: data};
+                                                var serialized = {country: 30, product_price: product_price, product_weight: product_weight, product_height: product_height, product_width: product_width, product_depth: product_depth, processing_days: processing_days, product_category: product_category, product_all_categories: product_all_categories, product_sku: product_sku, zip: zip, address: data};
 
                                                 if(data['resultado'] == 0){
                                                     $shipping = '<p><strong>Endereço não encontrado. Corrija seu CEP...</strong></p>';

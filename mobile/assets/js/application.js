@@ -14,9 +14,9 @@ $.fn.extend({
         element.unmask();
         phone = element.val().replace(/\D/g, '');
         if(phone.length > 10) {
-            element.mask("(99) 99999-999?9");
+            element.mask("(99) 99999-9999");
         } else {
-            element.mask("(99) 9999-9999?9");
+            element.mask("(99) 9999-99999");
         }
         }).trigger('focusout');
     },
@@ -35,10 +35,10 @@ $.fn.extend({
 
 $(document).ready(function(){
 
-    $('.tag-filter').change(function(e){
-        if ($(this).val() != '') {
-            window.location.href = $(this).val();
-        };
-    });
+	$('.tag-filter').change(function(e){
+		if ($(this).val() != '') {
+			window.location.href = $(this).val();
+		};
+	});
 
 });

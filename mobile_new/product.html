@@ -94,7 +94,7 @@
                                     <div class="hide">{{ variation_select(product, {button_selects: 'true'}) }}</div>
 
                                     <script type="text/javascript">
-                                    $( document ).ready(function() {
+
                                         s_weight = {
                                             {% for variant in product.variants %}
                                                 {{ variant.id }}: {{ variant.weight }},
@@ -115,24 +115,26 @@
                                             $('#buy-btn').show();
                                             variant_pay_discount(this.selected_variant);
                                         }
+                                        
+                                        $( document ).ready(function() {
+                                        
+                                            productvariants_settings_{{ product.id }}.validationNotAvailable = function(){
+                                                variant_unavailable();
+                                                variant_pay_discount(this.selected_variant);
+                                            }
 
-                                        productvariants_settings_{{ product.id }}.validationNotAvailable = function(){
-                                            variant_unavailable();
-                                            variant_pay_discount(this.selected_variant);
-                                        }
+                                            productvariants_settings_{{ product.id }}.validationOutofstock = function(){
+                                                variant_unavailable();
+                                                variant_pay_discount(this.selected_variant);
+                                            }
 
-                                        productvariants_settings_{{ product.id }}.validationOutofstock = function(){
-                                            variant_unavailable();
-                                            variant_pay_discount(this.selected_variant);
-                                        }
-
-                                        var variant_unavailable = function(){
-                                            $('#buy-btn').hide();
-                                            $('.buy-message').hide();
-                                            $('.estoque').hide();
-                                            $('.alert-unavailable').removeClass('hide');
-                                        }
-                                    });
+                                            var variant_unavailable = function(){
+                                                $('#buy-btn').hide();
+                                                $('.buy-message').hide();
+                                                $('.estoque').hide();
+                                                $('.alert-unavailable').removeClass('hide');
+                                            }
+                                        });
                                     </script>
 
                                     {% if product.options|count > 0 %}

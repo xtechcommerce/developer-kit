@@ -68,7 +68,7 @@
 			</div>
 		</div>
 
-		{% if not is_local() %}
+		{% if not is_local() and not shop_config('hide_google_analytics') %}
 			<script>
 				ga('require', 'ecommerce');
 

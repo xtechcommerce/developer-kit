@@ -7,8 +7,8 @@
         <div class="single-photo"><img src="{{ host_url('uploads/images/full/' ~ single['image:cover']) }}" alt=""></div>
       {% endif %}
       <div class="single-title">{{ single['text:title'] }}</div>
-			<div class="single-published">Publicado: <span>{{ single.created_at|to_formatted_date }}</span></div>
-			<div class="single-resume">{{ single['textarea:resume']|raw }}</div>
+			<div class="single-published">Publicado: <span>{{ single.created_at|to_formatted_date }}</span></div>	
+			<div class="single-resume">{{ single['textarea:resume']|raw }}</div>		
 			<div class="single-body">{{ single['textarea:body']|raw }}</div>
 		</div>
 		<a class="btn btn-primary" href="{{ site_url('blog') }}" class="button blue">Voltar</a>
@@ -23,7 +23,7 @@
 					</div>
 				</li>
 			{% endfor %}
-		</ul>
+		</ul> 
 		{% if get_collection_pagination() %}
       {{ get_collection_pagination() }}
 		{% endif %}

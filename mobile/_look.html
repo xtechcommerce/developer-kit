@@ -8,7 +8,7 @@
                 {{ product_img(product, 'small', {'class': 'btm-margin'}) }}
                 <label class="mobile-checkbox">
                     {{ form_input({'name': 'product[' ~ product.id ~ '][variant_id]', 'value': '', 'type': 'hidden', 'id': 'lookitem-variant-' ~ product.id}) }}
-                    Incluir este produto? {{ form_input({'name': 'product[' ~ product.id ~ '][id]', 'value': product.id, 'type': 'checkbox', 'checked': 'checked'}) }}
+                    {{ form_input({'name': 'product[' ~ product.id ~ '][id]', 'value': product.id, 'type': 'hidden'}) }}
                 </label>
                 <div class="options clearfix">
                     <div class="variants-wrapper clearfix form-group">
@@ -24,7 +24,7 @@
 
                         {% if product.options|count > 0 %}
                             <div class="clearfix prod-variants">
-                                <ul>        
+                                <ul>
                                     {% for option in product.options %}
                                     <li class="prod-variant-li clearfix">
                                         <div class="prod-variant">
@@ -45,7 +45,18 @@
                                 </ul>
                             </div>
                         {% endif %}
-                        
+                        {% for option in options %}
+                            {% if option.id in product.available_options %}
+                                {% if option.type == 'textarea' %}
+                                <label>{{ option.name }}</label>
+                                <textarea class="form-control" name="option[{{ option.id }}]"></textarea>
+                                {% elseif option.type == 'textfield' %}
+                                <label>{{ option.name }}</label>
+                                <input class="form-control" name="option[{{ option.id }}]">
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+
                         <script type="text/javascript">
                             $(document).ready(function(){
                                 var productvariants_settings = productvariants_settings_{{ product.id }};
@@ -63,7 +74,7 @@
             </div>
         </div>
     {% endfor %}
-    
+
     <div class="prod-action side-pad">
         <div class="price" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer">
             <div class="buy-price">
@@ -76,11 +87,11 @@
                 {% endif %}
             </div>
         </div>
-            
+
         <button class="btn buy-btn btn-buy-look" type="submit" value="submit">
             <i class="glyphicon glyphicon-shopping-cart"></i> {{ lang('form_buy') }}
-        </button>   
+        </button>
     </div>
-    
+
     {{ form_close() }}
 </div>
