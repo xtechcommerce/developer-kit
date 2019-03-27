@@ -1,195 +1,418 @@
+{% import 'bs3/checkout/inputgroup.html' as inputgroup %}
+
 <h1 class="page-title">{{ lang('create_new_account') }}</h1>
 <div class="row">
-	<div class="col-lg-12">
-		{% if validation_errors() and set_value('new') != 'new' %}
-		  <div class="alert alert-danger">
-			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-			{{ validation_errors() }}
-		  </div>
-		{% endif %}
-		{{ form_open('secure/register', 'class="form-horizontal"', {'redirect': redirect, 'submitted': 'submitted'}) }}
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title">
-						<i class="glyphicon glyphicon-asterisk"></i>
-						{{ lang('account_data') }}
-					</h3>
-				</div>
-				<div class="panel-body">
-					<div class="form-group">
-						<label for="email" class="col-md-3 control-label">
-							{{ lang('address_email') }}
-							<sup>*</sup>
-						</label>
-						<div class="col-md-5">
-							{{ form_input({'name': 'email', 'placeholder': lang('address_email'), 'class': 'form-control', 'value': set_value('email'), 'autocomplete': 'off'}) }}
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="password" class="col-md-3 control-label">
-							{{ lang('password') }}
-							<sup>*</sup>
-						</label>
-						<div class="col-md-5">
-							{{ form_input({'name': 'password', 'placeholder': lang('your_password'), 'class': 'form-control', 'value': '', 'autocomplete': 'off', 'type': 'password'}) }}
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="confirm" class="col-md-3 control-label">
-							{{ lang('account_confirm') }}
-							<sup>*</sup>
-						</label>
-						<div class="col-md-5">
-							{{ form_input({'name': 'confirm', 'placeholder': lang('account_confirm'), 'class': 'form-control', 'value': '', 'autocomplete': 'off', 'type': 'password'}) }}
-						</div>
-					</div>
-				</div>
-			</div>
+    <div class="col-lg-12">
+        {% if validation_errors() and set_value('new') != 'new' %}
+        <div class="alert alert-danger">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            {{ validation_errors() }}
+        </div>
+        {% endif %}
 
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title">
-						<i class="glyphicon glyphicon-bookmark"></i>
-						{{ lang('personal_info') }}
-					</h3>
-				</div>
-				<div class="panel-body">
+        {{ form_open('secure/register', 'class="form-horizontal"', {'redirect': redirect, 'submitted': 'submitted'}) }}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <i class="glyphicon glyphicon-asterisk"></i>
+                    {{ lang('account_data') }}
+                </h3>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label for="email" class="col-md-3 control-label">
+                        {{ lang('address_email') }}
+                        <sup>*</sup>
+                    </label>
+                    <div class="col-md-5">
+                        {{ form_input({'name': 'email', 'placeholder': lang('address_email'), 'class': 'form-control', 'value': set_value('email'), 'autocomplete': 'off'}) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="col-md-3 control-label">
+                        {{ lang('password') }}
+                        <sup>*</sup>
+                    </label>
+                    <div class="col-md-5">
+                        {{ form_input({'name': 'password', 'placeholder': lang('your_password'), 'class': 'form-control', 'value': '', 'autocomplete': 'off', 'type': 'password'}) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirm" class="col-md-3 control-label">
+                        {{ lang('account_confirm') }}
+                        <sup>*</sup>
+                    </label>
+                    <div class="col-md-5">
+                        {{ form_input({'name': 'confirm', 'placeholder': lang('account_confirm'), 'class': 'form-control', 'value': '', 'autocomplete': 'off', 'type': 'password'}) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <i class="glyphicon glyphicon-bookmark"></i>
+                    {{ lang('personal_info') }}
+                </h3>
+            </div>
+            <div class="panel-body">
 
-					{% if shop_config('company_fields') %}
-						<button class="btn btn-default" id="company_fields_btn" type="button">
-							{{ lang('account_iam') }} {{ lang('account_am_company') }}
-						</button>
-						<button class="btn btn-default" id="person_fields_btn" type="button" style="display: none;">
-							{{ lang('account_iam') }} {{ lang('account_am_person') }}
-						</button>
-						<hr>
-					{% endif %}
+                {% if shop_config('company_fields') %}
+                <button class="btn btn-default" id="company_fields_btn" type="button">
+                    {{ lang('account_iam') }} {{ lang('account_am_company') }}
+                </button>
+                <button class="btn btn-default" id="person_fields_btn" type="button" style="display: none;">
+                    {{ lang('account_iam') }} {{ lang('account_am_person') }}
+                </button>
+                <hr>
+                {% endif %}
 
-					<div class="form-group is_company" style="display: none;">
-						<label for="cnpj" class="col-md-3 control-label ">
-							{{ lang('account_cnpj') }}
-						</label>
-						<div class="col-md-5">
-							{{ form_input({'name': 'cnpj', 'placeholder': '00.000.000/0000-00', 'class': 'form-control', 'value': set_value('cnpj')}) }}
-						</div>
-					</div>
-					<div class="form-group is_company"  style="display: none;">
-						<label for="company" class="col-md-3 control-label">
-							{{ lang('account_company') }}
-						</label>
-						<div class="col-md-5">
-							{{ form_input({'name': 'company', 'placeholder': lang('account_company'), 'class': 'form-control', 'value': set_value('company')}) }}
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="name" class="col-md-3 control-label">
-							{{ lang('account_firstname') }}
-							<sup>*</sup>
-						</label>
-						<div class="col-md-5">
-							{{ form_input({'name': 'firstname', 'placeholder': lang('account_firstname'), 'class': 'form-control', 'value': set_value('firstname')}) }}
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="name" class="col-md-3 control-label">
-							{{ lang('account_lastname') }}
-						</label>
-						<div class="col-md-5">
-							{{ form_input({'name': 'lastname', 'placeholder': lang('account_lastname'), 'class': 'form-control', 'value': set_value('lastname')}) }}
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="phone" class="col-md-3 control-label">
-							{{ lang('account_phone') }}
-							<sup>*</sup>
-						</label>
-						<div class="col-md-5">
-							{{ form_input({'name': 'phone', 'placeholder': '(21) 12345-1234', 'class': 'form-control', 'value': set_value('phone')}) }}
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="cpf" class="col-md-3 control-label">
-							{{ lang('account_cpf') }}
-							<sup>*</sup>
-						</label>
-						<div class="col-md-5">
-							{{ form_input({'name': 'cpf', 'placeholder': '000.000.000-00', 'class': 'form-control', 'value': set_value('cpf')}) }}
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="sex" class="col-md-3 control-label">
-							{{ lang('account_sex') }}
-						</label>
-						<div class="col-md-5">
-							{{ form_dropdown('sex', {0: lang('account_sex_m'), 1: lang('account_sex_w')}, set_value('sex'), 'class="form-control"') }}
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="birthday" class="col-md-3 control-label">
-							{{ lang('account_birthday') }}
-						</label>
-						<div class="col-md-5">
-							{{ form_input({'name': 'birthday', 'placeholder': '00/00/0000', 'class': 'form-control', 'value': set_value('birthday')}) }}
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="panel panel-default">
-				<div class="panel-heading clearfix">
-					<div class="pull-left">
-						<label>
-							<input type="checkbox" name="email_subscribe" value="1" checked="checked" />
-							{{ lang('want_to_receive_newsletter') }}
-						</label>
-						<br />
-						<small>{{ lang('want_to_receive_newsletter_hint') }}</small>
-					</div>
-					<div class="pull-right">
-						* {{ lang('required_fields') }}
-					</div>
-				</div>
-			</div>
-			<div class="pull-right">
-				<a href="{{ site_url('secure/login') }}" class="btn btn-default">
-					<i class="glyphicon glyphicon-chevronl-eft"></i>
-					{{ lang('form_back') }}
-				</a>
-				<input type="submit" value="{{ lang('register') }}" class="btn btn-primary btn-bck" />
-			</div>
-		{{ form_close() }}
-		<script type="text/javascript">
-		<!--
-			$(document).ready(function(){
-				$('input[name=phone]').mask_brazilian_phone();
-				$('input[name=cpf]').mask('999.999.999-99');
-				$('input[name=cnpj]').mask('99.999.999/9999-99');
-				$('input[name=birthday]').mask('99/99/9999');
+                {% if shop_config('international') %}
+                <div class="form-group">
+                    <label for="country_id" class="col-md-3 control-label">
+                        {{ lang('choose_your_country') }}
+                    </label>
+                    <div class="col-md-5">
+                        {{ form_dropdown('country_id', countries_menu, set_value('country_id', country_id), 'class="form-control" id="country_id"') }}
+                    </div>
+                </div>
+                <hr class="cart-seperator">
+                {% else %}
+                {{ form_input({'name': 'country_id', 'id': 'country_id', 'type': 'hidden', 'value': set_value('country_id', country_id)}) }}
+                <br>
+                {% endif %}
 
-				if ($('input[name=cnpj]').val().length > 0) {
-					show_company();
-				}
+                <div class="form-group is_company brasil-only{{ country_id != 30 ? ' hide' : '' }}" style="display: none;">
+                    <label for="cnpj" class="col-md-3 control-label ">
+                        {{ lang('account_cnpj') }}
+                        <sup>*</sup>
+                    </label>
+                    <div class="col-md-5">
+                        {{ form_input({'name': 'cnpj', 'placeholder': '00.000.000/0000-00', 'class': 'form-control', 'value': set_value('cnpj')}) }}
+                    </div>
+                </div>
+                <div class="form-group is_company"  style="display: none;">
+                    <label for="company" class="col-md-3 control-label">
+                        {{ lang('account_company') }}
+                        <sup>*</sup>
+                    </label>
+                    <div class="col-md-5">
+                        {{ form_input({'name': 'company', 'placeholder': lang('account_company'), 'class': 'form-control', 'value': set_value('company')}) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="name" class="col-md-3 control-label">
+                        {{ lang('account_firstname') }}
+                        <sup>*</sup>
+                    </label>
+                    <div class="col-md-5">
+                        {{ form_input({'name': 'firstname', 'placeholder': lang('account_firstname'), 'class': 'form-control', 'value': set_value('firstname')}) }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="name" class="col-md-3 control-label">
+                        {{ lang('account_lastname') }}
+                    </label>
+                    <div class="col-md-5">
+                        {{ form_input({'name': 'lastname', 'placeholder': lang('account_lastname'), 'class': 'form-control', 'value': set_value('lastname')}) }}
+                    </div>
+                </div>
 
-				$('#company_fields_btn').click(function(){
-					show_company();
-				});
+                <div class="brasil-only{{ country_id != 30 ? ' hide' : '' }}">
+                    <div class="form-group">
+                        <label for="phone" class="col-md-3 control-label">
+                            {{ lang('account_phone') }}
+                            <sup>*</sup>
+                        </label>
+                        <div class="col-md-5">
+                            {{ form_input({'id': 'phone_id', 'placeholder': '(21) 12345-1234', 'class': 'form-control', 'value': set_value('phone')}) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="cpf" class="col-md-3 control-label">
+                            {{ lang('account_cpf') }}
+                            <sup>*</sup>
+                        </label>
+                        <div class="col-md-5">
+                            {{ form_input({'name': 'cpf', 'placeholder': '000.000.000-00', 'class': 'form-control', 'value': set_value('cpf')}) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="other-countries{{ country_id == 30 ? ' hide' : '' }}">
+                    <div class="form-group">
+                        <label for="phone" class="col-md-3 control-label">
+                            {{ lang('account_phone') }}
+                            <sup>*</sup>
+                        </label>
+                        <div class="col-md-5">
+                            {{ form_input({'name': 'phone', 'class': 'form-control', 'value': set_value('phone')}) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="sex" class="col-md-3 control-label">
+                        {{ lang('account_sex') }}
+                    </label>
+                    <div class="col-md-5">
+                        {{ form_dropdown('sex', {0: lang('account_sex_m'), 1: lang('account_sex_w')}, set_value('sex'), 'class="form-control"') }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="birthday" class="col-md-3 control-label">
+                        {{ lang('account_birthday') }}
+                    </label>
+                    <div class="col-md-5">
+                        {{ form_input({'name': 'birthday', 'placeholder': '00/00/0000', 'class': 'form-control', 'value': set_value('birthday')}) }}
+                    </div>
+                </div>
+            </div>
+        </div>
 
-				$('#person_fields_btn').click(function(){
-					$('.is_company').hide();
-					$('#person_fields_btn').hide();
-					$('#company_fields_btn').show();
-				});
-			});
+        {% if shop_config('address_required_at_signup') %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <i class="glyphicon glyphicon-home"></i>
+                    {{ lang('address_step') }}
+                </h3>
+            </div>
 
-			var show_company = function() {
-				$('.is_company').show();
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="brasil-only{{ country_id != 30 ? ' hide' : '' }}">
 
-				$('input[name=cnpj]').val('');
-				$('input[name=company]').val('');
+                        <label class="col-md-3 control-label">
+                            {{ lang('address_postcode') }}
+                        </label>
 
-				$('#company_fields_btn').hide();
-				$('#person_fields_btn').show();
-			}
-		//-->
-		</script>
-	</div>
+                        <div class="input-group col-md-5">
+                            {{ form_input({'id': 'zip_code', 'placeholder': lang('address_zip'), 'class': 'address form-control', 'value': set_value('zip', zip)}) }}
+                            <span class="input-group-btn input-group-search-address">
+                                <a href="#" class="btn btn-default btn-search-address">
+                                    {{ lang('search_address') }}
+                                </a>
+                            </span>
+                        </div>
+
+                        <span class="input-group-btn input-group-search-address col-md-4" style="margin-left: 7em;">
+                            <a href="http://www.buscacep.correios.com.br/sistemas/buscacep/" class="btn btn-default link-consult-cep pull-right" target="_blank">
+                                {{ lang('consulting_zip') }}
+                            </a>
+                        </span>
+                    </div>
+
+                    <div class="other-countries{{ country_id == 30 ? ' hide' : '' }}">
+                        <label for="zip" class="col-md-3 control-label">
+                            {{ lang('address_zip') }}
+                        </label>
+                        <div class="col-md-5">
+                            {{ form_input({'autocomplete': 'off', 'id': 'a_zip', 'type': 'text', 'class': 'address form-control', 'name': 'zip', 'value': set_value('zip', zip)}) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="zone_id" class="col-md-3 control-label">
+                        {{ lang('address_state') }}
+                    </label>
+                    <div class="col-md-5">
+                        {{ form_dropdown('zone_id', zones_menu, set_value('zone_id', a_zone_id), 'class = "form-control"') }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="a_city" class="col-md-3 control-label">
+                        {{ lang('address_city') }}
+                    </label>
+                    <div class="col-md-5">
+                        {{ form_input({'name' : 'city', 'value' : set_value('city'), 'class' : 'form-control', 'placeholder': lang('address_city')}) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="a_district" class="col-md-3 control-label">
+                        {{ lang('district') }}
+                    </label>
+                    <div class="col-md-5">
+                        {{ form_input({'name' : 'district', 'value' : set_value('district'), 'class' : 'form-control', 'placeholder': lang('district')}) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="a_address1" class="col-md-3 control-label">
+                        {{ lang('address1') }}
+                    </label>
+                    <div class="col-md-5">
+                        {{ form_input({'name' : 'address1', 'value' : set_value('address1'), 'class' : 'form-control', 'placeholder': lang('address1')}) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="a_number" class="col-md-3 control-label">
+                        {{ lang('anumber') }}
+                    </label>
+                    <div class="col-md-5">
+                        {{ form_input({'name' : 'anumber', 'value' : set_value('anumber'), 'class' : 'form-control', 'placeholder': lang('anumber')}) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="a_address2" class="col-md-3 control-label">
+                        {{ lang('address2') }}
+                    </label>
+                    <div class="col-md-5">
+                        {{ form_input({'name' : 'address2', 'value' : set_value('address2'), 'class' : 'form-control', 'placeholder': lang('address2')}) }}
+                    </div>
+                </div>
+
+                {{ form_hidden('address_id', address_id) }}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="panel panel-default">
+            <div class="panel-heading clearfix">
+                <div class="pull-left">
+                    <label>
+                        <input type="checkbox" name="email_subscribe" value="1" checked="checked" />
+                        {{ lang('want_to_receive_newsletter') }}
+                    </label>
+                    <br />
+                    <small>{{ lang('want_to_receive_newsletter_hint') }}</small>
+                </div>
+                <div class="pull-right">
+                    * {{ lang('required_fields') }}
+                </div>
+            </div>
+        </div>
+        <div class="pull-right">
+            <a href="{{ site_url('secure/login') }}" class="btn btn-default">
+                <i class="glyphicon glyphicon-chevronl-eft"></i>
+                {{ lang('form_back') }}
+            </a>
+            <input type="submit" value="{{ lang('register') }}" class="btn btn-primary btn-bck" />
+        </div>
+
+        {{ form_close() }}
+    </div>
 </div>
+
+<script type="text/javascript">
+    <!--
+    zonesMap =  {{ zones_map|json_encode }};
+    $(document).ready(function(){
+        $('#phone_id').mask_brazilian_phone();
+        $('input[name=cpf]').mask('999.999.999-99');
+        $('input[name=cnpj]').mask('99.999.999/9999-99');
+        $('input[name=birthday]').mask('99/99/9999');
+        $('#zip_code').mask("99999-999");
+        $('#zip_code_val').mask("99999-999");
+
+        if ($('input[name=cnpj]').val().length > 0) {
+            show_company();
+        }
+
+        $('#company_fields_btn').click(function(){
+            show_company();
+        });
+
+        $('#person_fields_btn').click(function(){
+            $('.is_company').hide();
+            $('#person_fields_btn').hide();
+            $('#company_fields_btn').show();
+        });
+    });
+
+    var show_company = function() {
+        $('.is_company').show();
+
+        $('input[name=cnpj]').val('');
+        $('input[name=company]').val('');
+
+        $('#company_fields_btn').hide();
+        $('#person_fields_btn').show();
+    };
+
+    var searchAddress = function(focus, update_address, event) {
+        var address = {country: $('#country_id').val(), zip: $('#zip_code').val()};
+
+        if (address.country == 30) {
+            $('input[name=zip]').val(address.zip);
+
+            if (address.zip.length == 9 && address.zip.indexOf('_') == -1) {
+
+                $('#shipping_table').html('<tr><td><div class="loading"><i class="icon-refresh"></i> Calculando o frete</div></td></tr>');
+                address.zip = address.zip.replace("-", "");
+                var last_btn_address_text = $('.btn-search-address').text();
+                $('.btn-search-address').addClass('disabled');
+                $('.btn-search-address').text('Buscando...');
+
+                $.getJSON(site_url.base + 'shipping/busca_cep', {zip: address.zip}, function (data) {
+                    $('.btn-search-address').removeClass('disabled');
+                    $('.btn-search-address').text(last_btn_address_text);
+
+                    if (data["resultado"] == "1" && update_address) {
+
+                        $("input[name=district]").val(unescape(data["bairro"]));
+                        $("input[name=city]").val(unescape(data["cidade"]));
+                        $("input[name=address1]").val(unescape(data["logradouro"]));
+                        $("select[name=zone_id]").val(unescape(zonesMap[data["uf"]]));
+                        if (focus) {
+                            $("input[name=anumber]").focus();
+                        }
+                    }
+
+                    data["country"] = address.country;
+                });
+            }
+        }
+    };
+
+    $('.btn-search-address').on('click', function () {
+        searchAddress(true, true)
+    });
+
+    $('#zip_code').on('blur', function () {
+        searchAddress(true, true)
+    });
+
+    $('#phone_id').on('blur', function () {
+        $('input[name=phone]').val($(this).val());
+    });
+
+    $('select[name=country_id]').on('change', function () {
+        if($(this).val() != 30){
+            $('.brasil-only').hide();
+            $('.other-countries').removeClass('hide').show();
+            $('#a_zip').val('');
+        } else {
+            $('.other-countries').hide();
+            $('.brasil-only').removeClass('hide').show();
+        }
+
+        repopulateZonesMap($(this).val());
+    });
+
+    var repopulateZonesMap = function (country_id) {
+        $.ajax({
+            url: "{{ site_url('secure/get_zones_map') }}",
+            type: 'GET',
+            dataType: 'json',
+            data: { 'country_id' : country_id },
+            success: function(data){
+                if (data.success) {
+                    $('select[name=zone_id]').empty();
+                    options = $('select[name=zone_id]');
+                    $.each(data.zones.menu, function (index, value) {
+                        options.append($("<option />").val(index).text(value));
+                    });
+                    $('select[name=zone_id]').val(data.zones.menu);
+                    zonesMap =  data.zones.map;
+                }
+            }
+        });
+    };
+
+    //-->
+
+</script>
