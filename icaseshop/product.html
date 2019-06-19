@@ -130,7 +130,7 @@
 		</div>
 	</div>
 
-	{% if product.description or product.properties|count > 0 %}
+	{% if product.description or product.properties %}
 
 		<!-- Descricao e Caracteristicas do produto -->
 		<div class="prod-description">
@@ -138,7 +138,7 @@
 				<li class="active">
 					<a href="#tab-description" data-toggle="tab">Descrição</a>
 				</li>
-				{% if product.properties|count > 0 %}
+				{% if product.properties %}
 				<li>
 					<a href="#tab-properties" data-toggle="tab">Características</a>
 				</li>
@@ -150,7 +150,7 @@
 				<div class="tab-pane active" id="tab-description">
 					{{ product.description|raw }}
 				</div>
-				{% if product.properties|count > 0 %}
+				{% if product.properties %}
 				<div class="tab-pane clearfix" id="tab-properties">
 					{{ format_properties(properties, product.properties) }}
 				</div>
@@ -172,7 +172,7 @@
 
 <!-- Produtos relacionados -->
 
-{% if related|count > 0 %}
+{% if related %}
 
 <div id="prod-relateds">
 	

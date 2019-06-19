@@ -11,7 +11,7 @@
 			<div class="description">{{ category.description }}</div>
 		</div>
 
-		{% if categories[category.root_category].children|count > 0 %}
+		{% if categories[category.root_category].children %}
 		<div class="side-pad btm-margin">
 			<select class="tag-filter" name="tag-filter">
 				<option value="">- {{ 'Selecionar categorias'|trans({'en':'Select Categories'}) }}-</option>

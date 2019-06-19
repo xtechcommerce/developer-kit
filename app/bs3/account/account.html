@@ -250,7 +250,7 @@
                         </div>
 
                         <div class="panel panel-default">
-                            {% if addresses|count > 0 %}
+                            {% if addresses %}
                                 <table class="table table-striped">
                                     {% for address in addresses %}
                                         <tr id="address_{{ address.id }}">
@@ -302,7 +302,7 @@
                             <h4>{{ 'Pedidos'|trans({'en': 'Orders'}) }}</h4>
                         </div>
                         <div class="panel panel-default">
-                            {% if orders|count > 0 %}
+                            {% if orders %}
                                 <table class="table table-striped">
                                     <thead>
                                         <tr>
@@ -350,7 +350,7 @@
 
                 <div class="row">
                     <div class="col-xs-12">
-                        {% if purchased_products|count > 0 %}
+                        {% if purchased_products %}
                             {{ form_open('testimonials/create', {'class': 'testimonial-form'}) }}
                                 {% for product in purchased_products %}
                                     <div class="row rating-product">
@@ -476,7 +476,7 @@
                 <h2 class="category-header">{{ lang('saved_creditcard') }}</h2>
                 <div class="row">
                     <div class="col-xs-12">
-                        {% if credit_cards|count > 0 %}
+                        {% if credit_cards %}
                             <table class="table table-striped">
                                 <thead>
                                     <tr>

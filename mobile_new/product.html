@@ -137,7 +137,7 @@
                                         });
                                     </script>
 
-                                    {% if product.options|count > 0 %}
+                                    {% if product.options %}
                                     <div class="prod-variants clearfix">
                                         <ul>
                                             {% for option in product.options %}
@@ -300,7 +300,7 @@
 
                     <div class="row">
                         <div class="col-xs-12">
-                            {% if product.description or product.properties|count > 0 or testimonials|count > 0 %}
+                            {% if product.description or product.properties or testimonials %}
                                 <div class="prod-description">
                                     <ul class="nav nav-tabs">
                                         {% if product.description %}
@@ -309,13 +309,13 @@
                                             </li>
                                         {% endif %}
 
-                                        {% if product.properties|count > 0 %}
+                                        {% if product.properties %}
                                             <li>
                                                 <a href="#tab-properties" data-toggle="tab">{{ 'Características'|trans({'en':'Properties'}) }}</a>
                                             </li>
                                         {% endif %}
 
-                                        {% if testimonials|count > 0 %}
+                                        {% if testimonials %}
                                             <li {{ product.description ? '' : 'class="active"'}}>
                                                 <a href="#tab-testimonials" data-toggle="tab">Depoimentos</a>
                                             </li>
@@ -329,7 +329,7 @@
                                             </div>
                                         {% endif %}
 
-                                        {% if product.properties|count > 0 %}
+                                        {% if product.properties %}
                                             <div class="tab-pane clearfix" id="tab-properties">
                                                 {% for prop in product.properties %}
                                                     {% if properties_flatten[prop.id].image is not empty %}
@@ -342,7 +342,7 @@
                                             </div>
                                         {% endif %}
 
-                                        {% if testimonials|count > 0 %}
+                                        {% if testimonials %}
                                             <div class="tab-pane {{ product.description ? '' : 'active'}} clearfix" id="tab-testimonials">
                                                 {{ testimonials_widget() }}
                                             </div>
@@ -355,7 +355,7 @@
 
                     <div class="row">
                         <div class="col-xs-12">
-                            {% if related|count > 0 %}
+                            {% if related %}
                                 <div id="prod-relateds">
                                     <div class="row">
                                         <div class="col-xs-12">

@@ -24,7 +24,7 @@
                 <div class="options clearfix">
                     <div class="variants-wrapper clearfix form-group">
                         <div class="hide">{{ variation_select(product, {'button_selects': true, 'exclude_js': true}) }}</div>
-                        {% if product.options|count > 0 %}
+                        {% if product.options %}
                             <div class="prod-variants clearfix">
                                 <ul>
                                 {% for option in product.options %}

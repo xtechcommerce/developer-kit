@@ -89,7 +89,7 @@
           <ul class="nav navbar-nav navbar-right">
             {% for cat in categories %}
                 {% if cat.category.slug != 'home' %}
-                  {% if cat.children|count > 0 %}
+                  {% if cat.children %}
                     <li class="dropdown">
                       <a href="{{ site_url(cat.category.slug) }}">
                         {{ cat.category.name }}

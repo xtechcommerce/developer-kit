@@ -22,7 +22,7 @@
                             });
                         </script>
 
-                        {% if product.options|count > 0 %}
+                        {% if product.options %}
                             <div class="clearfix prod-variants">
                                 <ul>
                                     {% for option in product.options %}

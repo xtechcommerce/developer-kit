@@ -105,7 +105,7 @@
                   <nav class="navbar navbar-default" role="navigation">
                      <ul class="nav navbar-nav">
                       {% for cat in categories %}
-                        {% if cat.children|count > 0 %}
+                        {% if cat.children %}
                           <li class="dropdown" onmouseover="$(this).addClass('open');" onmouseout="$(this).removeClass('open');">
                             <a href="{{ site_url(cat.category.slug) }}">
                               {{ cat.category.name }}

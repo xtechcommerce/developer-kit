@@ -283,7 +283,7 @@
 				<div class="row">
 					<div class="col-xs-12">
 						<div class="panel panel-default">
-							{% if addresses|count > 0 %}
+							{% if addresses %}
 							<table class="table table-striped">
 								{% for address in addresses %}
 								<tr id="address_{{ address.id }}">
@@ -347,7 +347,7 @@
 				<div class="row">
 					<div class="col-xs-12">
 						<div class="panel panel-default order">
-							{% if orders|count > 0 %}
+							{% if orders %}
 								{% for order in orders %}
 									<div class="row">
 										<div class="col-xs-12">

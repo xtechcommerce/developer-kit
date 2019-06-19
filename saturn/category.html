@@ -4,7 +4,7 @@
 
 {% import 'product_listing.html' as product_listing %}
 
-{% if categories[category.root_category].children|count > 0 %}
+{% if categories[category.root_category].children %}
 
 {% set cols = 4 %}
 
@@ -32,7 +32,7 @@
 					{% endfor %}
 				</ul>
 
-				{% if selected_properties|length > 0 or selected_options|length > 0 or price_max > 0 %}
+				{% if selected_properties or selected_options or price_max > 0 %}
 					<h4>{{ lang('selected_filters') }}</h4>
 					<ul class="active-filters list-unstyled buffer-bottom-md" style="display:none;">
 						{% for property in selected_properties %}
@@ -68,7 +68,7 @@
 				
 
 				{% for property in properties %}
-				    {% if property.children|count > 0 %}
+				    {% if property.children %}
 				        <div class="filters-side filters">
 				        	<h4>{{ lang('filter_by', {'v': property.category.name}) }}</h4>
 				          	<ul class="list-unstyled list-inline clearfix buffer-bottom-md">
@@ -81,7 +81,7 @@
 				{% endfor %}
 
 				{% for option in global_options %}
-				    {% if option.values|count > 0 %}
+				    {% if option.values %}
 				        <div class="filters-side filters">
 				        	<h4>{{ lang('filter_by', {'v': option.name}) }}</h4>
 				          	<ul class="list-unstyled list-inline clearfix buffer-bottom-md">
@@ -177,7 +177,7 @@
 	</div>
 </div>
 
-{% if categories[category.root_category].children|count > 0 %}
+{% if categories[category.root_category].children %}
 
 	</div>
 </div>

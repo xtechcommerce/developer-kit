@@ -12,7 +12,7 @@
 	</ul>
 </div>
 {% for property in properties %}
-	{% if property.children|count > 0 %}
+	{% if property.children %}
 		<div id="product_filter" class="filters filter">
 			<a class="main" href="#"><span class="glyphicon glyphicon-chevron-down"></span> Filtrar por {{ property.category.name }}</a>
 			<ul>
@@ -29,7 +29,7 @@
 <!-- The unvisible form for submitting -->
 
 {{ form_open(current_url(), {'id': 'filter_form', 'style': 'display:none;', 'method': 'get'}) }}
-{% if properties|count > 0 %}
+{% if properties %}
 	{% for prop in properties %}
 		{% for child in prop.children %}
 			<input type="checkbox" name="properties[]" value="{{ child.category.id }}" id="filter_property{{ child.category.id }}" {{ selected_properties and child.category.id in selected_properties ? ' checked' : '' }}/>

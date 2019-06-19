@@ -38,7 +38,7 @@
 
             {% for cat in categories %}
                 {% if cat.category.slug != 'home' %}
-                    {% if cat.children|count > 0  %}
+                    {% if cat.children  %}
                         <li>
                             <a href="{{ site_url(cat.category.slug) }}">
                                 {{ cat.category.name }}
@@ -47,7 +47,7 @@
                             <ul>
                                 {% set limiter = 0 %}
                                 {% for child in cat.children %}
-                                    {% if child.children|count > 0 %}
+                                    {% if child.children %}
                                         <li>
                                             <a href="{{ site_url(cat.category.slug ~ '/' ~ child.category.slug) }}">
                                                 {{ child.category.name }}

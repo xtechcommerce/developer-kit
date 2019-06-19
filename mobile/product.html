@@ -75,7 +75,7 @@
 
                                 </script>
 
-                                {% if product.options|count > 0 %}
+                                {% if product.options %}
                                     {% for option in options %}
                                         {% if option.id in product.available_options %}
                                             {% if option.type == 'textarea' %}
@@ -268,7 +268,7 @@
 
             </div>
 
-            {% if product.properties|count > 0 %}
+            {% if product.properties %}
                 <aside class="more-info side-pad">
                     <dl>
                         <div class="tab-pane clearfix" id="tab-properties">
@@ -296,7 +296,7 @@
 
             <hr>
 
-            {% if related|count > 0 %}
+            {% if related %}
 
                 <div id="products" class="products clearfix">
                     <h3 class="title top-border side-pad"><a href="/collections/beds">{{ 'Aproveite também'|trans({'en':'Enjoy also'}) }}</a></h3>

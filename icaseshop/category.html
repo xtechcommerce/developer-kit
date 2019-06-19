@@ -4,7 +4,7 @@
 
 {{ breadcrumbs_widget() }}
 
-{% if categories[category.root_category].children|count > 0 %}
+{% if categories[category.root_category].children %}
 
 <div class="row">
 	<div class="col-xs-3 sidebar">
@@ -76,7 +76,7 @@
 	{% endfor %}
 </div>
 
-{% if categories[category.root_category].children|count > 0 %}
+{% if categories[category.root_category].children %}
 
 	</div>
 </div>

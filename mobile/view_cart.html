@@ -218,7 +218,7 @@
 
 			{% endif %}
 
-			{% if cart('get_custom_charges')|count > 0 %}
+			{% if cart('get_custom_charges') %}
 			{% for name, price in cart('get_custom_charges') %}
 			<tr>
 				<td class="text-right">

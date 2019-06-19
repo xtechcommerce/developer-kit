@@ -80,7 +80,7 @@
 
 				<div class="hide">{{ variation_select(product, {button_selects: 'true'}) }}</div>
 
-				{% if product.options|count > 0 %}
+				{% if product.options %}
 				    <div class="prod-variants">
 				        <ul>        
 				            {% for option in product.options %}
@@ -178,7 +178,7 @@
 			{{ product.description|raw }}
 		</div>
 	{% endif %}
-	{% if product.properties|count > 0 %}
+	{% if product.properties %}
 		<div class="col-md-5">
 			<div class="buffer-left-md">
 				<h3 class="buffer-top-xs">{{ lang('product_properties') }}</h3>
@@ -191,7 +191,7 @@
 	</div>
 
 
-	{% if testimonials|count > 0 %}
+	{% if testimonials %}
 	<hr>
 	<script type="text/javascript">
 	$(document).ready(function(){
@@ -247,7 +247,7 @@
 	{% endif %}
 
 
-	{% if related|count > 0 %}
+	{% if related %}
 
 	<div id="prod-related">
 	    <h2 class="text-center buffer-bottom-lg buffer-top-lg">Aproveite também</h2>
