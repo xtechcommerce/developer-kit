@@ -19,11 +19,11 @@
 		<div id="products" class="products clearfix">
 			{% import 'mobile_new/product_listing.html' as product_listing %}
 
-			{% for product in products %}
-				<div class="row">
+			<div class="row">
+				{% for product in products %}
 					{{ product_listing.item(product, category, 12) }}
-				</div>
-			{% endfor %}
+				{% endfor %}
+			</div>
 		</div>
 	</div>
 {% endblock %}
