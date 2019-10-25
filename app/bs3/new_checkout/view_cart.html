@@ -165,6 +165,17 @@
                                         });
                                     </script>
                                 {{ form_close() }}
+                                {% if cart('coupon_list') %}
+                                <div class="coupons-activate">
+                                    <hr>
+                                    <label class="">{{ lang('coupon_list') }}</label>
+                                    <ul class="list-inline">
+                                        {% for coupon_list in cart('coupon_list') %}
+                                            <li>{{ coupon_list.code }} <a href="/remove_coupon/{{ coupon_list.code }}">&times;</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                {% endif %}
                               </div>
                             </div>
                         </div>

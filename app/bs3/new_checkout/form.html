@@ -155,8 +155,8 @@
 
                     <div class="row cart-bottom-buffer cart-address-fields-two">
                         {{ inputgroup.input('a_address1', 'address1', set_value('address1', customer.ship_address.address1), lang('address1'), 12) }}
-                        {{ inputgroup.input('a_anumber', 'anumber', set_value('anumber', customer.ship_address.anumber), lang('anumber'), '6 nopad-right') }}
-                        {{ inputgroup.input('a_address2', 'address2', set_value('address2', customer.ship_address.address2), lang('address2'), '6 nopad-left', 'text', true) }}
+                        {{ inputgroup.input('a_anumber', 'anumber', set_value('anumber', customer.ship_address.anumber), lang('anumber'), '6 nopad-right', 'text', false, 'address-line2') }}
+                        {{ inputgroup.input('a_address2', 'address2', set_value('address2', customer.ship_address.address2), lang('address2'), '6 nopad-left', 'text', true, 'address-line3') }}
                     </div>
 
                     {{ form_hidden('address_id', address_id) }}

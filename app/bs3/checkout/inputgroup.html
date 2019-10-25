@@ -1,9 +1,9 @@
-{% macro input(id, name, value, label, cols, type, hide_asterix) %}
+{% macro input(id, name, value, label, cols, type, hide_asterix, autocomplete) %}
 	<div class="col-md-{{ cols }}">
 		<label style="white-space:nowrap">
 			{{ label }}{% if not hide_asterix %} <sup>*</sup>{% endif %}
 		</label>
-		{{ form_input({'autocomplete': 'off', 'id': id, 'type': type|default('text'), 'class': 'address form-control', 'name': name, 'value': value}) }}
+		{{ form_input({'autocomplete': autocomplete|default('off'), 'id': id, 'type': type|default('text'), 'class': 'address form-control', 'name': name, 'value': value}) }}
 	</div>
 {% endmacro %}
 {% macro dropdown(id, name, options, value, label, cols, hide_asterix) %}

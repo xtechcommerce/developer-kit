@@ -1,26 +1,26 @@
 {% if payment.info.confirmtitle %}
 	<h1 class="page-title">{{ payment.info.confirmtitle }}</h1>
 {% else %}
-	<h1 class="page-title">Compra realizada com sucesso!</h1>
+	<h1 class="page-title">{{ 'Pedido realizado com sucesso!'|trans({'en':'Purchase made with success!'}) }}!</h1>
 {% endif %}
 
 <div class="row">
 	<div class="col-lg-12">
 		<div class="row">
 			<div class="col-md-6">
-				<h4>O número do seu pedido é #{{ order.order_number }}</h4>
+				<h4>{{ 'O número do seu pedido é'|trans({'en':'Your order number is'}) }} #{{ order.order_number }}</h4>
 				{% if payment.info.boletourl %}
 				<!-- Boleto begin -->
 
-					<p>Agora, resta imprimir o boleto. Ele pode ser pago em qualquer agência ou pelo site do seu banco.</p>
-					<p><a class="btn btn-primary btn-lg" target="_blank" href="{{ payment.info.boletourl }}">Imprimir boleto</a></p>
-					<p>Como o banco leva um dia para processar o boleto, o prazo de entrega começa a valer um dia após o seu pagamento.</p>
+					<p>{{ 'Agora, resta imprimir o boleto. Ele pode ser pago em qualquer agência ou pelo site do seu banco.'|trans({'en':"Now, it remains to print the ticket. It can be paid at any branch or through your bank's website."}) }}</p>
+					<p><a class="btn btn-primary btn-lg" target="_blank" href="{{ payment.info.boletourl }}">{{ 'Imprimir boleto'|trans({'en':'Print'}) }}</a></p>
+					<p>{{ 'Como o banco leva um dia para processar o boleto, o prazo de entrega começa a valer um dia após o seu pagamento.'|trans({'en':'Since the bank takes a day to process the bill of exchange, the delivery time starts to be valid one day after your payment.'}) }}</p>
 
 				<!-- Boleto end -->
 				{% elseif payment.info.paymenturl %}
 
-					<p>Agora, resta completar o pagamento. Clique no link abaixo para efetuar o pagamento do seu pedido.</p>
-					<p><a class="btn btn-primary btn-lg" target="_blank" href="{{ payment.info.paymenturl }}">Efetuar o Pagamento</a></p>
+					<p>{{ 'Agora, resta completar o pagamento. Clique no link abaixo para efetuar o pagamento do seu pedido.'|trans({'en':'Now, you have to complete the payment. Click the link below to pay for your order.'}) }}</p>
+					<p><a class="btn btn-primary btn-lg" target="_blank" href="{{ payment.info.paymenturl }}">{{ 'Efetuar o Pagamento'|trans({'en':'Make payment'}) }}</a></p>
 
 				{% elseif payment.info.paymentmessage %}
 
@@ -30,13 +30,13 @@
 				<!-- Other begin -->
 
 					<p>
-						Enviamos os detalhes do seu pedido para {{ order.email }}.
+						{{ 'Enviamos os detalhes do seu pedido para'|trans({'en':'We sent the details from your order to'}) }} {{ order.email }}.
 						{% if payment.info.status %}
-							<br>O status atual da sua transação é <strong>{{ payment.info.status }}</strong>.
+							<br>{{ 'O status atual da sua transação é'|trans({'en':'The current status of your transaction is'}) }} <strong>{{ payment.info.status }}</strong>.
 						{% endif %}
 					</p>
 
-					<p><a class="btn btn-default" href="{{ site_url('/') }}">Voltar para pagina inicial</a></p>
+					<p><a class="btn btn-default" href="{{ site_url('/') }}">{{ 'Voltar para página inicial'|trans({'en':'Back to home page'}) }}</a></p>
 
 				<!-- Other end -->
 				{% endif %}
@@ -44,21 +44,24 @@
 				{% if shop_config('ebit_id') is not empty %}
 					<br>
 					<a id="bannerEbit"><img src="https://www.ebitempresa.com.br/bitrate/banners/b1{{ shop_config('ebit_id') }}5.gif"></a>
-					{% if shop_config('buscape_id') is not empty %}
-						{% set birthday = order.customer_birthday|split('-') %}
-						{% set values = '' %}
-						{% set quantities = '' %}
-						{% set names = '' %}
-						{% set skus = '' %}
-						{% for product in order.contents %}
-							{% set values = values ~ (product.price|number_format(2, ".", "") ~ (loop.index > 0 and not loop.last ? '|' : '')) %}
-							{% set quantities = quantities ~ product.quantity ~ (loop.index > 0 and not loop.last ? '|' : '') %}
-							{% set names = names ~ product.name ~ (loop.index > 0 and not loop.last ? '|' : '') %}
-							{% set skus = skus ~ product.sku ~ (loop.index > 0 and not loop.last ? '|' : '') %}
-						{% endfor %}
-						<param id="ebitParam" value="email={{ order.email }}&gender={{ order.customer_sex ? 'F' : 'M' }}&birthDay={{ birthday[2] ~ '-' ~ birthday[1] ~ '-' ~ birthday[0] }}&zipCode={{ order.ship_zip|replace({'-':''}) }}&deliveryTax={{ order.shipping }}&deliveryTime={{ order.delivery_time }}&totalSpent={{ order.total }}&value={{ values }}&quantity={{ quantities }}&productName={{ names }}&transactionId={{ order.order_number }}&sku={{ skus }}&buscapeId={{ shop_config('buscape_id') }}&storeId={{ shop_config('ebit_id') }}" />
+					{% set birthday = order.customer_birthday|split('-') %}
+					{% set values = '' %}
+					{% set quantities = '' %}
+					{% set names = '' %}
+					{% set skus = '' %}
+					{% set installments = '' %}
+					{% for product in order.contents %}
+						{% set values = values ~ (product.price|number_format(2, ".", "") ~ (loop.index > 0 and not loop.last ? '|' : '')) %}
+						{% set quantities = quantities ~ product.quantity ~ (loop.index > 0 and not loop.last ? '|' : '') %}
+						{% set names = names ~ product.name ~ (loop.index > 0 and not loop.last ? '|' : '') %}
+						{% set skus = skus ~ product.sku ~ (loop.index > 0 and not loop.last ? '|' : '') %}
+						{% set installments = product.installments %}
+					{% endfor %}
+
+					<param id="ebitParam" value="{% if shop_config('buscape_id') is not empty %}buscapeId={{ shop_config('buscape_id') }}&{% endif %}platform=0&parcels={{ installments }}&email={{ order.email }}&gender={{ order.customer_sex ? 'F' : 'M' }}&birthDay={{ birthday[2] ~ '-' ~ birthday[1] ~ '-' ~ birthday[0] }}&zipCode={{ order.ship_zip|replace({'-':''}) }}&deliveryTax={{ order.shipping }}&deliveryTime={{ order.delivery_time }}&totalSpent={{ order.total }}&value={{ values }}&quantity={{ quantities }}&productName={{ names }}&transactionId={{ order.order_number }}&sku={{ skus }}&storeId={{ shop_config('ebit_id') }}" />
+					{% if not shop_config('ebit_auto_template') %}
+						<script type="text/javascript" id="getSelo" src="https://imgs.ebit.com.br/ebitBR/selo-ebit/js/getSelo.js?{{ shop_config('ebit_id') }}&lightbox=true"></script>
 					{% endif %}
-					<script type="text/javascript" id="getSelo" src="https://imgs.ebit.com.br/ebitBR/selo-ebit/js/getSelo.js?{{ shop_config('ebit_id') }}&lightbox=true"></script>
 				{% endif %}
 			</div>
 
@@ -68,10 +71,10 @@
 
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						<h3 class="panel-title">Compartilhe sua compra!</h3>
+						<h3 class="panel-title">{{ 'Compartilhe sua compra!'|trans({'en':'Share your purchase!'}) }}</h3>
 					</div>
 					<div class="panel-body">
-						<p>Instruções: Selecione um produto e escolha Facebook ou Twitter.</p>
+						<p>{{ 'Instruções: Selecione um produto e escolha Facebook ou Twitter.'|trans({'en':'Instructions: Select a product and choose Facebook or Twitter.'}) }}</p>
 						<div class="share-product-list row">
 							{% for product in order.contents %}
 								<div class="col-md-4">
@@ -94,7 +97,7 @@
 			</div>
 		</div>
 
-		{% if not is_local() %}
+		{% if not is_local() and not shop_config('hide_google_analytics') %}
 			<script>
 				ga('require', 'ecommerce');
 
