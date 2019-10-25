@@ -57,6 +57,16 @@
 								<input type="text" name="coupon_code" class="form-control" style="width: 50%;" />
 								<input type="submit" class="btn btn-default" value="{{ lang('apply_coupon') }}" />
 							</div>
+							{% if cart('coupon_list') %}
+							<div class="coupons-activate">
+								<label class="">{{ lang('coupon_list') }}</label>
+								<ul class="list-inline">
+									{% for coupon_list in cart('coupon_list') %}
+										<li>{{ coupon_list.code }} <a href="/remove_coupon/{{ coupon_list.code }}">&times;</a></li>
+									{% endfor %}
+								</ul>
+							</div>
+							{% endif %}
 						</div>
 						<div class="cart-secure col-md-6">
 							<ul class="list-inline pull-right">
